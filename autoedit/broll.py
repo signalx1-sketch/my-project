@@ -19,7 +19,7 @@ VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 
 FULL_SEC = 4.0       # 전체 화면 길이
 SIDE_SEC = 3.5       # 팝업 길이
-FULL_GAP = 20.0      # 전체 화면 사이 최소 간격
+FULL_GAP = 14.0      # 전체 화면 사이 최소 간격
 SIDE_GAP = 8.0       # 팝업 사이 최소 간격
 FULL_RATIO = 0.15    # 본편 중 전체 화면 비율 상한
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 피한다
