@@ -14,7 +14,7 @@ from pathlib import Path
 from .cuts import Sentence
 from .timeline import Timeline
 
-IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
+IMAGE_EXT = {".jpg", ".jpeg", ".jfif", ".png", ".webp", ".bmp"}
 VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 
 FULL_SEC = 4.0       # 전체 화면 길이
