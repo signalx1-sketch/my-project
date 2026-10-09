@@ -42,6 +42,7 @@ python -m autoedit 원본.mp4
 | `--plan 계획.json` | 편집 계획을 직접 지정 (아래 참고) |
 | `--bgm 음악.mp3` | 배경음악 |
 | `--assets 자료폴더` | 자료 화면 폴더 (하위 폴더 포함) |
+| `--rename-assets` | 자료 파일 이름을 내용 설명으로 바꿈 (원래 이름은 `rename_log.json`에 남음) |
 | `--broll 배치.json` | 자료 화면 배치를 직접 지정 `[{"at": 문장번호, "asset": "파일경로", "mode": "full" 또는 "side"}]` |
 | `--channel 이름` | 우상단 로고 글자 (기본: 더마허브) |
 | `--no-ai` | Claude API를 쓰지 않음 |

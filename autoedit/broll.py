@@ -246,3 +246,42 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
         parts.append(f"[{cur}][br{n}]overlay={pos}:eof_action=pass[{nxt}]")
         cur = nxt
     return ";".join(parts), cur
+
+
+def _safe_name(desc: str, max_len: int = 40) -> str:
+    words = re.findall(r"[가-힣A-Za-z0-9]+", desc)
+    name = ""
+    for w in words:
+        if len(name) + len(w) + 1 > max_len:
+            break
+        name = f"{name}_{w}" if name else w
+    return name or "자료"
+
+
+def rename_by_tags(folder: Path) -> int:
+    """tags.json의 설명으로 파일 이름을 바꾼다. 되돌릴 수 있게 rename_log.json에 원래 이름을 남긴다."""
+    tags_file = folder / "tags.json"
+    if not tags_file.exists():
+        return 0
+    tags = json.loads(tags_file.read_text(encoding="utf-8"))
+    log_file = folder / "rename_log.json"
+    log = json.loads(log_file.read_text(encoding="utf-8")) if log_file.exists() else {}
+    new_tags, n = {}, 0
+    for rel, desc in tags.items():
+        old = folder / rel
+        if not old.exists():
+            continue
+        target = old.with_name(_safe_name(desc) + old.suffix.lower())
+        k = 2
+        while target.exists() and target != old:
+            target = old.with_name(f"{_safe_name(desc)}_{k}{old.suffix.lower()}")
+            k += 1
+        new_rel = target.relative_to(folder).as_posix()
+        if target != old:
+            old.rename(target)
+            log[new_rel] = log.pop(rel, rel)
+            n += 1
+        new_tags[new_rel] = desc
+    tags_file.write_text(json.dumps(new_tags, ensure_ascii=False, indent=1), encoding="utf-8")
+    log_file.write_text(json.dumps(log, ensure_ascii=False, indent=1), encoding="utf-8")
+    return n

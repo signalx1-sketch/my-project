@@ -28,6 +28,8 @@ def main():
     p.add_argument("--plan", type=Path, help="편집 계획 JSON (콜드 오픈/챕터/키워드)")
     p.add_argument("--bgm", type=Path, help="배경음악 파일 (없으면 생략)")
     p.add_argument("--assets", type=Path, help="자료 화면 폴더 (스톡 영상/이미지)")
+    p.add_argument("--rename-assets", action="store_true",
+                   help="자료 파일 이름을 내용 설명으로 바꾼다 (원래 이름은 rename_log.json에 남음)")
     p.add_argument("--broll", type=Path, help="자료 화면 배치 계획 JSON [{at, asset, mode}]")
     p.add_argument("--channel", default="더마허브", help="우상단 로고 글자")
     p.add_argument("--no-ai", action="store_true", help="Claude API를 쓰지 않는다")
@@ -61,6 +63,10 @@ def main():
         assets = broll.scan_library(args.assets.resolve())
         if not args.no_ai and (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
             assets = broll.tag_with_claude(args.assets.resolve(), assets, plan_mod.CLAUDE_MODEL)
+        if args.rename_assets:
+            n = broll.rename_by_tags(args.assets.resolve())
+            print(f"  자료 파일 {n}개 이름 변경")
+            assets = broll.scan_library(args.assets.resolve())
         print(f"  자료 {len(assets)}개 (영상 {sum(a.kind == 'video' for a in assets)}, 이미지 {sum(a.kind == 'image' for a in assets)})")
         if args.broll:
             items = json.loads(args.broll.read_text(encoding="utf-8"))
