@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
+from . import broll
 from .timeline import FPS, Clip, Timeline
 
 W, H = 1920, 1080
@@ -97,7 +98,7 @@ def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path)
 
 
 def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]], out: Path,
-           work: Path, bgm: Path | None = None, jobs: int = 4):
+           work: Path, bgm: Path | None = None, jobs: int = 4, placements: list | None = None):
     clips_dir = work / "clips"
     clips_dir.mkdir(parents=True, exist_ok=True)
 
@@ -127,7 +128,15 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
     else:
         audio = "[1:a][2:a]amix=inputs=2:normalize=0:duration=first[mix];"
     audio += "[mix]loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
-    vf = f"[0:v]ass={ass_path}:fontsdir={FONTS_DIR}[vout]"
+
+    # 자료 화면을 먼저 얹고 그 위에 자막을 입힌다 (자료 화면 위에서도 자막이 보이게)
+    base = "0:v"
+    if placements:
+        first = 4 if bgm else 3  # 영상, 대사, 효과음, (배경음악) 다음 입력부터
+        inputs += broll.ffmpeg_inputs(placements)
+        overlays, base = broll.overlay_filters(placements, first, "0:v")
+        audio = overlays + ";" + audio
+    vf = f"[{base}]ass={ass_path}:fontsdir={FONTS_DIR}[vout]"
 
     print("  자막과 소리를 입혀서 최종 렌더링 중...")
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", f"{vf};{audio}",

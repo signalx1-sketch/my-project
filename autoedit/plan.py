@@ -175,3 +175,70 @@ def make_plan(sentences: list[Sentence], plan_file: Path | None, out_json: Path,
     out_json.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  편집 계획: {source} (콜드 오픈 {len(plan['hooks'])}구간, 챕터 {len(plan['chapters'])}개)")
     return plan
+
+
+BROLL_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "broll": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "at": {"type": "integer", "description": "자료가 나올 문장 번호"},
+                    "asset": {"type": "string", "description": "자료 목록의 파일 경로 그대로"},
+                    "mode": {"type": "string", "enum": ["full", "side"]},
+                },
+                "required": ["at", "asset", "mode"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    "required": ["broll"],
+    "additionalProperties": False,
+}
+
+BROLL_PROMPT = """너는 피부 질환 전문 의료 유튜브 채널의 편집 감독이다.
+대본(번호 붙은 문장)과 자료 화면 목록을 보고, 어느 문장에 어떤 자료를 띄울지 고른다.
+
+- full: 화면 전체를 4초 덮는다. 말하는 내용을 장면으로 보여줄 때 (연고 바르는 손, 붉어진 얼굴,
+  병원 진료, 주사 맞는 장면 등). 20~40초에 한 번 정도, 영상 전체의 15%를 넘지 않게.
+- side: 얼굴 옆에 작게 3.5초. 약 제품 사진, 논문 화면, 도표처럼 "이것"을 가리킬 때.
+- 문장 내용과 자료가 정확히 맞을 때만 쓴다. 억지로 채우지 않는다.
+- 같은 자료는 한 번만 쓴다. 인사말, 병원 홍보, 구독 안내 문장에는 넣지 않는다.
+"""
+
+
+def plan_broll(sentences: list[Sentence], assets: list, out_json: Path, use_ai: bool = True) -> list[dict]:
+    """자료 화면 배치 계획. 결과는 out_json에 저장되고, 있으면 다시 쓴다."""
+    from . import broll
+
+    if out_json.exists():
+        items = json.loads(out_json.read_text(encoding="utf-8"))
+        print(f"  자료 화면 계획: 이전 실행 결과 ({len(items)}개 후보)")
+        return items
+    items = None
+    if use_ai and (os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")):
+        import anthropic
+
+        client = anthropic.Anthropic()
+        content = (sentences_prompt(sentences) + "\n\n자료 화면 목록:\n" + broll.catalog_prompt(assets))
+        try:
+            with client.messages.stream(
+                model=CLAUDE_MODEL, max_tokens=16000, system=BROLL_PROMPT,
+                messages=[{"role": "user", "content": content}],
+                output_config={"effort": "high", "format": {"type": "json_schema", "schema": BROLL_SCHEMA}},
+            ) as stream:
+                resp = stream.get_final_message()
+            if resp.stop_reason != "refusal":
+                text = next((b.text for b in resp.content if b.type == "text"), None)
+                items = json.loads(text)["broll"] if text else None
+        except anthropic.APIError as e:
+            print(f"  Claude API 호출 실패, 파일명 규칙으로 진행합니다: {e}")
+    source = "Claude API"
+    if items is None:
+        items = broll.suggest_with_rules(sentences, assets)
+        source = "파일명/태그 규칙"
+    out_json.write_text(json.dumps(items, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"  자료 화면 계획: {source} ({len(items)}개 후보)")
+    return items
