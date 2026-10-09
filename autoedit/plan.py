@@ -42,6 +42,16 @@ PLAN_SCHEMA = {
             "description": "자막에서 노란색으로 강조할 핵심 단어 (10~25개)",
             "items": {"type": "string"},
         },
+        "fix": {
+            "type": "array",
+            "description": "음성 인식이 틀리게 적은 표기 → 올바른 표기 (약 이름, 의학 용어)",
+            "items": {
+                "type": "object",
+                "properties": {"wrong": {"type": "string"}, "right": {"type": "string"}},
+                "required": ["wrong", "right"],
+                "additionalProperties": False,
+            },
+        },
         "skip": {
             "type": "array",
             "description": "본편에서 뺄 문장 구간 (NG, 같은 말 반복, 재촬영 앞부분)",
@@ -53,7 +63,7 @@ PLAN_SCHEMA = {
             },
         },
     },
-    "required": ["title", "hooks", "chapters", "keywords", "skip"],
+    "required": ["title", "hooks", "chapters", "keywords", "fix", "skip"],
     "additionalProperties": False,
 }
 
@@ -69,6 +79,9 @@ SYSTEM_PROMPT = """너는 피부 질환 전문 의료 유튜브 채널의 편집
   label은 "Q."를 빼고 20자 이내로 쓴다. 첫 챕터는 0번 문장부터 시작한다.
 - 핵심 단어(약 이름, 질환명, 부작용, 숫자, 결론 단어)만 노란색으로 강조한다.
   keywords는 대본에 실제로 나오는 표기 그대로 쓴다.
+- 대본은 음성 인식 결과라서 약 이름, 의학 용어가 틀리게 적힌 경우가 많다.
+  fix에 {"wrong": 틀린 표기, "right": 올바른 표기}로 적는다. 예: 디페린결 → 디페린겔.
+  keywords에는 고친 뒤의 표기를 쓴다.
 - skip에는 같은 말을 다시 시작한 NG 문장, 말이 꼬여서 바로 다시 말한 앞 문장만 넣는다.
   확실하지 않으면 비워 둔다.
 """
@@ -132,6 +145,7 @@ def plan_with_rules(sentences: list[Sentence]) -> dict:
         "hooks": [{"from": h, "to": h} for h in sorted(hooks)],
         "chapters": [],
         "keywords": [],
+        "fix": {},
         "skip": [],
     }
 
@@ -154,6 +168,9 @@ def make_plan(sentences: list[Sentence], plan_file: Path | None, out_json: Path,
             source = "키워드 규칙"
     for key in ("hooks", "chapters", "keywords", "skip"):
         plan.setdefault(key, [])
+    plan.setdefault("fix", {})
+    if isinstance(plan["fix"], list):  # API 응답은 [{"wrong", "right"}] 목록
+        plan["fix"] = {f["wrong"]: f["right"] for f in plan["fix"] if f["wrong"]}
     plan.setdefault("title", "")
     out_json.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  편집 계획: {source} (콜드 오픈 {len(plan['hooks'])}구간, 챕터 {len(plan['chapters'])}개)")

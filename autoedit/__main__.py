@@ -35,6 +35,7 @@ def main():
     load_dotenv(Path.cwd() / ".env")
     src = args.video.resolve()
     out = (args.out or src.with_name(src.stem + "_편집.mp4")).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
     work = (args.work or src.with_name(src.stem + "_work")).resolve()
     work.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -50,7 +51,8 @@ def main():
     plan = plan_mod.make_plan(sentences, args.plan, work / "plan.json", use_ai=not args.no_ai)
 
     print("3/4 타임라인과 자막")
-    tl = timeline.build(words, sentences, plan)
+    silences = cuts.detect_silences(src, work / "silences.json")
+    tl = timeline.build(words, sentences, plan, silences)
     ass, sfx = subtitles.build_ass(words, tl, plan, args.channel)
     src_len = sentences[-1].end if sentences else 0
     print(f"  {src_len / 60:.1f}분 → {tl.duration / 60:.1f}분 (클립 {len(tl.clips)}개, 효과음 {len(sfx)}개)")

@@ -1,7 +1,7 @@
 """타임라인과 단어 타임스탬프로 ASS 자막(자막, 챕터 라벨, 로고, 큰 글씨)을 만들고 효과음 위치를 정한다."""
 from dataclasses import dataclass
 
-from .cuts import is_filler
+from .cuts import _ends_sentence, is_filler
 from .timeline import Timeline
 
 MAX_CHARS = 15      # 한 줄 최대 글자 수 (공백 제외)
@@ -52,8 +52,14 @@ def esc(text: str) -> str:
     return text.replace("\\", "").replace("{", "(").replace("}", ")")
 
 
-def map_words(words: list[dict], tl: Timeline) -> list[OutWord]:
-    """원본 단어들을 출력 타임라인 시간으로 옮긴다 (잘려나간 단어는 빠진다)."""
+def fix_text(text: str, fixes: dict[str, str]) -> str:
+    for wrong, right in fixes.items():
+        text = text.replace(wrong, right)
+    return text
+
+
+def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[OutWord]:
+    """원본 단어들을 출력 타임라인 시간으로 옮기고 잘못 인식된 용어를 고친다 (잘려나간 단어는 빠진다)."""
     out: list[OutWord] = []
     for c in tl.clips:
         if c.kind == "bumper":
@@ -62,7 +68,7 @@ def map_words(words: list[dict], tl: Timeline) -> list[OutWord]:
             if w["s"] >= c.src_start - 0.03 and w["e"] <= c.src_end + 0.08 and not is_filler(w["w"]):
                 s = c.out_start + max(0.0, w["s"] - c.src_start)
                 e = min(c.out_start + c.dur, c.out_start + (w["e"] - c.src_start))
-                out.append(OutWord(w["w"], s, max(e, s + 0.05), c.kind))
+                out.append(OutWord(fix_text(w["w"], fixes), s, max(e, s + 0.05), c.kind))
     out.sort(key=lambda w: w.s)
     return out
 
@@ -74,7 +80,7 @@ def group_lines(ws: list[OutWord]) -> list[list[OutWord]]:
         if cur:
             chars = sum(len(x.text) for x in cur) + len(w.text)
             if (chars > MAX_CHARS or len(cur) >= MAX_WORDS or w.s - cur[-1].e > LINE_GAP
-                    or w.section != cur[-1].section or cur[-1].text.endswith((".", "?", "!"))):
+                    or w.section != cur[-1].section or _ends_sentence(cur[-1].text)):
                 lines.append(cur)
                 cur = []
         cur.append(w)
@@ -98,7 +104,7 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str) -> tupl
         events.append(f"Dialogue: {layer},{ts(start)},{ts(end)},{style},,0,0,0,,{text}")
 
     # 자막
-    lines = group_lines(map_words(words, tl))
+    lines = group_lines(map_words(words, tl, plan.get("fix", {})))
     last_pop = -POP_MIN_GAP
     for i, line in enumerate(lines):
         start = line[0].s
@@ -144,7 +150,7 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str) -> tupl
         label = esc(chapters[ch]["label"])
         if t0 > 1.0:  # 본편 첫 챕터는 범퍼 직후라 큰 글씨 생략
             add(3, t0, t0 + 1.6, "Big",
-                "{\\fad(80,160)\\fscx80\\fscy80\\t(0,140,\\fscx100\\fscy100)}"
+                "{\\fad(80,160)\\pos(960,230)\\fscx80\\fscy80\\t(0,140,\\fscx100\\fscy100)}"
                 f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")
             sfx.append((t0, "whoosh"))
         add(2, t0 + (1.6 if t0 > 1.0 else 0), t1, "Label", f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")

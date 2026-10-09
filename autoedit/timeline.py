@@ -14,6 +14,9 @@ ZOOM_WIDE = 1.0
 ZOOM_TIGHT = 1.15
 HOOK_ZOOMS = (1.12, 1.26)
 MIN_ZOOM_HOLD = 2.5  # 줌을 바꾼 뒤 최소 유지 시간 (너무 자주 바뀌면 어지럽다)
+SHOT_MIN = 2.5       # 끊김 없이 이어지는 말도 문장이 바뀌면 이 길이마다 줌을 바꾼다
+SHOT_MAX = 4.5       # 문장이 길면 이 길이를 넘을 때 단어 사이에서라도 줌을 바꾼다
+HOOK_SHOT = (1.5, 3.0)  # 콜드 오픈은 더 빠르게
 
 
 def snap(t: float) -> float:
@@ -27,6 +30,7 @@ class Clip:
     src_end: float
     zoom: float = 1.0
     out_start: float = 0.0
+    joined: bool = False  # 원본에서 앞 클립과 바로 이어지면 True (오디오 페이드를 넣지 않는다)
     chapter: int | None = None  # 이 클립에서 챕터가 시작되면 챕터 번호
 
     @property
@@ -48,14 +52,35 @@ def _sentence_span(sentences: list[Sentence], a: int, b: int) -> tuple[float, fl
     return sentences[a].start, sentences[b].end
 
 
-def build(words: list[dict], sentences: list[Sentence], plan: dict) -> Timeline:
+def _shots(a: float, b: float, sentence_starts: list[float], word_starts: list[float],
+           shot_min: float = SHOT_MIN, shot_max: float = SHOT_MAX) -> list[tuple[float, float]]:
+    """하나로 이어진 구간 [a, b]를 줌을 바꿀 샷들로 나눈다. 문장 경계를 우선으로 쓴다."""
+    cands = sorted({(t, True) for t in sentence_starts if a + 1.0 < t < b - 1.0}
+                   | {(t, False) for t in word_starts if a + 1.0 < t < b - 1.0})
+    shots, cur = [], a
+    for t, at_sentence in cands:
+        held = t - cur
+        if held >= shot_min and (at_sentence or held >= shot_max):
+            shots.append((cur, t))
+            cur = t
+    shots.append((cur, b))
+    return shots
+
+
+def build(words: list[dict], sentences: list[Sentence], plan: dict,
+          silences: list[tuple[float, float]] = ()) -> Timeline:
     tl = Timeline()
+    sentence_starts = [s.start for s in sentences]
+    word_starts = [w["s"] for w in words]
 
     # 1. 콜드 오픈
-    for n, h in enumerate(plan["hooks"]):
+    k = 0
+    for h in plan["hooks"]:
         s, e = _sentence_span(sentences, h["from"], h["to"])
-        for i, (a, b) in enumerate(keep_ranges(words, s, e)):
-            tl.clips.append(Clip("hook", a, b, zoom=HOOK_ZOOMS[(n + i) % 2]))
+        for a, b in keep_ranges(words, s, e, silences):
+            for j, (sa, sb) in enumerate(_shots(a, b, sentence_starts, word_starts, *HOOK_SHOT)):
+                tl.clips.append(Clip("hook", sa, sb, zoom=HOOK_ZOOMS[k % 2], joined=j > 0))
+                k += 1
 
     # 2. 인트로 범퍼 (콜드 오픈이 있을 때만)
     if tl.clips:
@@ -72,7 +97,7 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict) -> Timeline:
     for s in sentences:
         if s.idx in skipped:
             continue
-        for i, (a, b) in enumerate(keep_ranges(words, s.start, s.end)):
+        for i, (a, b) in enumerate(keep_ranges(words, s.start, s.end, silences)):
             chapter = chapter_at.get(s.idx) if i == 0 else None
             if body and a <= body[-1][1] + 0.05:
                 # 원본에서 바로 이어지는 구간: 챕터 경계가 아니면 합치고, 경계면 겹침만 없앤다
@@ -84,12 +109,14 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict) -> Timeline:
 
     zoom, held = ZOOM_WIDE, 0.0
     for a, b, chapter in body:
-        if chapter is not None:
-            zoom, held = ZOOM_WIDE, 0.0
-        elif held >= MIN_ZOOM_HOLD:
-            zoom, held = (ZOOM_TIGHT if zoom == ZOOM_WIDE else ZOOM_WIDE), 0.0
-        tl.clips.append(Clip("body", a, b, zoom=zoom, chapter=chapter))
-        held += b - a
+        for j, (sa, sb) in enumerate(_shots(a, b, sentence_starts, word_starts)):
+            ch = chapter if j == 0 else None
+            if ch is not None:
+                zoom, held = ZOOM_WIDE, 0.0
+            elif held >= MIN_ZOOM_HOLD:
+                zoom, held = (ZOOM_TIGHT if zoom == ZOOM_WIDE else ZOOM_WIDE), 0.0
+            tl.clips.append(Clip("body", sa, sb, zoom=zoom, chapter=ch, joined=j > 0))
+            held += sb - sa
 
     # 문장 단위로 따로 잘라서 생긴 겹침을 정리하고 프레임에 맞춘다
     t = 0.0

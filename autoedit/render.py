@@ -36,9 +36,10 @@ def _zoom_filter(z: float) -> str:
             f"scale={W}:{H}:flags=lanczos")
 
 
-def render_clip(src: Path, c: Clip, i: int, work: Path) -> tuple[Path, Path]:
+def render_clip(src: Path, c: Clip, i: int, work: Path, next_joined: bool) -> tuple[Path, Path]:
     # 파일명에 구간과 줌을 넣어서, 계획을 바꿔 다시 돌리면 바뀐 클립만 새로 만든다
-    key = f"{i:04d}_{c.kind}_{round(c.src_start * 1000)}_{round(c.src_end * 1000)}_{round(c.zoom * 100)}"
+    key = (f"{i:04d}_{c.kind}_{round(c.src_start * 1000)}_{round(c.src_end * 1000)}_{round(c.zoom * 100)}"
+           f"_{int(c.joined)}{int(next_joined)}")
     v, a = work / f"v{key}.mp4", work / f"a{key}.wav"
     if v.exists() and a.exists():
         return v, a
@@ -55,17 +56,20 @@ def render_clip(src: Path, c: Clip, i: int, work: Path) -> tuple[Path, Path]:
         return v, a
     run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.dur + 0.1}",
          "-vf", _zoom_filter(c.zoom), *venc, str(v)])
-    fade_out = max(0.0, c.dur - 0.03)
+    # 실제로 잘린 경계에만 짧은 페이드를 넣어 '틱' 소리를 막는다 (줌만 바뀌는 경계는 소리가 이어져야 한다)
+    af = [f"apad", f"atrim=0:{c.dur}"]
+    if not c.joined:
+        af.append("afade=t=in:d=0.012")
+    if not next_joined:
+        af.append(f"afade=t=out:st={max(0.0, c.dur - 0.03)}:d=0.03")
     run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.dur}",
-         "-vn", "-ac", "2", "-ar", str(SR),
-         "-af", f"apad,atrim=0:{c.dur},afade=t=in:d=0.012,afade=t=out:st={fade_out}:d=0.03",
-         "-c:a", "pcm_s16le", str(a)])
+         "-vn", "-ac", "2", "-ar", str(SR), "-af", ",".join(af), "-c:a", "pcm_s16le", str(a)])
     return v, a
 
 
 def _concat(files: list[Path], out: Path, extra: list[str]):
     lst = out.with_suffix(".txt")
-    lst.write_text("".join(f"file '{f.name}'\n" for f in files))
+    lst.write_text("".join(f"file '{f}'\n" for f in files))
     run(["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lst), *extra, str(out)])
 
 
@@ -99,7 +103,8 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
 
     print(f"  클립 {len(tl.clips)}개 자르는 중...")
     with ThreadPoolExecutor(jobs) as ex:
-        parts = list(ex.map(lambda ic: render_clip(src, ic[1], ic[0], clips_dir), enumerate(tl.clips)))
+        nxt = [tl.clips[i + 1].joined if i + 1 < len(tl.clips) else False for i in range(len(tl.clips))]
+        parts = list(ex.map(lambda i: render_clip(src, tl.clips[i], i, clips_dir, nxt[i]), range(len(tl.clips))))
 
     video = work / "video.mp4"
     speech = work / "speech.wav"
