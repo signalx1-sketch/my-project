@@ -24,7 +24,7 @@ FONTS_DIR = Path(__file__).resolve().parent.parent / "assets" / "fonts"
 READABLE = ("Pretendard ExtraBold", "Pretendard")
 SMALL_PT = 20      # 이보다 작은 글씨(논문 인용, 출처)는 영상에서 안 읽혀서 키운다
 SMALL_SCALE = 1.6  # 기본 배율. 공간이 남으면 2배까지 키운다
-CONTENT_BOTTOM = 0.83  # 슬라이드 내용은 여기까지만 (아래는 자막 자리)
+CONTENT_BOTTOM = 0.80  # 슬라이드 내용은 여기까지만 (아래는 자막 자리)
 SCORE_MIN = 0.12  # 이보다 덜 겹치면 맞는 문장이 없다고 본다
 SKIP_SLIDE = -0.05  # 슬라이드를 건너뛰는 비용 (조금이라도 맞으면 쓰는 쪽을 택한다)
 
@@ -177,6 +177,35 @@ def restyle(pptx: Path, out: Path):
                     if inside:
                         sh.top = min(m.top for m in inside)
                         sh.height = max(m.top + m.height for m in inside) - sh.top
+        # 글자가 화면 아래 자막 자리까지 내려오는 장(파트 표지 등)은 내용 전체를 위로 올린다.
+        # 상자는 세로 가운데 정렬이라 상자 높이를 실제 글자 높이로 줄여서 계산한다
+        if texts:
+            body = [sh for sh in texts if sh is not texts[0]] or texts
+            for sh in body:
+                need = int(_text_height_pt(sh, sh.width / 12700) * 12700)
+                if need < sh.height:
+                    sh.top = sh.top + (sh.height - need) // 2
+                    sh.height = need
+            over = int(max(sh.top + sh.height for sh in body) - limit)
+            hb = texts[0].top + texts[0].height if len(texts) > 1 else 0
+            room = min(sh.top for sh in body) - hb
+            if over > 0 and room >= over:
+                for sh in slide.shapes:
+                    if sh is not texts[0] and sh.top is not None and sh.top > texts[0].top:
+                        sh.top = sh.top - over
+            elif over > 0:
+                # 올릴 자리가 없으면 머리말 아래 내용 전체를 같은 비율로 줄인다
+                f = (limit - hb) / (limit + over - hb)
+                for sh in slide.shapes:
+                    if sh is texts[0] or sh.top is None or sh.top <= texts[0].top:
+                        continue
+                    sh.top = int(hb + (sh.top - hb) * f)
+                    sh.height = int(sh.height * f)
+                    if sh.has_text_frame:
+                        for p in sh.text_frame.paragraphs:
+                            for r in p.runs:
+                                if r.font.size:
+                                    r.font.size = Pt(max(8, round(r.font.size.pt * f)))
         for _, r, _ in runs:
             face = READABLE[0] if (r.font.size.pt if r.font.size else 18) >= 30 else READABLE[1]
             for tag in ("a:latin", "a:ea", "a:cs"):
