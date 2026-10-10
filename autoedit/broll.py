@@ -17,12 +17,12 @@ from .timeline import Timeline
 IMAGE_EXT = {".jpg", ".jpeg", ".jfif", ".png", ".webp", ".bmp"}
 VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 
-FULL_SEC = 3.2       # 전체 화면 길이 (짧게 자주 바꿔야 지루하지 않다)
+FULL_SEC = 3.0       # 전체 화면 길이 (짧게 자주 바꿔야 지루하지 않다)
 SIDE_SEC = 3.5       # 팝업 길이
-FULL_GAP = 7.0       # 전체 화면 시작 사이 최소 간격
+FULL_GAP = 5.0       # 전체 화면 시작 사이 최소 간격
 SIDE_GAP = 10.0      # 팝업 사이 최소 간격
-FULL_RATIO = 0.35    # 본편 중 전체 화면 비율 상한
-FACE_MIN = 2.5       # 자료 화면 사이에 얼굴이 최소 이만큼은 보이게
+FULL_RATIO = 0.5     # 본편 중 전체 화면 비율 상한
+FACE_MIN = 1.8       # 자료 화면 사이에 얼굴이 최소 이만큼은 보이게
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 피한다
 
@@ -141,7 +141,7 @@ STOP = {"영상", "사진", "도표", "캡처", "확인필요", "여성", "남�
         "얼굴", "피부", "제품", "설명", "비교", "모습", "장면", "하는", "있는", "바르는", "보는", "든", "들고",
         "3D", "일러스트", "vs", "논문", "기사", "유튜브", "썸네일", "목록",
         "구독", "좋아요", "피켓", "흔들기", "알림"}  # 끝인사 문장에 엉뚱한 자료가 붙지 않게
-FILL_EVERY = 8.0  # 긴 문장은 이 간격마다 채움용 전체 화면 후보를 더 낸다
+FILL_EVERY = 6.0  # 긴 문장은 이 간격마다 채움용 전체 화면 후보를 더 낸다
 # 화면 전체보다 얼굴 옆 팝업이 어울리는 자료 (글씨가 있거나 가리키는 대상)
 SIDE_HINTS = ("도표", "캡처", "전후", "치료전", "치료후", "제품", "논문", "현미경")
 
@@ -268,16 +268,44 @@ SIDE_X = 70            # 얼굴 왼쪽
 FADE = 0.2
 
 
+def _dims(path: Path) -> tuple[int, int]:
+    r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+                        "-of", "csv=p=0:s=x", str(path)], capture_output=True, text=True)
+    try:
+        w, h = r.stdout.strip().split("\n")[0].split("x")
+        return int(w), int(h)
+    except ValueError:
+        return 1920, 1080
+
+
 def ffmpeg_inputs(placements: list[Placement]) -> list[str]:
     args = []
     for p in placements:
         a = p.asset
-        if a.kind == "image":
+        if a.kind == "image" and p.mode == "full":
+            args += ["-i", str(a.path)]  # 한 장만 읽고 zoompan이 필요한 프레임 수만큼 만든다
+        elif a.kind == "image":
             args += ["-loop", "1", "-framerate", "30", "-t", f"{p.dur}", "-i", str(a.path)]
         else:
             ss = max(0.0, min(a.duration - p.dur, a.duration * 0.25))
             args += ["-ss", f"{ss:.2f}", "-t", f"{p.dur}", "-i", str(a.path)]
     return args
+
+
+def _full_image(path: Path, d: float) -> str:
+    """사진을 화면 전체에 천천히 확대하며 보여준다. 16:9와 많이 다르면(도표, 전후 사진, 제품) 잘리지 않게
+    흐린 배경 위에 원본 비율로 얹는다."""
+    frames = int(d * 30)
+    w, h = _dims(path)
+    zoom = (f"zoompan=z='1+0.0010*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}"
+            f":s=1920x1080:fps=30")
+    if 1.5 <= w / max(h, 1) <= 2.0:
+        return f"scale=3840:2160:force_original_aspect_ratio=increase,crop=3840:2160,{zoom}"
+    return ("split=2[fa][fb];"
+            "[fa]scale=960:540:force_original_aspect_ratio=increase,crop=960:540,boxblur=20:2,"
+            "eq=brightness=-0.15,scale=3840:2160[fbg];"
+            "[fb]scale=3600:2000:force_original_aspect_ratio=decrease[ffg];"
+            f"[fbg][ffg]overlay=(W-w)/2:(H-h)/2,{zoom}")
 
 
 def overlay_filters(placements: list[Placement], first_input: int, base: str) -> tuple[str, str]:
@@ -290,10 +318,8 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
                  f"fade=t=out:st={max(0, d - FADE)}:d={FADE}:alpha=1")
         if p.mode == "full":
             if p.asset.kind == "image":
-                frames = int(d * 30)
-                # 사진은 천천히 확대해서 정지 화면처럼 보이지 않게 한다
-                prep = (f"scale=3840:2160:force_original_aspect_ratio=increase,crop=3840:2160,"
-                        f"zoompan=z='1+0.0012*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}:s=1920x1080:fps=30")
+                # 분기(split)가 들어가는 필터는 라벨을 이 자료 번호로 고유하게 바꾼다
+                prep = _full_image(p.asset.path, d).replace("[f", f"[f{n}_")
             else:
                 prep = "fps=30,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080"
             pos = "0:0"

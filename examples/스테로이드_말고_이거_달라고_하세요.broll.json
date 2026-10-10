@@ -18,20 +18,26 @@
   "mode": "full"
  },
  {
-  "at": 3,
+  "at": 2,
   "offset": 0.0,
   "asset": "영상_연고_튜브_볼에_바르기_클로즈업_홍조.mp4",
   "mode": "full"
  },
  {
   "at": 4,
-  "offset": 3.0,
+  "offset": 0.0,
   "asset": "영상_연고_튜브_쌓인_선반_볼에_연고_바르는_여성_구진.mp4",
   "mode": "full"
  },
  {
   "at": 4,
-  "offset": 8.0,
+  "offset": 5.0,
+  "asset": "사진_스테로이드_주사_약병_주사기.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 4,
+  "offset": 9.0,
   "asset": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
   "mode": "full"
  },
@@ -43,14 +49,20 @@
  },
  {
   "at": 7,
-  "offset": 2.0,
-  "asset": "사진_볼_실핏줄_모세혈관_확장_클로즈업.jpg",
-  "mode": "side"
+  "offset": 0.0,
+  "asset": "사진_혈관_적혈구_3D_일러스트.jpg",
+  "mode": "full"
  },
  {
   "at": 8,
-  "offset": 2.0,
+  "offset": 0.0,
   "asset": "영상_현미경_피부_조직_단면_모낭.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 8,
+  "offset": 6.0,
+  "asset": "도표_스테로이드_크림_얼굴_부작용.jpg",
   "mode": "full"
  },
  {
@@ -73,7 +85,7 @@
  },
  {
   "at": 11,
-  "offset": 6.0,
+  "offset": 5.0,
   "asset": "영상_홍조_볼_만지는_여성_클로즈업.mp4",
   "mode": "full"
  },
@@ -81,6 +93,12 @@
   "at": 12,
   "offset": 0.0,
   "asset": "영상_피부과_건물_앞_홍조_여성_답답함.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 12,
+  "offset": 4.0,
+  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
   "mode": "full"
  },
  {
@@ -103,21 +121,27 @@
  },
  {
   "at": 15,
-  "offset": 8.0,
+  "offset": 6.0,
   "asset": "사진_볼_홍조_치료전_치료후.jpg",
-  "mode": "side"
+  "mode": "full"
  },
  {
-  "at": 16,
-  "offset": 0.0,
-  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
+  "at": 15,
+  "offset": 11.0,
+  "asset": "영상_세안_후_미소_홍조_여성.mp4",
   "mode": "full"
  },
  {
   "at": 16,
-  "offset": 7.0,
+  "offset": 0.0,
   "asset": "캡처_논문_스테로이드_유발_로사세아_200명_임상.jpg",
-  "mode": "side"
+  "mode": "full"
+ },
+ {
+  "at": 16,
+  "offset": 6.0,
+  "asset": "영상_연구실_실험_기기_여성_연구원.mp4",
+  "mode": "full"
  },
  {
   "at": 17,
@@ -128,19 +152,25 @@
  {
   "at": 18,
   "offset": 0.0,
-  "asset": "영상_세안_후_미소_홍조_여성.mp4",
+  "asset": "영상_볼에_세럼_바르는_여성_미소.mp4",
   "mode": "full"
  },
  {
   "at": 19,
   "offset": 0.0,
-  "asset": "영상_연구실_실험_기기_여성_연구원.mp4",
+  "asset": "영상_침대_누운_심한_홍조_여성.mp4",
   "mode": "full"
  },
  {
   "at": 20,
   "offset": 1.0,
   "asset": "영상_연고_들고_볼_만지는_걱정_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 20,
+  "offset": 6.0,
+  "asset": "사진_리도멕스_크림_스테로이드_제품.jpg",
   "mode": "full"
  },
  {
@@ -151,7 +181,13 @@
  },
  {
   "at": 22,
-  "offset": 1.0,
+  "offset": 0.0,
+  "asset": "사진_프로토픽_엘리델_제품.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 22,
+  "offset": 4.0,
   "asset": "영상_다리_습진_랩_감는_여성.mp4",
   "mode": "full"
  },
@@ -159,7 +195,7 @@
   "at": 23,
   "offset": 0.0,
   "asset": "도표_아토피_피부장벽_이상_면역_기능장애.png",
-  "mode": "side"
+  "mode": "full"
  },
  {
   "at": 23,
@@ -170,6 +206,12 @@
  {
   "at": 24,
   "offset": 0.0,
+  "asset": "사진_엘리델_프로토픽_제품_상자.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 24,
+  "offset": 4.0,
   "asset": "영상_팔에_로션_바르는_홍조_여성.mp4",
   "mode": "full"
  },
@@ -177,7 +219,7 @@
   "at": 25,
   "offset": 0.0,
   "asset": "도표_정상_피부_vs_아토피_피부장벽_지질_비교.jpg",
-  "mode": "side"
+  "mode": "full"
  },
  {
   "at": 25,
@@ -192,6 +234,12 @@
   "mode": "full"
  },
  {
+  "at": 26,
+  "offset": 5.0,
+  "asset": "사진_팔_오금_습진_치료전_치료후.jpg",
+  "mode": "full"
+ },
+ {
   "at": 27,
   "offset": 1.0,
   "asset": "영상_어깨에_오일_바르는_여성.mp4",
@@ -200,12 +248,24 @@
  {
   "at": 28,
   "offset": 0.0,
-  "asset": "영상_피부과_접수_결제_홍조_여성_직원.mp4",
+  "asset": "사진_듀피젠트_린버크_제품.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 28,
+  "offset": 5.0,
+  "asset": "캡처_듀피젠트_약가_기준표.jpg",
   "mode": "full"
  },
  {
   "at": 29,
   "offset": 0.0,
+  "asset": "영상_피부과_접수_결제_홍조_여성_직원.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 29,
+  "offset": 4.0,
   "asset": "영상_약국_앞_처방전_보며_걱정하는_홍조_여성.mp4",
   "mode": "full"
  },
@@ -217,15 +277,21 @@
  },
  {
   "at": 30,
-  "offset": 9.0,
+  "offset": 7.0,
+  "asset": "사진_이소티논_10mg_한미_약_상자.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 30,
+  "offset": 12.0,
   "asset": "영상_수건으로_얼굴_닦는_여성_여드름.mp4",
   "mode": "full"
  },
  {
   "at": 31,
   "offset": 1.0,
-  "asset": "사진_이소티논_10mg_한미_여드름_약_제품.jpg",
-  "mode": "side"
+  "asset": "도표_여드름_단계_화이트헤드_블랙헤드_구진_농포.jpg",
+  "mode": "full"
  },
  {
   "at": 32,
@@ -235,14 +301,20 @@
  },
  {
   "at": 32,
-  "offset": 6.0,
-  "asset": "도표_여드름_진행_단계_면포_구진_농포.jpg",
-  "mode": "side"
+  "offset": 5.0,
+  "asset": "캡처_카페_글_여드름_주사가_스테로이드인가요.jpg",
+  "mode": "full"
  },
  {
   "at": 34,
   "offset": 0.0,
   "asset": "영상_피부_각질층_바늘_자극_3D_일러스트.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 34,
+  "offset": 5.0,
+  "asset": "캡처_하이닥_여드름_염증주사_부작용_질문.jpg",
   "mode": "full"
  },
  {
@@ -253,8 +325,14 @@
  },
  {
   "at": 35,
-  "offset": 8.0,
+  "offset": 6.0,
   "asset": "영상_욕실_거울_홍조_얼굴_걱정_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 35,
+  "offset": 12.0,
+  "asset": "캡처_염증주사_3개_광고_가격.jpg",
   "mode": "full"
  },
  {
@@ -265,7 +343,7 @@
  },
  {
   "at": 36,
-  "offset": 8.0,
+  "offset": 6.0,
   "asset": "영상_홍조_여성_놀란_표정_의사_상담.mp4",
   "mode": "full"
  },
@@ -278,25 +356,25 @@
  {
   "at": 38,
   "offset": 0.0,
-  "asset": "도표_피지선_모낭_구조_돋보기.webp",
-  "mode": "side"
+  "asset": "사진_이소티논_10mg_한미_여드름_약_제품.jpg",
+  "mode": "full"
  },
  {
   "at": 38,
-  "offset": 6.0,
+  "offset": 5.0,
   "asset": "영상_피지선_모낭_3D_일러스트.mp4",
   "mode": "full"
  },
  {
   "at": 38,
-  "offset": 12.0,
+  "offset": 10.0,
   "asset": "영상_피부_피지_모공_클로즈업.mp4",
   "mode": "full"
  },
  {
   "at": 39,
   "offset": 1.0,
-  "asset": "영상_볼에_세럼_바르는_여성_미소.mp4",
+  "asset": "사진_얼굴_여드름_치료전_치료후_정면.jpg",
   "mode": "full"
  },
  {
@@ -309,35 +387,41 @@
   "at": 41,
   "offset": 0.0,
   "asset": "도표_케토코나졸_샴푸_말라세지아_억제_효과.webp",
-  "mode": "side"
+  "mode": "full"
  },
  {
   "at": 41,
-  "offset": 6.0,
+  "offset": 5.0,
   "asset": "영상_말라세지아_곰팡이_현미경.mp4",
   "mode": "full"
  },
  {
   "at": 41,
-  "offset": 12.0,
+  "offset": 10.0,
   "asset": "영상_코_각질_홍조_얼굴_클로즈업_지루성.mp4",
   "mode": "full"
  },
  {
   "at": 42,
   "offset": 1.0,
+  "asset": "사진_지루성_피부염_부위별_임상_사진.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 43,
+  "offset": 0.0,
   "asset": "영상_코_피부_각질_만지는_여성_클로즈업.mp4",
   "mode": "full"
  },
  {
   "at": 44,
-  "offset": 0.0,
+  "offset": 1.0,
   "asset": "영상_볼_만지며_찡그린_여성_따가움.mp4",
   "mode": "full"
  },
  {
   "at": 44,
-  "offset": 7.0,
+  "offset": 6.0,
   "asset": "영상_돋보기로_두피_비듬_관찰.mp4",
   "mode": "full"
  },
@@ -360,10 +444,16 @@
   "mode": "full"
  },
  {
+  "at": 47,
+  "offset": 7.0,
+  "asset": "사진_로사세아_유형_얼굴_코_눈.jpg",
+  "mode": "full"
+ },
+ {
   "at": 48,
   "offset": 0.0,
-  "asset": "사진_수란트라_크림_이버멕틴_제품.jpg",
-  "mode": "side"
+  "asset": "사진_수란트라_크림_이버멕틴_제품_2.jpg",
+  "mode": "full"
  },
  {
   "at": 50,
@@ -385,7 +475,13 @@
  },
  {
   "at": 52,
-  "offset": 7.0,
+  "offset": 5.0,
+  "asset": "사진_모낭충_데모덱스_볼_홍조_돋보기.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 52,
+  "offset": 10.0,
   "asset": "영상_피부_위_세균_미생물_3D_클로즈업.mp4",
   "mode": "full"
  },
@@ -399,7 +495,7 @@
   "at": 54,
   "offset": 0.0,
   "asset": "도표_스테로이드_중단_혈관_확장_피부_기전.webp",
-  "mode": "side"
+  "mode": "full"
  },
  {
   "at": 54,
@@ -420,14 +516,14 @@
   "mode": "full"
  },
  {
-  "at": 58,
+  "at": 57,
   "offset": 0.0,
   "asset": "영상_지친_홍조_여성_소파.mp4",
   "mode": "full"
  },
  {
   "at": 59,
-  "offset": 1.0,
+  "offset": 0.0,
   "asset": "영상_홍조_눈_감은_지친_여성_창가.mp4",
   "mode": "full"
  },
@@ -440,13 +536,13 @@
  {
   "at": 62,
   "offset": 0.0,
-  "asset": "도표_혈관_확장_정상_vs_확장된_혈관.jpg",
-  "mode": "side"
+  "asset": "도표_혈관_정상_vs_혈관_확장.jpg",
+  "mode": "full"
  },
  {
   "at": 62,
   "offset": 5.0,
-  "asset": "영상_침대_누운_심한_홍조_여성.mp4",
+  "asset": "사진_얼굴_모세혈관_확장_실핏줄.jpg",
   "mode": "full"
  },
  {
@@ -469,7 +565,7 @@
  },
  {
   "at": 65,
-  "offset": 7.0,
+  "offset": 6.0,
   "asset": "영상_욕실_손에_크림_덜어_미소짓는_여성.mp4",
   "mode": "full"
  },
@@ -487,19 +583,31 @@
  },
  {
   "at": 68,
-  "offset": 3.0,
+  "offset": 2.0,
   "asset": "영상_병원_상담실_상담_실장과_여성.mp4",
   "mode": "full"
  },
  {
   "at": 69,
-  "offset": 1.0,
-  "asset": "사진_볼_홍조_치료_경과_3단계_비교.jpg",
-  "mode": "side"
+  "offset": 0.0,
+  "asset": "사진_볼_홍조_치료전_치료후_빨간_원_2.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 69,
+  "offset": 5.0,
+  "asset": "사진_양볼_홍조_치료전_치료후_입술_가림.jpg",
+  "mode": "full"
  },
  {
   "at": 70,
-  "offset": 2.0,
+  "offset": 1.0,
+  "asset": "사진_얼굴_홍조_치료전_치료후_정면_스킨룩스.jpg",
+  "mode": "full"
+ },
+ {
+  "at": 70,
+  "offset": 5.0,
   "asset": "영상_욕실_거울_앞_크림_바르는_여성_미소.mp4",
   "mode": "full"
  },
@@ -510,9 +618,15 @@
   "mode": "side"
  },
  {
+  "at": 72,
+  "offset": 0.0,
+  "asset": "영상_창가_기지개_스트레칭_여성.mp4",
+  "mode": "full"
+ },
+ {
   "at": 74,
   "offset": 1.0,
-  "asset": "영상_창가_기지개_스트레칭_여성.mp4",
+  "asset": "영상_욕조_거품_목욕_홍조_여성_미소.mp4",
   "mode": "full"
  }
 ]
