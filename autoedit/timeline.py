@@ -10,13 +10,13 @@ from .cuts import Sentence, keep_ranges
 FPS = 30
 BUMPER_SEC = 1.4
 
+# 줌은 꼭 필요한 곳에만: 콜드 오픈은 문장마다 한 번 바꾸고, 본편은 계획의 punch 문장에서만 당긴다.
+# 화면 전환은 슬라이드와 자료 화면이 맡는다.
 ZOOM_WIDE = 1.0
 ZOOM_TIGHT = 1.10
 HOOK_ZOOMS = (1.0, 1.12)
-MIN_ZOOM_HOLD = 14.0  # 줌을 바꾼 뒤 최소 유지 시간 (자주 바뀌면 어지럽다. 화면 전환은 자료 화면이 맡는다)
-SHOT_MIN = 8.0        # 끊김 없이 이어지는 말도 문장이 바뀌면 이 길이마다 줌을 바꿀 수 있다
-SHOT_MAX = 14.0       # 문장이 길면 이 길이를 넘을 때 단어 사이에서라도 줌을 바꾼다
-HOOK_SHOT = (3.0, 6.0)  # 콜드 오픈은 조금 더 빠르게
+SHOT_MIN = 8.0        # 긴 구간은 문장 경계에서 클립을 나눈다 (줌 지정 단위)
+SHOT_MAX = 14.0
 
 
 def snap(t: float) -> float:
@@ -74,13 +74,10 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict,
     word_starts = [w["s"] for w in words]
 
     # 1. 콜드 오픈
-    k = 0
-    for h in plan["hooks"]:
+    for k, h in enumerate(plan["hooks"]):
         s, e = _sentence_span(sentences, h["from"], h["to"])
         for a, b in keep_ranges(words, s, e, silences):
-            for j, (sa, sb) in enumerate(_shots(a, b, sentence_starts, word_starts, *HOOK_SHOT)):
-                tl.clips.append(Clip("hook", sa, sb, zoom=HOOK_ZOOMS[k % 2], joined=j > 0))
-                k += 1
+            tl.clips.append(Clip("hook", a, b, zoom=HOOK_ZOOMS[k % 2]))
 
     # 2. 인트로 범퍼 (콜드 오픈이 있을 때만)
     if tl.clips:
@@ -107,16 +104,12 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict,
                 body[-1][1] = min(body[-1][1], a)
             body.append([a, b, chapter])
 
-    zoom, held = ZOOM_WIDE, 0.0
+    punch = [(sentences[i].start, sentences[i].end) for i in plan.get("punch", []) if 0 <= i < len(sentences)]
     for a, b, chapter in body:
         for j, (sa, sb) in enumerate(_shots(a, b, sentence_starts, word_starts)):
-            ch = chapter if j == 0 else None
-            if ch is not None:
-                zoom, held = ZOOM_WIDE, 0.0
-            elif held >= MIN_ZOOM_HOLD:
-                zoom, held = (ZOOM_TIGHT if zoom == ZOOM_WIDE else ZOOM_WIDE), 0.0
-            tl.clips.append(Clip("body", sa, sb, zoom=zoom, chapter=ch, joined=j > 0))
-            held += sb - sa
+            mid = (sa + sb) / 2
+            zoom = ZOOM_TIGHT if any(ps <= mid < pe for ps, pe in punch) else ZOOM_WIDE
+            tl.clips.append(Clip("body", sa, sb, zoom=zoom, chapter=chapter if j == 0 else None, joined=j > 0))
 
     # 문장 단위로 따로 잘라서 생긴 겹침을 정리하고 프레임에 맞춘다
     t = 0.0

@@ -93,10 +93,28 @@ def _clean(text: str) -> str:
     return text.rstrip(".,…")
 
 
+def _visible(start: float, end: float, hide: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    """[start, end]에서 hide 구간을 뺀 나머지 중 0.4초 이상인 조각."""
+    out, cur = [], start
+    for s, e in sorted(hide):
+        if e <= cur or s >= end:
+            continue
+        if s > cur:
+            out.append((cur, s))
+        cur = max(cur, e)
+    if cur < end:
+        out.append((cur, end))
+    return [(a, b) for a, b in out if b - a >= 0.4]
+
+
 def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
-              fonts: tuple[str, str] = ("Pretendard ExtraBold", "Pretendard ExtraBold")
-              ) -> tuple[str, list[tuple[float, str]]]:
-    """ASS 자막 문자열과 효과음 이벤트 [(시간, 종류)] 를 돌려준다."""
+              fonts: tuple[str, str] = ("Pretendard ExtraBold", "Pretendard ExtraBold"),
+              hide: list[tuple[float, float]] = ()) -> tuple[str, list[tuple[float, str]]]:
+    """ASS 자막 문자열과 효과음 이벤트 [(시간, 종류)] 를 돌려준다.
+
+    hide: 슬라이드가 화면을 덮는 구간. 슬라이드 글자가 곧 자막이라 이 동안은 아래 자막과 챕터 라벨을 숨긴다.
+    """
+    hide = list(hide)
     events: list[str] = []
     sfx: list[tuple[float, str]] = []
     keywords = [k for k in plan.get("keywords", []) if k.strip()]
@@ -121,8 +139,10 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
                 hit = True
             else:
                 parts.append(t)
-        add(1, start, end, "Cap", " ".join(parts))
-        if hit and start - last_pop >= POP_MIN_GAP:
+        shown = _visible(start, end, hide)
+        for a, b in shown:
+            add(1, a, b, "Cap", " ".join(parts))
+        if shown and hit and start - last_pop >= POP_MIN_GAP:
             sfx.append((start, "pop"))
             last_pop = start
 
@@ -150,12 +170,14 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
     for n, (t0, ch) in enumerate(starts):
         t1 = starts[n + 1][0] if n + 1 < len(starts) else total
         label = esc(chapters[ch]["label"])
-        if t0 > 1.0:  # 본편 첫 챕터는 범퍼 직후라 큰 글씨 생략
+        covered = any(s <= t0 + 0.05 < e for s, e in hide)
+        if t0 > 1.0 and not covered:  # 본편 첫 챕터는 범퍼 직후라 큰 글씨 생략. 표지 슬라이드가 덮으면 생략
             add(3, t0, t0 + 1.6, "Big",
                 "{\\fad(80,160)\\pos(960,230)\\fscx80\\fscy80\\t(0,140,\\fscx100\\fscy100)}"
                 f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")
             sfx.append((t0, "whoosh"))
-        add(2, t0 + (1.6 if t0 > 1.0 else 0), t1, "Label", f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")
+        for a, b in _visible(t0 + (1.6 if t0 > 1.0 and not covered else 0), t1, hide):
+            add(2, a, b, "Label", f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")
 
     # 마지막 구독 안내
     if total > 30:
