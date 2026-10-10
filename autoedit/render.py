@@ -13,14 +13,26 @@ W, H = 1920, 1080
 SR = 48000
 FONTS_DIR = Path(__file__).resolve().parent.parent / "assets" / "fonts"
 
-# 효과음 (ffmpeg 필터로 직접 합성한다)
+# 효과음 (ffmpeg 필터로 직접 합성한다). 같은 소리가 반복되면 귀에 거슬려서 종류마다 변형을 여러 개 두고 돌려 쓴다.
 SFX_SOURCES = {
-    "whoosh": "anoisesrc=color=pink:duration=0.5:amplitude=0.6,highpass=f=500,lowpass=f=6000,"
-              "afade=t=in:d=0.28:curve=exp,afade=t=out:st=0.28:d=0.22,volume=0.55",
-    "pop": "aevalsrc='0.5*sin(2*PI*(500+1100*exp(-35*t))*t)*exp(-28*t)':d=0.16",
-    "ding": "aevalsrc='0.35*(sin(2*PI*1318.5*t)+0.5*sin(2*PI*1975.5*t))*exp(-5*t)':d=0.9",
+    "whoosh": [
+        "anoisesrc=color=pink:duration=0.5:amplitude=0.6:seed=1,highpass=f=500,lowpass=f=6000,"
+        "afade=t=in:d=0.28:curve=exp,afade=t=out:st=0.28:d=0.22,volume=0.55",
+        "anoisesrc=color=brown:duration=0.6:amplitude=0.7:seed=2,highpass=f=250,lowpass=f=3500,"
+        "afade=t=in:d=0.36:curve=exp,afade=t=out:st=0.36:d=0.24,volume=0.7",
+        "anoisesrc=color=white:duration=0.4:amplitude=0.4:seed=3,highpass=f=1200,lowpass=f=9000,"
+        "afade=t=in:d=0.22:curve=exp,afade=t=out:st=0.22:d=0.18,volume=0.45",
+    ],
+    "pop": [
+        "aevalsrc='0.5*sin(2*PI*(500+1100*exp(-35*t))*t)*exp(-28*t)':d=0.16",
+        "aevalsrc='0.45*sin(2*PI*(380+700*exp(-30*t))*t)*exp(-24*t)':d=0.18",
+        "aevalsrc='0.4*sin(2*PI*(900+900*exp(-45*t))*t)*exp(-34*t)':d=0.13",
+    ],
+    "ding": [
+        "aevalsrc='0.35*(sin(2*PI*1318.5*t)+0.5*sin(2*PI*1975.5*t))*exp(-5*t)':d=0.9",
+    ],
 }
-SFX_GAIN = {"whoosh": 0.7, "pop": 0.6, "ding": 0.5}
+SFX_GAIN = {"whoosh": 0.6, "pop": 0.45, "ding": 0.5}
 
 
 def run(cmd: list[str]):
@@ -82,10 +94,13 @@ def _read_pcm(cmd_input: list[str]) -> np.ndarray:
 
 def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path):
     """효과음 이벤트를 한 트랙(wav)에 배치한다."""
-    sounds = {k: _read_pcm(["-f", "lavfi", "-i", src]) * SFX_GAIN[k] for k, src in SFX_SOURCES.items()}
+    sounds = {k: [_read_pcm(["-f", "lavfi", "-i", src]) * SFX_GAIN[k] for src in srcs]
+              for k, srcs in SFX_SOURCES.items()}
     track = np.zeros((int(duration * SR) + SR, 2), np.float32)
+    used = {k: 0 for k in sounds}
     for t, kind in events:
-        snd = sounds[kind]
+        snd = sounds[kind][used[kind] % len(sounds[kind])]
+        used[kind] += 1
         # 휙 소리는 화면 전환 직전에 정점이 오도록 조금 당긴다
         start = max(0, int((t - (0.25 if kind == "whoosh" else 0)) * SR))
         end = min(len(track), start + len(snd))

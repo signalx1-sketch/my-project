@@ -17,11 +17,13 @@ from .timeline import Timeline
 IMAGE_EXT = {".jpg", ".jpeg", ".jfif", ".png", ".webp", ".bmp"}
 VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 
-FULL_SEC = 4.0       # 전체 화면 길이
+FULL_SEC = 3.2       # 전체 화면 길이 (짧게 자주 바꿔야 지루하지 않다)
 SIDE_SEC = 3.5       # 팝업 길이
-FULL_GAP = 14.0      # 전체 화면 사이 최소 간격
-SIDE_GAP = 8.0       # 팝업 사이 최소 간격
-FULL_RATIO = 0.15    # 본편 중 전체 화면 비율 상한
+FULL_GAP = 7.0       # 전체 화면 시작 사이 최소 간격
+SIDE_GAP = 10.0      # 팝업 사이 최소 간격
+FULL_RATIO = 0.35    # 본편 중 전체 화면 비율 상한
+FACE_MIN = 2.5       # 자료 화면 사이에 얼굴이 최소 이만큼은 보이게
+FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 피한다
 
 
@@ -134,23 +136,78 @@ def _tokens(text: str) -> set[str]:
     return {t for t in re.findall(r"[가-힣A-Za-z0-9]{2,}", text)}
 
 
+# 파일명에 흔히 붙지만 대본 내용과는 상관없는 단어
+STOP = {"영상", "사진", "도표", "캡처", "확인필요", "여성", "남성", "클로즈업", "정면", "측면", "미소", "표정",
+        "얼굴", "피부", "제품", "설명", "비교", "모습", "장면", "하는", "있는", "바르는", "보는", "든", "들고",
+        "3D", "일러스트", "vs", "논문", "기사", "유튜브", "썸네일", "목록",
+        "구독", "좋아요", "피켓", "흔들기", "알림"}  # 끝인사 문장에 엉뚱한 자료가 붙지 않게
+FILL_EVERY = 8.0  # 긴 문장은 이 간격마다 채움용 전체 화면 후보를 더 낸다
+# 화면 전체보다 얼굴 옆 팝업이 어울리는 자료 (글씨가 있거나 가리키는 대상)
+SIDE_HINTS = ("도표", "캡처", "전후", "치료전", "치료후", "제품", "논문", "현미경")
+
+
+def _content_tokens(a: Asset) -> list[str]:
+    return [t for t in re.findall(r"[가-힣A-Za-z0-9]{2,}", a.desc) if t not in STOP and not t.isdigit()]
+
+
+def family(a: Asset) -> str:
+    """비슷한 자료끼리 묶는 이름. '사진_욕조_홍조_여성_정면_3' → '사진 욕조 홍조'."""
+    kind = a.id.split("/")[-1].split("_")[0]
+    return " ".join([kind] + _content_tokens(a)[:2])
+
+
+def default_mode(a: Asset) -> str:
+    return "side" if a.kind == "image" and any(h in a.id for h in SIDE_HINTS) else "full"
+
+
 def suggest_with_rules(sentences: list[Sentence], assets: list[Asset]) -> list[dict]:
-    """API 없이: 파일명/태그의 단어가 문장에 나오면 그 문장에 배치한다."""
+    """API 없이: 파일명/태그의 단어가 문장에 나오면 그 문장에 배치할 후보로 낸다.
+
+    드문 단어가 맞을수록 점수가 높다. 문장마다 점수 순으로 여러 후보를 내고,
+    맞는 자료가 없는 문장에는 영상 전체 주제와 가까운 자료를 낮은 순위로 낸다 (전체 화면이 자주 바뀌도록).
+    실제로 쓸지는 place()가 간격/다양성 규칙으로 고른다.
+    """
+    import math
+
+    toks = {a.id: set(_content_tokens(a)) for a in assets}
+    df: dict[str, int] = {}
+    for ts in toks.values():
+        for t in ts:
+            df[t] = df.get(t, 0) + 1
+    n = len(assets) or 1
+
+    def score(a: Asset, text: str) -> float:
+        return sum(math.log(1 + n / df[t]) for t in toks[a.id] if t in text)
+
+    whole = " ".join(s.text for s in sentences)
+    topic = sorted(assets, key=lambda a: -score(a, whole))
+    topic = [a for a in topic if score(a, whole) > 0][:150]
+
     out = []
-    for a in assets:
-        toks = _tokens(a.desc)
-        for s in sentences:
-            if any(t in s.text for t in toks):
-                out.append({"at": s.idx, "asset": a.id, "mode": "full" if a.kind == "video" else "side"})
-                break
+    for i, s in enumerate(sentences):
+        ctx = s.text
+        ranked = sorted(((score(a, ctx), a) for a in assets), key=lambda x: -x[0])
+        # 팝업(도표/캡처)은 정확히 맞을 때만, 전체 화면은 조금 느슨하게
+        local = [a for sc, a in ranked if sc >= (4.0 if default_mode(a) == "side" else 2.0)][:4]
+        for a in local:
+            out.append({"at": s.idx, "asset": a.id, "mode": default_mode(a)})
+        # 주제 자료는 전체 화면용으로만, 문장마다 다른 것부터 돌려가며 낸다. 긴 문장은 중간에도 낸다
+        fill = [a for a in topic if default_mode(a) == "full" and a not in local]
+        offsets = [k * FILL_EVERY for k in range(max(1, int((s.end - s.start) // FILL_EVERY) + 1))]
+        for j, off in enumerate(offsets):
+            for k in range(min(3, len(fill))):
+                a = fill[(i * 7 + j * 3 + k) % len(fill)]
+                out.append({"at": s.idx, "offset": off, "asset": a.id, "mode": "full", "filler": True})
     return out
 
 
 def _out_time(src_t: float, tl: Timeline) -> float | None:
+    """원본 시간을 출력 시간으로. 잘려 나간 무음 구간이면 바로 다음 클립 시작으로 당긴다."""
     for c in tl.clips:
         if c.kind == "body" and c.src_start - 0.05 <= src_t < c.src_end:
             return c.out_start + max(0.0, src_t - c.src_start)
-    return None
+    nxt = [c for c in tl.clips if c.kind == "body" and src_t < c.src_start < src_t + 1.5]
+    return min(nxt, key=lambda c: c.src_start).out_start if nxt else None
 
 
 def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset], tl: Timeline) -> list[Placement]:
@@ -166,12 +223,17 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
 
     placed: list[Placement] = []
     used: set[str] = set()
-    for item in sorted(plan_broll, key=lambda x: x["at"]):
+    # 같은 문장 안에서는 계획에 적힌 순서(점수 순)를 지키고, 내용이 맞는 자료를 채움용보다 먼저 본다
+    order = sorted(range(len(plan_broll)), key=lambda k: (plan_broll[k]["at"], float(plan_broll[k].get("offset", 0)),
+                                                          bool(plan_broll[k].get("filler")), k))
+    for item in (plan_broll[k] for k in order):
         a = by_id.get(item.get("asset", ""))
         if not a or a.id in used or not 0 <= item["at"] < len(sentences):
             continue
+        if family(a) in {family(p.asset) for p in placed[-FAMILY_RECENT:]}:
+            continue
         mode = item.get("mode", "full")
-        t = _out_time(sentences[item["at"]].start, tl)
+        t = _out_time(sentences[item["at"]].start + float(item.get("offset", 0)), tl)
         if t is None:
             continue
         # 챕터 제목이 크게 뜨는 구간은 건너뛴다
@@ -186,7 +248,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         gap = SIDE_GAP if mode == "side" else FULL_GAP
         if any(p.mode == mode and abs(p.start - t) < gap for p in placed):
             continue
-        if any(p.start < t + dur + 0.5 and t < p.start + p.dur + 0.5 for p in placed):
+        if any(p.start < t + dur + FACE_MIN and t < p.start + p.dur + FACE_MIN for p in placed):
             continue
         if mode == "full":
             if sum(p.dur for p in placed if p.mode == "full") + dur > full_budget:

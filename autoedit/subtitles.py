@@ -4,10 +4,10 @@ from dataclasses import dataclass
 from .cuts import _ends_sentence, is_filler
 from .timeline import Timeline
 
-MAX_CHARS = 15      # 한 줄 최대 글자 수 (공백 제외)
+MAX_CHARS = 14      # 한 줄 최대 글자 수 (공백 제외)
 MAX_WORDS = 6       # 한 줄 최대 어절 수
 LINE_GAP = 0.5      # 출력 시간 기준으로 이만큼 비면 줄을 끊는다
-POP_MIN_GAP = 8.0   # 강조 효과음 최소 간격
+POP_MIN_GAP = 20.0  # 강조 효과음 최소 간격 (자주 나면 거슬린다)
 CTA_SEC = 6.0       # 마지막 구독 안내 표시 시간
 
 YELLOW = "&H0000D2FF&"  # #FFD200 (ASS는 BGR 순서)
@@ -21,12 +21,12 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,Pretendard ExtraBold,68,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,5,2,2,80,80,78,1
-Style: Label,Pretendard Bold,40,&H00FFFFFF,&H00FFFFFF,&H38141414,&H38141414,0,0,0,0,100,100,0,0,3,14,0,7,56,56,52,1
+Style: Cap,{cap},86,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,6,2,2,80,80,70,1
+Style: Label,{big},44,&H00FFFFFF,&H00FFFFFF,&H38141414,&H38141414,0,0,0,0,100,100,0,0,3,14,0,7,56,56,52,1
 Style: Logo,Pretendard Bold,34,&H10FFFFFF,&H10FFFFFF,&H50000000,&H00000000,0,0,0,0,100,100,0,0,1,3,1,9,56,56,56,1
-Style: Big,Pretendard ExtraBold,96,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,7,3,5,120,120,0,1
-Style: Sub,Pretendard Bold,44,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,5,120,120,0,1
-Style: Cta,Pretendard ExtraBold,52,&H00FFFFFF,&H00FFFFFF,&H202020E0,&H202020E0,0,0,0,0,100,100,0,0,3,18,0,8,80,80,70,1
+Style: Big,{big},110,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,7,3,5,120,120,0,1
+Style: Sub,{big},48,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,5,120,120,0,1
+Style: Cta,{big},58,&H00FFFFFF,&H00FFFFFF,&H202020E0,&H202020E0,0,0,0,0,100,100,0,0,3,18,0,8,80,80,70,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -93,7 +93,9 @@ def _clean(text: str) -> str:
     return text.rstrip(".,…")
 
 
-def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str) -> tuple[str, list[tuple[float, str]]]:
+def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
+              fonts: tuple[str, str] = ("Pretendard ExtraBold", "Pretendard ExtraBold")
+              ) -> tuple[str, list[tuple[float, str]]]:
     """ASS 자막 문자열과 효과음 이벤트 [(시간, 종류)] 를 돌려준다."""
     events: list[str] = []
     sfx: list[tuple[float, str]] = []
@@ -161,4 +163,5 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str) -> tupl
             "{\\fad(150,200)\\fscx80\\fscy80\\t(0,180,\\fscx100\\fscy100)}구독 · 좋아요 · 알림설정")
         sfx.append((total - CTA_SEC, "ding"))
 
-    return HEADER + "\n".join(events) + "\n", sorted(sfx)
+    header = HEADER.replace("{cap}", fonts[0]).replace("{big}", fonts[1])
+    return header + "\n".join(events) + "\n", sorted(sfx)

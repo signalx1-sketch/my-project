@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from . import broll, cuts, plan as plan_mod, render, subtitles, timeline, transcribe
+from . import broll, cuts, fonts, plan as plan_mod, render, subtitles, timeline, transcribe
 
 
 def load_dotenv(path: Path):
@@ -75,8 +75,9 @@ def main():
         placements = broll.place(items, sentences, assets, tl)
         full = [p for p in placements if p.mode == "full"]
         print(f"  자료 화면 {len(placements)}개 배치 (전체 화면 {len(full)}개, {sum(p.dur for p in full):.0f}초 / 팝업 {len(placements) - len(full)}개)")
-    ass, sfx = subtitles.build_ass(words, tl, plan, args.channel)
-    sfx = sorted(sfx + [(p.start, "whoosh" if p.mode == "full" else "pop") for p in placements])
+    ass, sfx = subtitles.build_ass(words, tl, plan, args.channel, fonts.caption_fonts())
+    # 전체 화면 자료는 화면 전환 자체가 효과라서 소리를 넣지 않고, 얼굴 옆 팝업에만 작게 넣는다
+    sfx = sorted(sfx + [(p.start, "pop") for p in placements if p.mode == "side"])
     src_len = sentences[-1].end if sentences else 0
     print(f"  {src_len / 60:.1f}분 → {tl.duration / 60:.1f}분 (클립 {len(tl.clips)}개, 효과음 {len(sfx)}개)")
     (work / "timeline.json").write_text(
