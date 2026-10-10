@@ -19,16 +19,16 @@ IMAGE_EXT = {".jpg", ".jpeg", ".jfif", ".png", ".webp", ".bmp"}
 VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 
 FACE_TARGET = 0.2    # 본편에서 얼굴이 그대로 보이는 시간 비율 목표 (나머지는 슬라이드/자료 화면)
-FULL_SEC = 3.2       # 전체 화면 자료 길이 (짧게 자주 바꿔야 지루하지 않다)
+FULL_SEC = 4.0       # 전체 화면 자료 길이 (자청 채널처럼 3.5~5.5초마다 화면이 바뀌게)
 FULL_MIN = 2.0
-FULL_MAX = 4.5
-SLIDE_MAX = 6.0      # 슬라이드는 다음 슬라이드가 나올 때까지, 최대 이만큼
+FULL_MAX = 5.5
+SLIDE_MAX = 5.5      # 슬라이드는 다음 슬라이드가 나올 때까지, 최대 이만큼 (화면이 3.5~5.5초마다 바뀌게)
 SLIDE_MIN = 1.5
-SIDE_SEC = 3.5       # 팝업 길이
+SIDE_SEC = 3.0       # 팝업 길이
 SIDE_MIN = 2.2
-SIDE_GAP = 8.0       # 팝업 사이 최소 간격
+SIDE_GAP = 12.0      # 팝업 사이 최소 간격
 FACE_KEEP = 1.5      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
-FACE_LONG = 7.0      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
+FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 얼굴로 둔다
@@ -148,6 +148,7 @@ STOP = {"영상", "사진", "도표", "캡처", "확인필요", "여성", "남�
         "얼굴", "피부", "제품", "설명", "비교", "모습", "장면", "하는", "있는", "바르는", "보는", "든", "들고",
         "3D", "일러스트", "vs", "논문", "기사", "유튜브", "썸네일", "목록",
         "구독", "좋아요", "피켓", "흔들기", "알림"}  # 끝인사 문장에 엉뚱한 자료가 붙지 않게
+OUTRO_WORDS = ("구독", "좋아요", "알림", "하이프", "댓글", "영상은 여기까지", "고맙습니다", "감사합니다")
 FILL_EVERY = 6.0  # 긴 문장은 이 간격마다 채움용 전체 화면 후보를 더 낸다
 # 화면 전체보다 얼굴 옆 팝업이 어울리는 자료 (글씨가 있거나 가리키는 대상)
 SIDE_HINTS = ("도표", "캡처", "전후", "치료전", "치료후", "제품", "논문", "현미경")
@@ -297,6 +298,12 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
     # 챕터 시작은 얼굴로 (큰 챕터 제목이 뜬다). 슬라이드가 이미 덮은 챕터는 제외
     keep_face = [(c, c + AVOID_AFTER_CHAPTER) for c in bd.chapters if bd.free_at(c)]
     keep_face.append((bd.start, bd.start + 1.5))
+    # 구독/좋아요/하이프 같은 끝인사는 얼굴로 (엉뚱한 자료가 붙지 않게)
+    for snt in sentences:
+        if any(w in snt.text for w in OUTRO_WORDS):
+            a, b = _out_time(snt.start, tl), _out_time(max(snt.start, snt.end - 0.05), tl)
+            if a is not None and b is not None and b > a:
+                keep_face.append((a, b + 0.3))
 
     def fit_full(a: Asset, t: float, want: float) -> tuple[float, float] | None:
         """t 근처에서 덮을 수 있는 곳(얼굴 구간 중 챕터 시작/팝업 자리 제외)에 들어갈 (시작, 길이).

@@ -32,6 +32,8 @@ def main():
                    help="자료 파일 이름을 내용 설명으로 바꾼다 (원래 이름은 rename_log.json에 남음)")
     p.add_argument("--broll", type=Path, help="자료 화면 배치 계획 JSON [{at, asset, mode}]")
     p.add_argument("--slides", type=Path, help="발표 슬라이드(pptx). 말하는 순간에 맞춰 화면 전체에 띄운다")
+    p.add_argument("--slide-font", choices=["readable", "original"], default="readable",
+                   help="슬라이드 글꼴: readable(Pretendard, 작은 글씨 키움) 또는 original(파일에 지정된 글꼴)")
     p.add_argument("--face", type=float, default=broll.FACE_TARGET,
                    help="본편에서 얼굴이 그대로 보이는 시간 비율 목표 (기본 0.2)")
     p.add_argument("--channel", default="더마허브", help="우상단 로고 글자")
@@ -63,7 +65,7 @@ def main():
     tl = timeline.build(words, sentences, plan, silences)
     placements, slide_items, items, assets = [], [], [], []
     if args.slides:
-        sl = slides_mod.load(args.slides.resolve(), work)
+        sl = slides_mod.load(args.slides.resolve(), work, readable=args.slide_font == "readable")
         matched = slides_mod.match(sl, sentences, words, plan.get("chapters", []))
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}", m["slide"].path, "slide", 0.0,
                                              m["slide"].text), "t": m["t"]} for m in matched]

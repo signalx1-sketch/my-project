@@ -19,6 +19,12 @@ KNOWN_FONTS = {
     "SB Aggro": [f"{NOONNU}/noonfonts_2108/main/SBAggro{w}.woff" for w in "BML"],
     "TmonMonsori": [f"{NOONNU}/noonfonts_two/master/TmonMonsori.woff"],
 }
+FONTS_DIR = Path(__file__).resolve().parent.parent / "assets" / "fonts"
+# 가독성 우선 모드에서 쓸 폰트: 큰 글씨는 Pretendard ExtraBold, 작은 글씨는 Pretendard Bold
+READABLE = ("Pretendard ExtraBold", "Pretendard")
+SMALL_PT = 20      # 이보다 작은 글씨(논문 인용, 출처)는 영상에서 안 읽혀서 키운다
+SMALL_SCALE = 1.6  # 기본 배율. 공간이 남으면 2배까지 키운다
+CONTENT_BOTTOM = 0.83  # 슬라이드 내용은 여기까지만 (아래는 자막 자리)
 SCORE_MIN = 0.12  # 이보다 덜 겹치면 맞는 문장이 없다고 본다
 SKIP_SLIDE = -0.05  # 슬라이드를 건너뛰는 비용 (조금이라도 맞으면 쓰는 쪽을 택한다)
 
@@ -93,23 +99,118 @@ def _body_text(pptx: Path) -> list[str]:
     return out
 
 
-def load(pptx: Path, work: Path) -> list[Slide]:
-    """pptx → PDF → 1920x1080 PNG. 이미 만들어 둔 이미지가 있으면 다시 쓴다."""
+def _install_pretendard():
+    have = subprocess.run(["fc-list", ":", "family"], capture_output=True, text=True).stdout
+    if "Pretendard ExtraBold" in have:
+        return
+    FONT_DIR.mkdir(parents=True, exist_ok=True)
+    for f in FONTS_DIR.glob("Pretendard-*.otf"):
+        shutil.copy(f, FONT_DIR / f.name)
+    subprocess.run(["fc-cache", "-f"], capture_output=True)
+
+
+def _text_height_pt(shape, wrap_pt: float) -> float:
+    """글자 수로 대략의 줄 수를 세서 상자에 필요한 높이(pt)를 구한다."""
+    h = 0.0
+    for p in shape.text_frame.paragraphs:
+        size = max((r.font.size.pt for r in p.runs if r.font.size), default=18)
+        width = sum(size * (1.0 if "\uac00" <= ch <= "\ud7a3" else 0.56) for r in p.runs for ch in r.text)
+        lines = max(1, -(-width // max(wrap_pt, 1)))
+        h += lines * size * 1.3
+    return h + 8
+
+
+def restyle(pptx: Path, out: Path):
+    """슬라이드를 영상용으로 읽기 쉽게 고친 사본을 만든다.
+
+    - 글꼴을 Pretendard로 바꾼다 (화면에서 획이 뭉치지 않는다)
+    - 30pt보다 작은 글씨가 있는 장(논문 제목, 원문 인용, 출처)은 그 글씨들을 키우고 아래 상자들을 밀어 내린다.
+      아래 자막 자리(화면 아래 16%)를 침범하지 않는 가장 큰 배율을 고른다
+    - 맨 아래 꼬리말(섹션 이름, 쪽번호)은 지운다 (영상에서는 자막이 그 자리에 온다)
+    """
+    from pptx import Presentation
+    from pptx.oxml.ns import qn
+    from pptx.util import Pt
+
+    prs = Presentation(str(pptx))
+    H = prs.slide_height
+    limit = H * CONTENT_BOTTOM
+    for slide in prs.slides:
+        for sh in list(slide.shapes):
+            if sh.top is not None and sh.top >= H * 0.92:
+                sh._element.getparent().remove(sh._element)
+        texts = sorted((sh for sh in slide.shapes if sh.has_text_frame and sh.text_frame.text.strip()),
+                       key=lambda sh: sh.top)
+        runs = [(sh, r, r.font.size.pt if r.font.size else 18.0)
+                for sh in texts for p in sh.text_frame.paragraphs for r in p.runs]
+        for _, r, _ in runs:
+            rpr = r._r.get_or_add_rPr()
+            for tag in ("a:latin", "a:ea", "a:cs"):
+                el = rpr.find(qn(tag))
+                if el is None:
+                    el = rpr.makeelement(qn(tag), {})
+                    rpr.append(el)
+        # 머리말(맨 위 상자)은 그대로 두고, 작은 글씨가 있는 장만 키운다
+        small = [x for x in runs if x[2] < SMALL_PT and x[0] is not texts[0]]
+        if small:
+            grow = [x for x in runs if x[2] < 30 and x[0] is not texts[0]]
+            boxes = [sh for sh in texts if any(x[0] is sh for x in grow)]
+            orig = {id(sh): (sh.top, sh.height) for sh in texts}
+            for scale in (2.0, 1.8, SMALL_SCALE, 1.45, 1.3, 1.15, 1.0):
+                for sh, r, size in grow:
+                    r.font.size = Pt(round(size * scale))
+                bottom = boxes[0].top
+                for sh in texts:
+                    top0, h0 = orig[id(sh)]
+                    if top0 < orig[id(boxes[0])][0]:
+                        continue
+                    # 원래 자리보다 위로는 올리지 않되, 커진 만큼 아래 상자들을 바짝 붙여 쌓는다
+                    sh.top = bottom if sh is not boxes[0] else top0
+                    sh.height = int(_text_height_pt(sh, sh.width / 12700) * 12700)
+                    bottom = sh.top + sh.height + 90000
+                if bottom <= limit:
+                    break
+            # 인용 옆 세로 막대 같은 장식선은 옮긴 상자들 높이에 맞춘다
+            for sh in slide.shapes:
+                if not (sh.has_text_frame and sh.text_frame.text.strip()) and sh.width is not None and sh.width < 100000:
+                    inside = [m for m in texts if orig[id(m)][0] >= sh.top - 10000]
+                    if inside:
+                        sh.top = min(m.top for m in inside)
+                        sh.height = max(m.top + m.height for m in inside) - sh.top
+        for _, r, _ in runs:
+            face = READABLE[0] if (r.font.size.pt if r.font.size else 18) >= 30 else READABLE[1]
+            for tag in ("a:latin", "a:ea", "a:cs"):
+                r._r.get_or_add_rPr().find(qn(tag)).set("typeface", face)
+    prs.save(str(out))
+
+
+def load(pptx: Path, work: Path, readable: bool = True) -> list[Slide]:
+    """pptx → PDF → 1920x1080 PNG. 이미 만들어 둔 이미지가 있으면 다시 쓴다.
+
+    readable이면 restyle()로 글꼴과 작은 글씨를 고친 사본을 그린다. 아니면 원본 글꼴 그대로.
+    """
     folder = work / "slides"
     pngs = sorted(folder.glob("s-*.png"))
     src = folder / "src"
-    if not pngs or not src.exists() or src.read_text(encoding="utf-8") != str(pptx):
+    key = f"{pptx}|{'readable' if readable else 'original'}"
+    if not pngs or not src.exists() or src.read_text(encoding="utf-8") != key:
         if not shutil.which("soffice"):
             raise RuntimeError("슬라이드를 그리려면 LibreOffice(soffice)가 필요합니다.")
-        _install_fonts(pptx)
         shutil.rmtree(folder, ignore_errors=True)
         folder.mkdir(parents=True)
-        subprocess.run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(folder), str(pptx)],
+        deck = pptx
+        if readable:
+            _install_pretendard()
+            deck = folder / "deck.pptx"
+            restyle(pptx, deck)
+        else:
+            _install_fonts(pptx)
+        subprocess.run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", str(folder), str(deck)],
                        check=True, capture_output=True, timeout=600)
-        pdf = folder / (pptx.stem + ".pdf")
+        pdf = folder / (deck.stem + ".pdf")
         subprocess.run(["pdftoppm", "-png", "-scale-to-x", "1920", "-scale-to-y", "1080", str(pdf), str(folder / "s")],
                        check=True)
-        src.write_text(str(pptx), encoding="utf-8")
+        src.write_text(key, encoding="utf-8")
         pngs = sorted(folder.glob("s-*.png"))
     texts = _body_text(pptx)
     return [Slide(i + 1, p, texts[i] if i < len(texts) else "") for i, p in enumerate(pngs)]

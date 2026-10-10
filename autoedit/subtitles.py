@@ -112,7 +112,8 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
               hide: list[tuple[float, float]] = ()) -> tuple[str, list[tuple[float, str]]]:
     """ASS 자막 문자열과 효과음 이벤트 [(시간, 종류)] 를 돌려준다.
 
-    hide: 슬라이드가 화면을 덮는 구간. 슬라이드 글자가 곧 자막이라 이 동안은 아래 자막과 챕터 라벨을 숨긴다.
+    hide: 슬라이드가 화면을 덮는 구간. 슬라이드에 섹션 이름이 있어서 이 동안은 좌상단 챕터 라벨과
+    큰 챕터 제목을 숨긴다 (아래 자막은 그대로 둔다).
     """
     hide = list(hide)
     events: list[str] = []
@@ -139,10 +140,8 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
                 hit = True
             else:
                 parts.append(t)
-        shown = _visible(start, end, hide)
-        for a, b in shown:
-            add(1, a, b, "Cap", " ".join(parts))
-        if shown and hit and start - last_pop >= POP_MIN_GAP:
+        add(1, start, end, "Cap", " ".join(parts))
+        if hit and start - last_pop >= POP_MIN_GAP:
             sfx.append((start, "pop"))
             last_pop = start
 
