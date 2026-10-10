@@ -31,12 +31,6 @@
  },
  {
   "at": 4,
-  "offset": 5.0,
-  "asset": "사진_스테로이드_주사_약병_주사기.jpg",
-  "mode": "full"
- },
- {
-  "at": 4,
   "offset": 9.0,
   "asset": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
   "mode": "full"
@@ -133,12 +127,6 @@
  },
  {
   "at": 16,
-  "offset": 0.0,
-  "asset": "캡처_논문_스테로이드_유발_로사세아_200명_임상.jpg",
-  "mode": "full"
- },
- {
-  "at": 16,
   "offset": 6.0,
   "asset": "영상_연구실_실험_기기_여성_연구원.mp4",
   "mode": "full"
@@ -181,12 +169,6 @@
  },
  {
   "at": 22,
-  "offset": 0.0,
-  "asset": "사진_프로토픽_엘리델_제품.jpg",
-  "mode": "full"
- },
- {
-  "at": 22,
   "offset": 4.0,
   "asset": "영상_다리_습진_랩_감는_여성.mp4",
   "mode": "full"
@@ -201,12 +183,6 @@
   "at": 23,
   "offset": 6.0,
   "asset": "영상_침대_다리_랩_감는_여성_습진.mp4",
-  "mode": "full"
- },
- {
-  "at": 24,
-  "offset": 0.0,
-  "asset": "사진_엘리델_프로토픽_제품_상자.jpg",
   "mode": "full"
  },
  {
@@ -247,12 +223,6 @@
  },
  {
   "at": 28,
-  "offset": 0.0,
-  "asset": "사진_듀피젠트_린버크_제품.jpg",
-  "mode": "full"
- },
- {
-  "at": 28,
   "offset": 5.0,
   "asset": "캡처_듀피젠트_약가_기준표.jpg",
   "mode": "full"
@@ -273,12 +243,6 @@
   "at": 30,
   "offset": 2.0,
   "asset": "영상_돋보기로_보는_여드름_구진_피부_클로즈업.mp4",
-  "mode": "full"
- },
- {
-  "at": 30,
-  "offset": 7.0,
-  "asset": "사진_이소티논_10mg_한미_약_상자.jpg",
   "mode": "full"
  },
  {
@@ -355,12 +319,6 @@
  },
  {
   "at": 38,
-  "offset": 0.0,
-  "asset": "사진_이소티논_10mg_한미_여드름_약_제품.jpg",
-  "mode": "full"
- },
- {
-  "at": 38,
   "offset": 5.0,
   "asset": "영상_피지선_모낭_3D_일러스트.mp4",
   "mode": "full"
@@ -381,12 +339,6 @@
   "at": 40,
   "offset": 2.0,
   "asset": "영상_코_각질_지루성피부염_클로즈업.mp4",
-  "mode": "full"
- },
- {
-  "at": 41,
-  "offset": 0.0,
-  "asset": "도표_케토코나졸_샴푸_말라세지아_억제_효과.webp",
   "mode": "full"
  },
  {
@@ -450,12 +402,6 @@
   "mode": "full"
  },
  {
-  "at": 48,
-  "offset": 0.0,
-  "asset": "사진_수란트라_크림_이버멕틴_제품_2.jpg",
-  "mode": "full"
- },
- {
   "at": 50,
   "offset": 0.0,
   "asset": "영상_볼에_크림_바르는_홍조_여성.mp4",
@@ -475,12 +421,6 @@
  },
  {
   "at": 52,
-  "offset": 5.0,
-  "asset": "사진_모낭충_데모덱스_볼_홍조_돋보기.jpg",
-  "mode": "full"
- },
- {
-  "at": 52,
   "offset": 10.0,
   "asset": "영상_피부_위_세균_미생물_3D_클로즈업.mp4",
   "mode": "full"
@@ -489,12 +429,6 @@
   "at": 53,
   "offset": 0.0,
   "asset": "영상_크림_통_들고_볼에_바르는_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 54,
-  "offset": 0.0,
-  "asset": "도표_스테로이드_중단_혈관_확장_피부_기전.webp",
   "mode": "full"
  },
  {
@@ -601,21 +535,9 @@
  },
  {
   "at": 70,
-  "offset": 1.0,
-  "asset": "사진_얼굴_홍조_치료전_치료후_정면_스킨룩스.jpg",
-  "mode": "full"
- },
- {
-  "at": 70,
   "offset": 5.0,
   "asset": "영상_욕실_거울_앞_크림_바르는_여성_미소.mp4",
   "mode": "full"
- },
- {
-  "at": 71,
-  "offset": 0.0,
-  "asset": "캡처_더마허브_고정_댓글_1만원_체험_환불.jpg",
-  "mode": "side"
  },
  {
   "at": 72,
@@ -628,5 +550,245 @@
   "offset": 1.0,
   "asset": "영상_욕조_거품_목욕_홍조_여성_미소.mp4",
   "mode": "full"
+ },
+ {
+  "at": 0,
+  "offset": 3,
+  "asset": "캡처_논문_의사_스테로이드_외용제_처방_인식.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 4,
+  "offset": 0,
+  "asset": "사진_스테로이드_연고_튜브_쌓인_선반_볼에_연고_바르는_여성.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 7,
+  "offset": 2,
+  "asset": "도표_스테로이드_중단_혈관_확장_피부_기전.webp",
+  "mode": "side"
+ },
+ {
+  "at": 8,
+  "offset": 0,
+  "asset": "도표_스테로이드_중독_증상_목록.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 11,
+  "offset": 0,
+  "asset": "사진_스테로이드_주사_약병_주사기.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 14,
+  "offset": 0,
+  "asset": "캡처_유튜브_스테로이드_10년_쓴_환자_인터뷰.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 15,
+  "offset": 8,
+  "asset": "사진_볼_홍조_치료전_치료후_스킨룩스_2.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 20,
+  "offset": 0,
+  "asset": "캡처_스테로이드_사용_기간_빈도_권고.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 21,
+  "offset": 2,
+  "asset": "사진_엘리델_프로토픽_제품_상자.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 22,
+  "offset": 0,
+  "asset": "사진_엘리델_크림_튜브.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 23,
+  "offset": 3,
+  "asset": "캡처_논문_아토피_전신치료_메타분석.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 25,
+  "offset": 0,
+  "asset": "사진_팔_멍_피부_위축_보는_남성.png",
+  "mode": "side"
+ },
+ {
+  "at": 27,
+  "offset": 0,
+  "asset": "사진_프로토픽_엘리델_제품.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 28,
+  "offset": 0,
+  "asset": "사진_듀피젠트_린버크_제품.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 30,
+  "offset": 6,
+  "asset": "사진_이소티논_10mg_한미_약_상자.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 31,
+  "offset": 0,
+  "asset": "사진_이소티논_10mg_한미_여드름_약_제품.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 32,
+  "offset": 2,
+  "asset": "사진_덱사메타손_주사_약_상자.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 34,
+  "offset": 3,
+  "asset": "도표_피부_층별_압력_구조_표피_진피_피하지방.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 36,
+  "offset": 4,
+  "asset": "캡처_논문_국소_스테로이드_부작용_리뷰.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 37,
+  "offset": 0,
+  "asset": "캡처_기사_이소트레티노인_태아_기형_유발.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 38,
+  "offset": 6,
+  "asset": "사진_이소티논_10mg_한미_약_상자_2.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 39,
+  "offset": 0,
+  "asset": "사진_여드름_치료_전후_비교_사진.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 40,
+  "offset": 2,
+  "asset": "도표_케토코나졸_샴푸_말라세지아_억제_효과.webp",
+  "mode": "side"
+ },
+ {
+  "at": 41,
+  "offset": 3,
+  "asset": "사진_말라세지아_곰팡이_현미경.jpeg",
+  "mode": "side"
+ },
+ {
+  "at": 42,
+  "offset": 0,
+  "asset": "도표_지루성_피부염_피부장벽_말라세지아_염증.webp",
+  "mode": "side"
+ },
+ {
+  "at": 44,
+  "offset": 0,
+  "asset": "캡처_MSD_매뉴얼_지루성_피부염.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 46,
+  "offset": 0,
+  "asset": "캡처_NIH_StatPearls_지루성_피부염.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 47,
+  "offset": 3,
+  "asset": "사진_수란트라_크림_이버멕틴_제품.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 49,
+  "offset": 0,
+  "asset": "캡처_논문_모낭충_허브오일_이버멕틴_비교.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 52,
+  "offset": 0,
+  "asset": "사진_모낭충_데모덱스_볼_홍조_돋보기.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 53,
+  "offset": 0,
+  "asset": "사진_수란트라_크림_이버멕틴_제품_2.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 54,
+  "offset": 2,
+  "asset": "도표_스테로이드_과다사용_피부질환_로사세아_습진_피부얇아짐.jfif",
+  "mode": "side"
+ },
+ {
+  "at": 59,
+  "offset": 0,
+  "asset": "도표_테이퍼링_스테로이드_감량_축소.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 62,
+  "offset": 0,
+  "asset": "사진_얼굴_스테로이드_피부염_심한_홍반_구진.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 64,
+  "offset": 0,
+  "asset": "사진_듀피젠트_린버크_제품.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 66,
+  "offset": 0,
+  "asset": "캡처_논문_스테로이드_유발_로사세아_200명_임상.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 67,
+  "offset": 0,
+  "asset": "사진_볼_심한_홍조_치료전_치료후_스킨룩스.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 69,
+  "offset": 0,
+  "asset": "사진_얼굴_홍조_치료전_치료후_정면_스킨룩스.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 74,
+  "offset": 0,
+  "asset": "캡처_12년만에_다시_찾은_환자_인터뷰_치료_전후.jpg",
+  "mode": "side"
+ },
+ {
+  "at": 75,
+  "offset": 0,
+  "asset": "사진_볼_입가_피부염_치료전_치료후_스킨룩스.jpg",
+  "mode": "side"
  }
 ]
