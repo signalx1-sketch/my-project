@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import Callable
 
 from . import media
-from .captions import build_ass, build_parts
+from .captions import build_ass, build_parts, to_output_time
+from .inserts import find_pairs, make_card
 from .config import Options
 from .planner import ShortPlan, plan_shorts
 from .render import cover_image, render
@@ -51,12 +52,29 @@ def render_short(src: str, workdir: Path, analysis: dict, plan: ShortPlan, opts:
     parts = build_parts(plan, words, analysis.get("silences", []),
                         cut_silence=opts.cut_silence, zoom_punch=opts.zoom_punch)
     total = sum(p.dur for p in parts)
-    ass = build_ass(plan, parts, words, layout=opts.layout, total=total, font=opts.font,
+    ass = build_ass(plan, parts, words, layout=opts.layout, total=total, font="",
                     src_w=info["width"], src_h=info["height"] - opts.crop_bottom,
-                    header_style=opts.header_style, cta_text=opts.cta_text)
+                    cta_text=opts.cta_text, style=opts.text_style())
     out = workdir / f"short_{index + 1:02d}.mp4"
+    images, used = [], []
+    for k, ins in enumerate(plan.inserts):
+        t = to_output_time(parts, float(ins["at"]))
+        if t is None:
+            continue
+        dur = min(float(ins.get("duration", 3.0)), max(0.5, total - t))
+        pairs = find_pairs(ins.get("category", ""))
+        pick = ins.get("pick", 0)
+        pair = next((p for p in pairs if p["id"] == str(pick)), None) or \
+            (pairs[pick % len(pairs)] if pairs and isinstance(pick, int) else None)
+        card = make_card(pair and pair["before"], pair and pair["after"], workdir / f"{out.stem}_ba{k + 1}.png",
+                         title=ins.get("title", "실제 치료 전·후"),
+                         note=ins.get("note") or (pair or {}).get("note", "") or ins.get("category", ""))
+        images.append((card, t, dur))
+        used.append({"category": ins.get("category"), "photo": pair["id"] if pair else None,
+                     "at": round(t, 2), "duration": dur})
     render(src, out, parts, ass, layout=opts.layout, src_w=info["width"], src_h=info["height"],
-           has_audio=info["has_audio"], progress_bar=opts.progress_bar, crop_bottom=opts.crop_bottom)
+           has_audio=info["has_audio"], progress_bar=opts.progress_bar, crop_bottom=opts.crop_bottom,
+           images=images)
     cover = out.with_suffix(".jpg")
     cover_image(out, cover, at=min(0.6, total / 2))
     return {
@@ -65,6 +83,7 @@ def render_short(src: str, workdir: Path, analysis: dict, plan: ShortPlan, opts:
         "cover": cover.name,
         "duration": round(total, 2),
         "cuts": len(parts),
+        "before_after": used,
         "plan": plan.to_dict(),
     }
 

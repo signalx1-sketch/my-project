@@ -31,6 +31,9 @@ class ShortPlan:
     score: float = 0.0
     # 원본의 떨어진 구간 여러 개를 이어 붙일 때 [[시작, 끝], ...] (비어 있으면 start~end 한 구간)
     segments: list[list[float]] = field(default_factory=list)
+    # 비포앤애프터 끼워 넣기: [{"category": "아토피", "pick": 0, "at": 원본 기준 초, "duration": 3,
+    #                          "title": "실제 치료 전·후", "note": "치료 6개월"}]
+    inserts: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return asdict(self)

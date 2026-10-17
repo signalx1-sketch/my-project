@@ -95,7 +95,38 @@ def test_build_parts_and_ass():
                     font="Black Han Sans", src_w=1280, src_h=720)
     assert "Style: Hook" in ass and "수익률 10배" in ass
     assert "잠시 후 공개" in ass
-    assert "&H0000F0FF&}습관" in ass  # 강조 단어 노란색
+    assert "&H0000E4FF&}습관" in ass  # 강조 단어 노란색
+
+
+def test_brand_style_and_header_fit():
+    from shorts_editor.styles import TextStyle
+    a = make_analysis()
+    words = [w for s in a["transcript"] for w in s["words"]]
+    plan = ShortPlan(start=20, end=45, title="t", hook_text="팔 안쪽·무릎 뒤 가려움\n[아토피인지 확인법]")
+    parts = build_parts(plan, words, [], cut_silence=True, zoom_punch=True)
+    ass = build_ass(plan, parts, words, layout="blur", total=sum(p.dur for p in parts), font="",
+                    src_w=1920, src_h=940, style=TextStyle())
+    hook = next(l for l in ass.splitlines() if l.startswith("Style: Hook"))
+    size = float(hook.split(",")[2])
+    assert size <= 105  # 350pt × 0.3, 화면 폭에 맞게 축소
+    assert ",&H0000E4FF&," in hook  # 상단 문구 노란색
+    assert "[" not in ass.split("[Events]")[1]  # 대괄호는 지워짐
+    assert "\\fax-0.18" in ass  # 자막 기울임
+
+
+def test_before_after_pairs_and_card(tmp_path):
+    from PIL import Image
+    from shorts_editor.inserts import find_pairs, make_card
+    d = tmp_path / "아토피"
+    d.mkdir()
+    for name in ["01_before.jpg", "01_after.jpg", "02_전.png", "03_before.jpg"]:
+        Image.new("RGB", (300, 400), (200, 100, 100)).save(d / name)
+    (d / "01.txt").write_text("치료 6개월", encoding="utf-8")
+    pairs = find_pairs("아토피", base=tmp_path)
+    assert [p["id"] for p in pairs] == ["01"] and pairs[0]["note"] == "치료 6개월"
+    card = make_card(pairs[0]["before"], pairs[0]["after"], tmp_path / "c.png", note="치료 6개월")
+    assert Image.open(card).size == (1080, 860)
+    assert make_card(None, None, tmp_path / "ph.png").exists()  # 사진 없으면 자리 표시
 
 
 @pytest.fixture(scope="module")
@@ -108,12 +139,17 @@ def sample_video(tmp_path_factory) -> Path:
 
 
 @pytest.mark.parametrize("layout", ["blur", "crop"])
-def test_end_to_end_render(sample_video, tmp_path, layout):
+def test_end_to_end_render(sample_video, tmp_path, layout, monkeypatch):
     work = tmp_path / layout
     work.mkdir()
     a = make_analysis(60.0)
     (work / "analysis.json").write_text(json.dumps(a, ensure_ascii=False), encoding="utf-8")
     opts = Options(count=1, min_len=15, max_len=25, layout=layout, use_ai=False)
+    if layout == "blur":  # 비포앤애프터 자리 표시 카드도 함께 렌더
+        import shorts_editor.pipeline as pipeline
+        plans = heuristic_plan(a, opts)
+        plans[0].inserts = [{"category": "없는폴더", "at": plans[0].start + 3, "duration": 2}]
+        monkeypatch.setattr(pipeline, "plan_shorts", lambda *_: (plans, "heuristic"))
     summary = make_shorts(str(sample_video), work, opts)
     assert summary["method"] == "heuristic"
     s = summary["shorts"][0]

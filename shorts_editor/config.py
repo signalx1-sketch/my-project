@@ -23,8 +23,17 @@ class Options:
     teaser: bool = True            # 클립 속 하이라이트를 맨 앞에 미리보기로 붙이기
     zoom_punch: bool = True        # 컷마다 살짝 줌인/아웃
     progress_bar: bool = True      # 하단 진행바
-    font: str = "Black Han Sans"
-    header_style: str = "bar"      # bar: 상단 검은 바 + 흰/노랑 문구 / float: 배경 없이 외곽선 문구
+    header_style: str = "bar"      # bar: 상단 검은 바 / float: 배경 없이 외곽선 문구
+    # 톤앤매너 (기본값: 더마허브 — 상단 지마켓산스 볼드 노랑 350pt, 자막 지마켓산스 볼드 이탤릭 흰색 250pt)
+    header_font: str = "GmarketSansBold"
+    header_pt: float = 350
+    header_color: str = "#FFE400"  # 비우면 [대괄호]만 노란색
+    caption_font: str = "GmarketSansBold"
+    caption_pt: float = 250
+    caption_color: str = "#FFFFFF"
+    caption_italic: bool = True
+    caption_highlight: bool = False
+    pt_scale: float = 0.3          # pt → 화면 픽셀 배율 (1080×1920 기준, 350pt → 105px)
     crop_bottom: int = 0           # 원본 하단을 잘라낼 픽셀 수 (원본에 자막이 박혀 있을 때)
     cta_text: str = ""             # 마지막 3초 하단 문구 (예: "풀영상은 고정 댓글에서")
 
@@ -32,6 +41,14 @@ class Options:
     def from_dict(cls, d: dict) -> "Options":
         fields = cls.__dataclass_fields__
         return cls(**{k: v for k, v in d.items() if k in fields})
+
+    def text_style(self):
+        from .styles import TextStyle
+        return TextStyle(header_font=self.header_font, header_pt=self.header_pt, header_color=self.header_color,
+                         header_bar=self.header_style == "bar", caption_font=self.caption_font,
+                         caption_pt=self.caption_pt, caption_color=self.caption_color,
+                         caption_italic=self.caption_italic, caption_highlight=self.caption_highlight,
+                         pt_scale=self.pt_scale)
 
     def to_dict(self) -> dict:
         return asdict(self)

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from .config import OUT_H, OUT_W
 from .planner import ShortPlan
+from .styles import TextStyle, ass_color, text_width
 
 
 @dataclass
@@ -101,6 +102,19 @@ def output_timeline(parts: list[Part]) -> list[tuple[Part, float]]:
     return out
 
 
+def to_output_time(parts: list[Part], t: float) -> float | None:
+    """원본 시각 t가 결과 영상에서 나오는 시각 (잘려 나간 곳이면 다음 컷 시작)."""
+    nxt = None
+    for p, off in output_timeline(parts):
+        if p.teaser:
+            continue
+        if p.start <= t < p.end:
+            return off + t - p.start
+        if p.start >= t and nxt is None:
+            nxt = off
+    return nxt
+
+
 # ---------------------------------------------------------------- 자막 묶기
 
 def chunk_words(words: list[dict], max_chars: int = 12, max_words: int = 3, max_gap: float = 0.35):
@@ -167,7 +181,21 @@ def _hook_line(line: str, default_yellow: bool) -> str:
 
 def build_ass(plan: ShortPlan, parts: list[Part], words: list[dict], *, layout: str,
               total: float, font: str, src_w: int, src_h: int,
-              header_style: str = "bar", cta_text: str = "") -> str:
+              header_style: str = "bar", cta_text: str = "", style: TextStyle | None = None) -> str:
+    if style is None:  # 예전 방식 (Black Han Sans, 흰/노랑 2톤)
+        style = TextStyle(header_font=font, caption_font=font, header_pt=96 / 0.3, caption_pt=84 / 0.3,
+                          header_color="", header_bar=header_style == "bar", caption_italic=False,
+                          caption_highlight=True)
+    st = style.resolved()
+    hdr_lines = [l.replace("[", "").replace("]", "") for l in plan.hook_text.split("\n") if l.strip()][:2]
+    hdr_px = st.header_pt * st.pt_scale
+    widest = max((text_width(st.header_font, hdr_px, l) for l in hdr_lines), default=0)
+    if widest > OUT_W - 80:  # 화면 폭에 맞게 축소
+        hdr_px *= (OUT_W - 80) / widest
+    cap_px = st.caption_pt * st.pt_scale
+    hdr_col, cap_col, hl_col = ass_color(st.header_color or "#FFFFFF"), ass_color(st.caption_color), \
+        ass_color(st.highlight_color)
+    slant = "\\fax-0.18" if st.caption_italic else ""
     # 레이아웃별 위치: blur는 영상이 가운데, crop은 화면 전체
     if layout == "blur":
         video_h = OUT_W * src_h / src_w
@@ -186,9 +214,9 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Hook,{font},96,{WHITE},{WHITE},&H00000000&,&H99000000&,0,0,0,0,100,100,0,0,1,7,4,5,60,60,0,1
-Style: Caption,{font},84,{WHITE},{WHITE},&H00000000&,&H80000000&,0,0,0,0,100,100,0,0,1,8,3,5,70,70,0,1
-Style: Teaser,{font},54,{WHITE},{WHITE},&H00000000&,&H802020E0&,0,0,0,0,100,100,0,0,3,14,0,5,40,40,0,1
+Style: Hook,{st.header_font},{hdr_px:.0f},{hdr_col},{hdr_col},&H00000000&,&H99000000&,-1,0,0,0,100,100,0,0,1,7,4,5,40,40,0,1
+Style: Caption,{st.caption_font},{cap_px:.0f},{cap_col},{cap_col},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,7,3,5,60,60,0,1
+Style: Teaser,{st.caption_font},54,{WHITE},{WHITE},&H00000000&,&H802020E0&,-1,0,0,0,100,100,0,0,3,14,0,5,40,40,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -198,10 +226,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     # 상단 후킹 문구: 처음부터 끝까지. [대괄호]는 노란색 강조 (없으면 둘째 줄이 노란색)
     lines = [l for l in plan.hook_text.split("\n") if l.strip()][:2]
     if lines:
-        styled = [_hook_line(l, default_yellow=i > 0) for i, l in enumerate(lines)]
-        if header_style == "bar":
+        if st.header_color:  # 문구 전체를 한 색으로
+            styled = [_esc(l) for l in hdr_lines]
+        else:
+            styled = [_hook_line(l, default_yellow=i > 0) for i, l in enumerate(lines)]
+        if st.header_bar:
             # 레퍼런스 채널처럼 화면 폭 전체 검은 바 위에 문구
-            bar_h = 130 * len(lines) + 70
+            bar_h = int(hdr_px * 1.3 * len(lines) + 70)
             y0 = int(hook_y - bar_h / 2)
             events.append(f"Dialogue: 1,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
                           f"{{\\an7\\pos(0,{y0})\\bord0\\shad0\\1c&H000000&\\1a&H10&\\p1}}"
@@ -230,8 +261,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             pieces = []
             for w in chunk:
                 t = _esc(w["text"])
-                pieces.append(f"{{\\c{YELLOW}}}{t}{{\\c{WHITE}}}" if _is_highlight(w["text"], plan.highlight_words) else t)
-            pop = "{\\fscx80\\fscy80\\t(0,90,\\fscx100\\fscy100)}"
+                hl = st.caption_highlight and _is_highlight(w["text"], plan.highlight_words)
+                pieces.append(f"{{\\c{hl_col}}}{t}{{\\c{cap_col}}}" if hl else t)
+            pop = f"{{{slant}\\fscx80\\fscy80\\t(0,90,\\fscx100\\fscy100)}}"
             events.append(f"Dialogue: 1,{_ts(s)},{_ts(e)},Caption,,0,0,0,,"
                           f"{{\\pos({OUT_W // 2},{int(cap_y)})}}{pop}" + " ".join(pieces))
     return header + "\n".join(events) + "\n"

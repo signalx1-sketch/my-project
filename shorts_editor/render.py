@@ -22,7 +22,9 @@ def _layout_chain(layout: str, zoom: float, src_w: int, src_h: int, tag: str) ->
 
 
 def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, total: float,
-                 ass_name: str, progress_bar: bool, audio_input: int, crop_bottom: int = 0) -> str:
+                 ass_name: str, progress_bar: bool, audio_input: int, crop_bottom: int = 0,
+                 overlays: list[tuple[int, float, float]] = ()) -> str:
+    """overlays: (입력 번호, 시작 초, 길이) — 비포앤애프터 카드 등 이미지."""
     chains, concat_in = [], []
     for i, p in enumerate(parts):
         chains.append(f"[0:v]trim=start={p.start:.3f}:end={p.end:.3f},setpts=PTS-STARTPTS,"
@@ -34,7 +36,14 @@ def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, tota
                       f"afade=t=in:d={fade:.3f},afade=t=out:st={max(0, p.dur - fade):.3f}:d={fade:.3f}[a{i}]")
         concat_in.append(f"[v{i}][a{i}]")
     chains.append(f"{''.join(concat_in)}concat=n={len(parts)}:v=1:a=1[vc][ac]")
-    post = f"[vc]ass={ass_name}:fontsdir={FONTS_DIR}"
+    cur = "vc"
+    for j, (inp, t0, dur) in enumerate(overlays):
+        f = min(0.25, dur / 4)
+        chains.append(f"[{inp}:v]format=rgba,fade=t=in:st=0:d={f}:alpha=1,"
+                      f"fade=t=out:st={dur - f:.3f}:d={f}:alpha=1,setpts=PTS-STARTPTS+{t0:.3f}/TB[ov{j}]")
+        chains.append(f"[{cur}][ov{j}]overlay=(W-w)/2:(H-h)/2:eof_action=pass[vo{j}]")
+        cur = f"vo{j}"
+    post = f"[{cur}]ass={ass_name}:fontsdir={FONTS_DIR}"
     if progress_bar:
         post += (f",drawbox=x=0:y=ih-14:w=iw:h=14:color=black@0.45:t=fill"
                  f",drawbox=x=0:y=ih-14:w='iw*t/{total:.3f}':h=14:color=0xFFD400@0.95:t=fill")
@@ -45,7 +54,9 @@ def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, tota
 
 
 def render(src: str, out_path: Path, parts: list[Part], ass_text: str, *, layout: str,
-           src_w: int, src_h: int, has_audio: bool, progress_bar: bool, crop_bottom: int = 0) -> None:
+           src_w: int, src_h: int, has_audio: bool, progress_bar: bool, crop_bottom: int = 0,
+           images: list[tuple[Path, float, float]] = ()) -> None:
+    """images: (이미지 파일, 결과 영상 기준 시작 초, 길이)."""
     workdir = out_path.parent
     stem = out_path.stem
     ass_name = f"{stem}.ass"
@@ -53,13 +64,16 @@ def render(src: str, out_path: Path, parts: list[Part], ass_text: str, *, layout
     total = sum(p.dur for p in parts)
     filt = build_filter(parts, layout=layout, src_w=src_w, src_h=src_h - crop_bottom, total=total,
                         ass_name=ass_name, progress_bar=progress_bar,
-                        audio_input=0 if has_audio else 1, crop_bottom=crop_bottom)
+                        audio_input=0 if has_audio else 1, crop_bottom=crop_bottom,
+                        overlays=[(i + (1 if has_audio else 2), t, d) for i, (_, t, d) in enumerate(images)])
     script = workdir / f"{stem}.filter.txt"
     script.write_text(filt, encoding="utf-8")
 
     cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(Path(src).resolve())]
     if not has_audio:
         cmd += ["-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo"]
+    for img, _, dur in images:
+        cmd += ["-loop", "1", "-framerate", str(OUT_FPS), "-t", f"{dur:.3f}", "-i", str(Path(img).resolve())]
     cmd += ["-filter_complex_script", script.name, "-map", "[vout]", "-map", "[aout]",
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-r", str(OUT_FPS),
             "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.3f}",
