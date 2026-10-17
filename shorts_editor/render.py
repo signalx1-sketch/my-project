@@ -8,6 +8,10 @@ from .config import FONTS_DIR, OUT_FPS, OUT_H, OUT_W
 
 def _layout_chain(layout: str, zoom: float, src_w: int, src_h: int, tag: str) -> str:
     """입력 [{tag}in] → 출력 [{tag}] 세로 화면 필터."""
+    if layout == "black" and src_w > src_h:  # 검은 배경 + 가운데 원본 (레퍼런스 방식)
+        zw = int(OUT_W * zoom) // 2 * 2
+        return (f"[{tag}in]scale={zw}:-2,crop={OUT_W}:ih,"
+                f"pad={OUT_W}:{OUT_H}:0:(oh-ih)/2:black,setsar=1[{tag}]")
     if layout == "crop" or src_h >= src_w:  # 이미 세로 영상이면 꽉 채우기
         zw, zh = int(OUT_W * zoom) // 2 * 2, int(OUT_H * zoom) // 2 * 2
         return (f"[{tag}in]scale={zw}:{zh}:force_original_aspect_ratio=increase,"

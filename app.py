@@ -67,7 +67,7 @@ async def create_job(
     count: int = Form(3),
     min_len: float = Form(20),
     max_len: float = Form(45),
-    layout: str = Form("blur"),
+    layout: str = Form("black"),
     use_ai: bool = Form(True),
     teaser: bool = Form(True),
     cut_silence: bool = Form(True),
@@ -76,7 +76,7 @@ async def create_job(
     ext = Path(file.filename or "").suffix.lower()
     if ext not in ALLOWED_EXT:
         raise HTTPException(400, f"지원하지 않는 형식입니다: {ext}")
-    if layout not in ("blur", "crop") or not (1 <= count <= 10) or not (5 <= min_len <= max_len <= 180):
+    if layout not in ("black", "blur", "crop") or not (1 <= count <= 10) or not (5 <= min_len <= max_len <= 180):
         raise HTTPException(400, "옵션 값을 확인해 주세요")
     job_id = uuid.uuid4().hex[:12]
     d = JOBS_DIR / job_id

@@ -10,13 +10,16 @@ FONT_FILES = {
     "Black Han Sans": "BlackHanSans.ttf",
 }
 FALLBACK_FONT = "Black Han Sans"
+# 자막 렌더러(libass)는 글자 크기를 폰트의 줄 높이 기준으로 잡아서, 같은 숫자라도 실제 글자가 작게 나옴.
+# 실측 보정값 (레퍼런스 영상과 글자 폭을 맞춰 측정). 없으면 폰트의 win 줄 높이로 계산.
+ASS_SIZE_RATIO = {"GmarketSansBold": 1.17}
 
 
 @dataclass
 class TextStyle:
     header_font: str = "GmarketSansBold"
     header_pt: float = 350          # 상단 문구 크기 (pt_scale을 곱해 화면 픽셀로 변환, 화면 폭에 맞게 자동 축소)
-    header_color: str = "#FFE400"   # 비우면 [대괄호]만 노란색인 2톤
+    header_color: str = "#FBC600"   # 비우면 [대괄호]만 노란색인 2톤
     header_bar: bool = True         # 상단 검은 바
     caption_font: str = "GmarketSansBold"
     caption_pt: float = 250
@@ -24,7 +27,7 @@ class TextStyle:
     caption_italic: bool = True     # 자막을 오른쪽으로 눕힘
     caption_highlight: bool = False  # 강조 단어 색 바꾸기
     highlight_color: str = "#FFE400"
-    pt_scale: float = 0.3           # pt → 1080×1920 화면 픽셀 (350pt → 105px)
+    pt_scale: float = 0.33          # pt → 1080×1920 화면 픽셀 (레퍼런스 실측: 350pt → 116px)
 
     def resolved(self) -> "TextStyle":
         """폰트 파일이 없으면 기본 폰트로 대체."""
@@ -39,6 +42,19 @@ class TextStyle:
 def font_path(name: str):
     f = FONTS_DIR / FONT_FILES.get(name, f"{name}.ttf")
     return f if f.exists() else None
+
+
+def ass_size(name: str, em_px: float) -> float:
+    """원하는 글자 크기(em 픽셀)를 ASS 폰트 크기로 변환."""
+    if name in ASS_SIZE_RATIO:
+        return em_px * ASS_SIZE_RATIO[name]
+    p = font_path(name)
+    if p:
+        from fontTools.ttLib import TTFont
+        f = TTFont(str(p), lazy=True)
+        o = f["OS/2"]
+        return em_px * (o.usWinAscent + o.usWinDescent) / f["head"].unitsPerEm
+    return em_px
 
 
 def ass_color(hex_color: str) -> str:

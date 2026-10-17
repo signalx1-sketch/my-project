@@ -15,7 +15,7 @@ def main() -> None:
     ap.add_argument("--count", type=int, default=3)
     ap.add_argument("--min-len", type=float, default=20)
     ap.add_argument("--max-len", type=float, default=45)
-    ap.add_argument("--layout", choices=["blur", "crop"], default="blur")
+    ap.add_argument("--layout", choices=["black", "blur", "crop"], default="black")
     ap.add_argument("--no-ai", action="store_true", help="Claude 없이 자동 분석만 사용")
     ap.add_argument("--no-transcribe", action="store_true", help="음성 인식(자막) 끄기")
     ap.add_argument("--no-teaser", action="store_true")

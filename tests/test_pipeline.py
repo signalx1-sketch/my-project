@@ -108,8 +108,8 @@ def test_brand_style_and_header_fit():
                     src_w=1920, src_h=940, style=TextStyle())
     hook = next(l for l in ass.splitlines() if l.startswith("Style: Hook"))
     size = float(hook.split(",")[2])
-    assert size <= 105  # 350pt × 0.3, 화면 폭에 맞게 축소
-    assert ",&H0000E4FF&," in hook  # 상단 문구 노란색
+    assert size <= 116 * 1.17 + 1  # 350pt × 0.33 (libass 보정), 화면 폭에 맞게 축소
+    assert ",&H0000C6FB&," in hook  # 상단 문구 노란색 #FBC600
     assert "[" not in ass.split("[Events]")[1]  # 대괄호는 지워짐
     assert "\\fax-0.18" in ass  # 자막 기울임
 
@@ -138,14 +138,14 @@ def sample_video(tmp_path_factory) -> Path:
     return p
 
 
-@pytest.mark.parametrize("layout", ["blur", "crop"])
+@pytest.mark.parametrize("layout", ["black", "blur", "crop"])
 def test_end_to_end_render(sample_video, tmp_path, layout, monkeypatch):
     work = tmp_path / layout
     work.mkdir()
     a = make_analysis(60.0)
     (work / "analysis.json").write_text(json.dumps(a, ensure_ascii=False), encoding="utf-8")
     opts = Options(count=1, min_len=15, max_len=25, layout=layout, use_ai=False)
-    if layout == "blur":  # 비포앤애프터 자리 표시 카드도 함께 렌더
+    if layout == "black":  # 비포앤애프터 자리 표시 카드도 함께 렌더
         import shorts_editor.pipeline as pipeline
         plans = heuristic_plan(a, opts)
         plans[0].inserts = [{"category": "없는폴더", "at": plans[0].start + 3, "duration": 2}]
@@ -162,3 +162,15 @@ def test_end_to_end_render(sample_video, tmp_path, layout, monkeypatch):
     assert any(x["codec_type"] == "audio" for x in info["streams"])
     assert abs(float(info["format"]["duration"]) - s["duration"]) < 0.5
     assert (work / s["cover"]).exists()
+
+
+def test_combined_photo(tmp_path):
+    from PIL import Image
+    from shorts_editor.inserts import find_pairs, make_photo
+    d = tmp_path / "아토피"
+    d.mkdir()
+    Image.new("RGB", (2400, 900), (200, 100, 100)).save(d / "60.jpg")
+    pairs = find_pairs("아토피", base=tmp_path)
+    assert pairs[0]["id"] == "60" and "image" in pairs[0]
+    out = make_photo(pairs[0]["image"], tmp_path / "p.png")
+    assert Image.open(out).size == (1080, 620)  # 영상 높이만큼 검은 바탕

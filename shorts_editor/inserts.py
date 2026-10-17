@@ -28,11 +28,15 @@ def find_pairs(category: str, base: Path = BA_DIR) -> list[dict]:
     if not folder.is_dir():
         return []
     groups: dict[str, dict] = {}
+    singles = []
     for f in sorted(folder.iterdir()):
         if f.suffix.lower() not in IMG_EXT:
             continue
         m = re.match(r"(.+?)[_\- ]?(before|after|전|후)$", f.stem, re.I)
-        if not m:
+        if not m:  # 전·후가 한 장에 합쳐진 사진
+            note = folder / f"{f.stem}.txt"
+            singles.append({"id": f.stem, "image": f,
+                            "note": note.read_text(encoding="utf-8").strip() if note.exists() else ""})
             continue
         key, kind = m.group(1), m.group(2).lower()
         g = groups.setdefault(key, {"id": key})
@@ -43,7 +47,7 @@ def find_pairs(category: str, base: Path = BA_DIR) -> list[dict]:
             note = folder / f"{key}.txt"
             g["note"] = note.read_text(encoding="utf-8").strip() if note.exists() else ""
             pairs.append(g)
-    return pairs
+    return pairs + singles
 
 
 def _font(px: int):
@@ -61,6 +65,19 @@ def _photo(path: Path | None, size: tuple[int, int], label: str) -> Image.Image:
     d.text((size[0] // 2, size[1] // 2), f"{label}\n사진 자리", font=_font(44), fill=(200, 200, 200),
            anchor="mm", align="center")
     return img
+
+
+def make_photo(image: Path, out: Path, box: tuple[int, int] = (OUT_W, 860), min_h: int = 620) -> Path:
+    """전·후가 합쳐진 사진 한 장을 영상 자리에 꽉 차게 (레퍼런스 방식).
+    사진이 영상보다 낮으면 검은 바탕을 깔아 뒤의 영상(원본 자막 등)이 보이지 않게 함."""
+    img = ImageOps.exif_transpose(Image.open(image)).convert("RGB")
+    scale = min(box[0] / img.width, box[1] / img.height)
+    img = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
+    canvas = Image.new("RGB", (box[0], max(img.height, min_h)), (0, 0, 0))
+    canvas.paste(img, ((canvas.width - img.width) // 2, (canvas.height - img.height) // 2))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out)
+    return out
 
 
 def make_card(before: Path | None, after: Path | None, out: Path, *, title: str = "실제 치료 전·후",

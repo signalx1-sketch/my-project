@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from .config import OUT_H, OUT_W
 from .planner import ShortPlan
-from .styles import TextStyle, ass_color, text_width
+from .styles import TextStyle, ass_color, ass_size, text_width
 
 
 @dataclass
@@ -190,14 +190,16 @@ def build_ass(plan: ShortPlan, parts: list[Part], words: list[dict], *, layout: 
     hdr_lines = [l.replace("[", "").replace("]", "") for l in plan.hook_text.split("\n") if l.strip()][:2]
     hdr_px = st.header_pt * st.pt_scale
     widest = max((text_width(st.header_font, hdr_px, l) for l in hdr_lines), default=0)
-    if widest > OUT_W - 80:  # 화면 폭에 맞게 축소
-        hdr_px *= (OUT_W - 80) / widest
+    if widest > OUT_W - 100:  # 화면 폭에 맞게 축소 (좌우 여백 50px)
+        hdr_px *= (OUT_W - 100) / widest
     cap_px = st.caption_pt * st.pt_scale
     hdr_col, cap_col, hl_col = ass_color(st.header_color or "#FFFFFF"), ass_color(st.caption_color), \
         ass_color(st.highlight_color)
     slant = "\\fax-0.18" if st.caption_italic else ""
     # 레이아웃별 위치: blur는 영상이 가운데, crop은 화면 전체
-    if layout == "blur":
+    if layout == "black":  # 레퍼런스(1080×1920 기준 실측): 문구 중심 386, 자막 중심 1449
+        hook_y, cap_y = 386, 1449
+    elif layout == "blur":
         video_h = OUT_W * src_h / src_w
         top_space = (OUT_H - video_h) / 2
         hook_y = max(260, top_space * 0.55)
@@ -214,8 +216,8 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Hook,{st.header_font},{hdr_px:.0f},{hdr_col},{hdr_col},&H00000000&,&H99000000&,-1,0,0,0,100,100,0,0,1,7,4,5,40,40,0,1
-Style: Caption,{st.caption_font},{cap_px:.0f},{cap_col},{cap_col},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,7,3,5,60,60,0,1
+Style: Hook,{st.header_font},{ass_size(st.header_font, hdr_px):.0f},{hdr_col},{hdr_col},&H00000000&,&H99000000&,-1,0,0,0,100,100,0,0,1,7,4,5,40,40,0,1
+Style: Caption,{st.caption_font},{ass_size(st.caption_font, cap_px):.0f},{cap_col},{cap_col},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,7,3,5,60,60,0,1
 Style: Teaser,{st.caption_font},54,{WHITE},{WHITE},&H00000000&,&H802020E0&,-1,0,0,0,100,100,0,0,3,14,0,5,40,40,0,1
 
 [Events]
@@ -230,7 +232,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             styled = [_esc(l) for l in hdr_lines]
         else:
             styled = [_hook_line(l, default_yellow=i > 0) for i, l in enumerate(lines)]
-        if st.header_bar:
+        if layout == "black":
+            # 검은 배경 위에 줄마다 따로 배치 (줄 간격 = 글자 크기 × 1.22, 레퍼런스 실측)
+            pitch = hdr_px * 1.22
+            y0 = hook_y - pitch * (len(styled) - 1) / 2
+            for i, line in enumerate(styled):
+                events.append(f"Dialogue: 2,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
+                              f"{{\\q2\\pos({OUT_W // 2},{int(y0 + i * pitch)})\\bord0\\shad0}}{line}")
+        elif st.header_bar:
             # 레퍼런스 채널처럼 화면 폭 전체 검은 바 위에 문구
             bar_h = int(hdr_px * 1.3 * len(lines) + 70)
             y0 = int(hook_y - bar_h / 2)

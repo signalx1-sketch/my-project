@@ -6,7 +6,7 @@ from typing import Callable
 
 from . import media
 from .captions import build_ass, build_parts, to_output_time
-from .inserts import find_pairs, make_card
+from .inserts import find_pairs, make_card, make_photo
 from .config import Options
 from .planner import ShortPlan, plan_shorts
 from .render import cover_image, render
@@ -66,9 +66,13 @@ def render_short(src: str, workdir: Path, analysis: dict, plan: ShortPlan, opts:
         pick = ins.get("pick", 0)
         pair = next((p for p in pairs if p["id"] == str(pick)), None) or \
             (pairs[pick % len(pairs)] if pairs and isinstance(pick, int) else None)
-        card = make_card(pair and pair["before"], pair and pair["after"], workdir / f"{out.stem}_ba{k + 1}.png",
-                         title=ins.get("title", "실제 치료 전·후"),
-                         note=ins.get("note") or (pair or {}).get("note", "") or ins.get("category", ""))
+        card_path = workdir / f"{out.stem}_ba{k + 1}.png"
+        if pair and "image" in pair:
+            card = make_photo(pair["image"], card_path)
+        else:
+            card = make_card(pair and pair["before"], pair and pair["after"], card_path,
+                             title=ins.get("title", "실제 치료 전·후"),
+                             note=ins.get("note") or (pair or {}).get("note", "") or ins.get("category", ""))
         images.append((card, t, dur))
         used.append({"category": ins.get("category"), "photo": pair["id"] if pair else None,
                      "at": round(t, 2), "duration": dur})
