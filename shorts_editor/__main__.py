@@ -21,12 +21,16 @@ def main() -> None:
     ap.add_argument("--no-teaser", action="store_true")
     ap.add_argument("--no-silence-cut", action="store_true")
     ap.add_argument("--language", default="ko")
+    ap.add_argument("--crop-bottom", type=int, default=0, help="원본 하단에 박힌 자막을 가릴 때 잘라낼 픽셀 수")
+    ap.add_argument("--cta", default="", help="마지막 3초 하단 문구 (예: '풀영상은 고정 댓글에')")
+    ap.add_argument("--header", choices=["bar", "float"], default="bar", help="상단 문구 스타일")
     args = ap.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     opts = Options(count=args.count, min_len=args.min_len, max_len=args.max_len, layout=args.layout,
                    use_ai=not args.no_ai, transcribe=not args.no_transcribe, teaser=not args.no_teaser,
-                   cut_silence=not args.no_silence_cut, language=args.language or None)
+                   cut_silence=not args.no_silence_cut, language=args.language or None,
+                   crop_bottom=args.crop_bottom, cta_text=args.cta, header_style=args.header)
     out = args.out or DATA_DIR / "cli" / Path(args.video).stem
     summary = make_shorts(args.video, out, opts)
     print(json.dumps(summary, ensure_ascii=False, indent=2))

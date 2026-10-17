@@ -22,11 +22,11 @@ def _layout_chain(layout: str, zoom: float, src_w: int, src_h: int, tag: str) ->
 
 
 def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, total: float,
-                 ass_name: str, progress_bar: bool, audio_input: int) -> str:
+                 ass_name: str, progress_bar: bool, audio_input: int, crop_bottom: int = 0) -> str:
     chains, concat_in = [], []
     for i, p in enumerate(parts):
         chains.append(f"[0:v]trim=start={p.start:.3f}:end={p.end:.3f},setpts=PTS-STARTPTS,"
-                      f"fps={OUT_FPS}[v{i}in]")
+                      f"fps={OUT_FPS}" + (f",crop=iw:ih-{crop_bottom}:0:0" if crop_bottom else "") + f"[v{i}in]")
         chains.append(_layout_chain(layout, p.zoom, src_w, src_h, f"v{i}"))
         fade = min(0.03, p.dur / 4)
         chains.append(f"[{audio_input}:a]atrim=start={p.start:.3f}:end={p.end:.3f},asetpts=PTS-STARTPTS,"
@@ -45,15 +45,15 @@ def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, tota
 
 
 def render(src: str, out_path: Path, parts: list[Part], ass_text: str, *, layout: str,
-           src_w: int, src_h: int, has_audio: bool, progress_bar: bool) -> None:
+           src_w: int, src_h: int, has_audio: bool, progress_bar: bool, crop_bottom: int = 0) -> None:
     workdir = out_path.parent
     stem = out_path.stem
     ass_name = f"{stem}.ass"
     (workdir / ass_name).write_text(ass_text, encoding="utf-8")
     total = sum(p.dur for p in parts)
-    filt = build_filter(parts, layout=layout, src_w=src_w, src_h=src_h, total=total,
+    filt = build_filter(parts, layout=layout, src_w=src_w, src_h=src_h - crop_bottom, total=total,
                         ass_name=ass_name, progress_bar=progress_bar,
-                        audio_input=0 if has_audio else 1)
+                        audio_input=0 if has_audio else 1, crop_bottom=crop_bottom)
     script = workdir / f"{stem}.filter.txt"
     script.write_text(filt, encoding="utf-8")
 

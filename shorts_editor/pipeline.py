@@ -52,10 +52,11 @@ def render_short(src: str, workdir: Path, analysis: dict, plan: ShortPlan, opts:
                         cut_silence=opts.cut_silence, zoom_punch=opts.zoom_punch)
     total = sum(p.dur for p in parts)
     ass = build_ass(plan, parts, words, layout=opts.layout, total=total, font=opts.font,
-                    src_w=info["width"], src_h=info["height"])
+                    src_w=info["width"], src_h=info["height"] - opts.crop_bottom,
+                    header_style=opts.header_style, cta_text=opts.cta_text)
     out = workdir / f"short_{index + 1:02d}.mp4"
     render(src, out, parts, ass, layout=opts.layout, src_w=info["width"], src_h=info["height"],
-           has_audio=info["has_audio"], progress_bar=opts.progress_bar)
+           has_audio=info["has_audio"], progress_bar=opts.progress_bar, crop_bottom=opts.crop_bottom)
     cover = out.with_suffix(".jpg")
     cover_image(out, cover, at=min(0.6, total / 2))
     return {

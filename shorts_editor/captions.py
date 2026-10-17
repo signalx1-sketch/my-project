@@ -51,14 +51,34 @@ def subtract_silences(start: float, end: float, silences: list, keep_pad: float 
     return parts or [(start, end)]
 
 
+def split_long_shots(ranges, words: list[dict], max_shot: float = 3.2, min_shot: float = 1.2):
+    """말이 쉬지 않고 이어져도 ~3초마다 단어 사이에서 컷을 나눠 줌 변화를 줌 (내용은 그대로)."""
+    out = []
+    for a, b in ranges:
+        gaps = [(w1["end"] + w2["start"]) / 2 for w1, w2 in zip(words, words[1:])
+                if a + min_shot < w1["end"] and w2["start"] < b - min_shot]
+        cur = a
+        for g in gaps:
+            if g - cur >= max_shot:
+                out.append((cur, round(g, 3)))
+                cur = round(g, 3)
+        out.append((cur, b))
+    return out
+
+
 def build_parts(plan: ShortPlan, words: list[dict], silences: list, *, cut_silence: bool,
                 zoom_punch: bool) -> list[Part]:
-    if cut_silence:
-        ranges = speech_islands(words, plan.start, plan.end) if words else \
-            subtract_silences(plan.start, plan.end, silences)
-    else:
-        ranges = [(plan.start, plan.end)]
-    ranges = [r for r in ranges if r[1] - r[0] >= 0.25] or [(plan.start, plan.end)]
+    spans = [tuple(x) for x in plan.segments] or [(plan.start, plan.end)]
+    ranges = []
+    for a, b in spans:
+        if cut_silence:
+            ranges += speech_islands(words, a, b) if words else subtract_silences(a, b, silences)
+        else:
+            ranges.append((a, b))
+    ranges = [r for r in ranges if r[1] - r[0] >= 0.25] or spans
+
+    if zoom_punch and words:
+        ranges = split_long_shots(ranges, words)
 
     parts: list[Part] = []
     if plan.teaser_end > plan.teaser_start:
@@ -127,8 +147,27 @@ def _is_highlight(word: str, highlights: list[str]) -> bool:
     return bool(w) and any(h and (_clean(h) in w or (len(w) >= 2 and w in _clean(h))) for h in highlights)
 
 
+def _hook_line(line: str, default_yellow: bool) -> str:
+    """[대괄호] 안은 노란색 강조. 대괄호가 없으면 줄 전체 색을 기본값으로."""
+    if "[" not in line:
+        t = _esc(line)
+        return f"{{\\c{YELLOW}}}{t}" if default_yellow else t
+    out, cur, yellow = [], "", False
+    for ch in line:
+        if ch in "[]":
+            if cur:
+                out.append(f"{{\\c{YELLOW if yellow else WHITE}}}{_esc(cur)}")
+            cur, yellow = "", ch == "["
+        else:
+            cur += ch
+    if cur:
+        out.append(f"{{\\c{YELLOW if yellow else WHITE}}}{_esc(cur)}")
+    return "".join(out)
+
+
 def build_ass(plan: ShortPlan, parts: list[Part], words: list[dict], *, layout: str,
-              total: float, font: str, src_w: int, src_h: int) -> str:
+              total: float, font: str, src_w: int, src_h: int,
+              header_style: str = "bar", cta_text: str = "") -> str:
     # 레이아웃별 위치: blur는 영상이 가운데, crop은 화면 전체
     if layout == "blur":
         video_h = OUT_W * src_h / src_w
@@ -156,13 +195,26 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
     events = []
 
-    # 상단 후킹 문구: 처음부터 끝까지, 첫 줄 흰색 / 둘째 줄 노란색, 등장 시 팝
+    # 상단 후킹 문구: 처음부터 끝까지. [대괄호]는 노란색 강조 (없으면 둘째 줄이 노란색)
     lines = [l for l in plan.hook_text.split("\n") if l.strip()][:2]
     if lines:
-        styled = [_esc(lines[0])] + [f"{{\\c{YELLOW}}}{_esc(l)}" for l in lines[1:]]
-        pop = "{\\fscx70\\fscy70\\t(0,180,\\fscx105\\fscy105)\\t(180,260,\\fscx100\\fscy100)}"
-        events.append(f"Dialogue: 2,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
-                      f"{{\\pos({OUT_W // 2},{int(hook_y)})}}{pop}" + "\\N".join(styled))
+        styled = [_hook_line(l, default_yellow=i > 0) for i, l in enumerate(lines)]
+        if header_style == "bar":
+            # 레퍼런스 채널처럼 화면 폭 전체 검은 바 위에 문구
+            bar_h = 130 * len(lines) + 70
+            y0 = int(hook_y - bar_h / 2)
+            events.append(f"Dialogue: 1,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
+                          f"{{\\an7\\pos(0,{y0})\\bord0\\shad0\\1c&H000000&\\1a&H10&\\p1}}"
+                          f"m 0 0 l {OUT_W} 0 {OUT_W} {bar_h} 0 {bar_h}{{\\p0}}")
+            events.append(f"Dialogue: 2,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
+                          f"{{\\pos({OUT_W // 2},{int(hook_y)})\\bord3\\shad0}}" + "\\N".join(styled))
+        else:
+            pop = "{\\fscx70\\fscy70\\t(0,180,\\fscx105\\fscy105)\\t(180,260,\\fscx100\\fscy100)}"
+            events.append(f"Dialogue: 2,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
+                          f"{{\\pos({OUT_W // 2},{int(hook_y)})}}{pop}" + "\\N".join(styled))
+    if cta_text:  # 마지막 3초 하단 안내 (예: 풀영상은 고정 댓글에서)
+        events.append(f"Dialogue: 3,{_ts(max(0, total - 3))},{_ts(total)},Caption,,0,0,0,,"
+                      f"{{\\pos({OUT_W // 2},{OUT_H - 120})\\fs52\\c{YELLOW}\\fad(200,0)}}{_esc(cta_text)}")
 
     timeline = output_timeline(parts)
     for p, offset in timeline:

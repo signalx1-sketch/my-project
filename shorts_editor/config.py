@@ -24,6 +24,9 @@ class Options:
     zoom_punch: bool = True        # 컷마다 살짝 줌인/아웃
     progress_bar: bool = True      # 하단 진행바
     font: str = "Black Han Sans"
+    header_style: str = "bar"      # bar: 상단 검은 바 + 흰/노랑 문구 / float: 배경 없이 외곽선 문구
+    crop_bottom: int = 0           # 원본 하단을 잘라낼 픽셀 수 (원본에 자막이 박혀 있을 때)
+    cta_text: str = ""             # 마지막 3초 하단 문구 (예: "풀영상은 고정 댓글에서")
 
     @classmethod
     def from_dict(cls, d: dict) -> "Options":
