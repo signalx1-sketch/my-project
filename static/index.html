@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>쇼츠 편집기</title>
+<style>
+  :root { --bg:#0f1115; --panel:#181b22; --line:#2a2f3a; --text:#e8eaf0; --muted:#9aa3b2; --accent:#ffd400; --red:#ff4d4f; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { margin: 0 0 4px; font-size: 28px; } h1 span { color: var(--accent); }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+  .drop { border: 2px dashed var(--line); border-radius: 12px; padding: 36px 16px; text-align: center; cursor: pointer; transition: .15s; }
+  .drop.over, .drop:hover { border-color: var(--accent); background: #1f2229; }
+  .drop b { color: var(--accent); }
+  .opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 18px; }
+  label { font-size: 13px; color: var(--muted); display: block; }
+  input, select, textarea { width: 100%; margin-top: 6px; background: #0f1115; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; font: inherit; font-size: 14px; }
+  textarea { resize: vertical; }
+  .checks { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+  .checks label { display: flex; align-items: center; gap: 6px; color: var(--text); font-size: 14px; }
+  .checks input { width: auto; margin: 0; }
+  button { background: var(--accent); color: #111; border: 0; border-radius: 10px; padding: 12px 20px; font-weight: 700; font-size: 15px; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  button.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); font-weight: 500; padding: 8px 12px; font-size: 13px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 18px; }
+  .bar { height: 10px; background: #0f1115; border-radius: 6px; overflow: hidden; margin-top: 10px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .4s; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .err { color: var(--red); white-space: pre-wrap; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .card video { width: 100%; aspect-ratio: 9/16; background: #000; display: block; }
+  .card .body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .reason { font-size: 12px; color: var(--muted); background: #0f1115; border-radius: 8px; padding: 8px; }
+  .badge { display: inline-block; font-size: 12px; padding: 3px 8px; border-radius: 99px; background: #2a2f3a; color: var(--muted); margin-left: 6px; }
+  a.dl { color: var(--accent); font-size: 13px; text-decoration: none; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>쇼츠 <span>편집기</span></h1>
+  <p class="sub">원본 영상을 올리면 끝까지 보게 되는 구간만 골라 세로 쇼츠로 자르고, 클릭을 부르는 문구와 자막을 넣어 드려요.</p>
+
+  <section class="panel" id="uploadPanel">
+    <div class="drop" id="drop">
+      <div style="font-size:34px">🎬</div>
+      <p><b>영상 파일을 끌어다 놓거나 클릭</b>해서 선택하세요</p>
+      <p class="muted" id="fileName">MP4 · MOV · MKV · WEBM</p>
+      <input type="file" id="file" accept="video/*" class="hidden">
+    </div>
+    <div class="opts">
+      <label>만들 쇼츠 개수<input type="number" id="count" value="3" min="1" max="10"></label>
+      <label>최소 길이(초)<input type="number" id="min_len" value="20" min="5" max="180"></label>
+      <label>최대 길이(초)<input type="number" id="max_len" value="45" min="5" max="180"></label>
+      <label>화면 구성
+        <select id="layout">
+          <option value="blur">원본 전체 + 흐린 배경</option>
+          <option value="crop">세로로 꽉 채우기(가운데 자르기)</option>
+        </select>
+      </label>
+    </div>
+    <div class="checks">
+      <label><input type="checkbox" id="use_ai" checked> AI가 구간·문구 선정 (Claude)</label>
+      <label><input type="checkbox" id="teaser" checked> 하이라이트 미리보기를 맨 앞에</label>
+      <label><input type="checkbox" id="cut_silence" checked> 말 없는 구간 자르기</label>
+      <label><input type="checkbox" id="zoom_punch" checked> 컷마다 줌 효과</label>
+    </div>
+    <div class="row">
+      <button id="start" disabled>쇼츠 만들기</button>
+      <span class="muted" id="uploadMsg"></span>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="progressPanel">
+    <div><b id="stage">대기 중</b> <span class="badge" id="method"></span></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <p class="err" id="error"></p>
+  </section>
+
+  <section class="grid" id="results"></section>
+</main>
+
+<template id="cardTpl">
+  <div class="card">
+    <video controls playsinline preload="metadata"></video>
+    <div class="body">
+      <div class="meta"><span class="m-idx"></span><span class="m-info"></span></div>
+      <label>화면 상단 문구 (2줄 추천)<textarea class="f-hook" rows="2"></textarea></label>
+      <label>업로드 제목 <button class="ghost f-copy" type="button" style="padding:2px 8px;margin-left:6px">복사</button><input class="f-title"></label>
+      <label>강조 단어 (쉼표로 구분)<input class="f-words"></label>
+      <div class="two">
+        <label>시작(초)<input type="number" step="0.1" class="f-start"></label>
+        <label>끝(초)<input type="number" step="0.1" class="f-end"></label>
+      </div>
+      <div class="reason"></div>
+      <div class="row" style="margin-top:4px;justify-content:space-between">
+        <button class="ghost f-rerender" type="button">수정 내용으로 다시 만들기</button>
+        <span><a class="dl f-dl">⬇ 영상</a> · <a class="dl f-cover">⬇ 커버</a></span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let file = null, jobId = null, timer = null, renderedVersion = {};
+
+const drop = $("drop");
+drop.onclick = () => $("file").click();
+$("file").onchange = (e) => pick(e.target.files[0]);
+drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); pick(e.dataTransfer.files[0]); };
+
+function pick(f) {
+  if (!f) return;
+  file = f;
+  $("fileName").textContent = `${f.name} (${(f.size / 1048576).toFixed(1)}MB)`;
+  $("start").disabled = false;
+}
+
+$("start").onclick = () => {
+  const fd = new FormData();
+  fd.append("file", file);
+  for (const k of ["count", "min_len", "max_len", "layout"]) fd.append(k, $(k).value);
+  for (const k of ["use_ai", "teaser", "cut_silence", "zoom_punch"]) fd.append(k, $(k).checked);
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "/api/jobs");
+  xhr.upload.onprogress = (e) => { if (e.lengthComputable) $("uploadMsg").textContent = `업로드 중 ${Math.round(e.loaded / e.total * 100)}%`; };
+  xhr.onload = () => {
+    if (xhr.status !== 200) { $("uploadMsg").textContent = "업로드 실패: " + xhr.responseText; $("start").disabled = false; return; }
+    jobId = JSON.parse(xhr.responseText).id;
+    history.replaceState(null, "", "#" + jobId);
+    $("uploadMsg").textContent = "";
+    startPolling();
+  };
+  xhr.onerror = () => { $("uploadMsg").textContent = "업로드 실패"; $("start").disabled = false; };
+  $("start").disabled = true;
+  xhr.send(fd);
+};
+
+function startPolling() {
+  $("progressPanel").classList.remove("hidden");
+  clearInterval(timer);
+  poll();
+  timer = setInterval(poll, 1500);
+}
+
+async function poll() {
+  const r = await fetch(`/api/jobs/${jobId}`);
+  if (!r.ok) { clearInterval(timer); $("error").textContent = "작업을 찾을 수 없습니다"; return; }
+  const s = await r.json();
+  $("stage").textContent = s.stage || s.status;
+  $("barFill").style.width = `${Math.round((s.progress || 0) * 100)}%`;
+  $("error").textContent = s.error || "";
+  if (s.result) {
+    $("method").textContent = s.result.method === "claude" ? "AI(Claude) 선정" : "자동 분석 선정";
+    if (!s.result.has_transcript) $("method").textContent += " · 음성 없음(자막 없음)";
+    renderCards(s);
+  }
+  const busy = (s.rendering || []).length > 0;
+  if ((s.status === "done" && !busy) || s.status === "error") { clearInterval(timer); timer = null; $("start").disabled = !file; }
+}
+
+function renderCards(s) {
+  const box = $("results");
+  const rendering = new Set(s.rendering || []);
+  s.result.shorts.forEach((c, i) => {
+    let card = box.children[i];
+    const version = `${c.file}:${c.duration}:${c.plan.hook_text}:${c.plan.start}:${c.plan.end}:${c.plan.title}`;
+    if (!card) {
+      card = $("cardTpl").content.firstElementChild.cloneNode(true);
+      box.appendChild(card);
+      card.querySelector(".f-rerender").onclick = () => rerender(i, card);
+      card.querySelector(".f-copy").onclick = () => navigator.clipboard.writeText(card.querySelector(".f-title").value);
+    }
+    const btn = card.querySelector(".f-rerender");
+    btn.disabled = rendering.has(i);
+    btn.textContent = rendering.has(i) ? "다시 만드는 중…" : "수정 내용으로 다시 만들기";
+    if (renderedVersion[i] === version) return;
+    renderedVersion[i] = version;
+    const bust = `?v=${Date.now()}`;
+    const url = (n) => `/api/jobs/${jobId}/files/${n}`;
+    card.querySelector("video").src = url(c.file) + bust;
+    card.querySelector("video").poster = url(c.cover) + bust;
+    card.querySelector(".m-idx").textContent = `쇼츠 #${i + 1}`;
+    card.querySelector(".m-info").textContent = `${c.duration.toFixed(1)}초 · 컷 ${c.cuts}개 · 원본 ${fmt(c.plan.start)}~${fmt(c.plan.end)}`;
+    card.querySelector(".f-hook").value = c.plan.hook_text;
+    card.querySelector(".f-title").value = c.plan.title;
+    card.querySelector(".f-words").value = (c.plan.highlight_words || []).join(", ");
+    card.querySelector(".f-start").value = c.plan.start;
+    card.querySelector(".f-end").value = c.plan.end;
+    card.dataset.teaser = JSON.stringify([c.plan.teaser_start, c.plan.teaser_end]);
+    card.querySelector(".reason").textContent = "선정 이유: " + (c.plan.reason || "-");
+    const dl = card.querySelector(".f-dl"); dl.href = url(c.file); dl.download = `shorts_${i + 1}.mp4`;
+    const cv = card.querySelector(".f-cover"); cv.href = url(c.cover); cv.download = `shorts_${i + 1}_cover.jpg`;
+  });
+}
+
+async function rerender(i, card) {
+  const [ts, te] = JSON.parse(card.dataset.teaser || "[0,0]");
+  const body = {
+    hook_text: card.querySelector(".f-hook").value,
+    title: card.querySelector(".f-title").value,
+    highlight_words: card.querySelector(".f-words").value.split(",").map((w) => w.trim()).filter(Boolean),
+    start: parseFloat(card.querySelector(".f-start").value),
+    end: parseFloat(card.querySelector(".f-end").value),
+    teaser_start: ts, teaser_end: te,
+  };
+  const r = await fetch(`/api/jobs/${jobId}/clips/${i}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  if (!r.ok) { alert("다시 만들기 실패: " + (await r.text())); return; }
+  startPolling();
+}
+
+const fmt = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+if (location.hash.length > 1) { jobId = location.hash.slice(1); startPolling(); }
+</script>
+</body>
+</html>

@@ -1,1 +1,80 @@
-# my-project
+# 쇼츠 편집기
+
+긴 원본 영상을 올리면 **시청 지속률이 높은 구간만 골라 세로(9:16) 쇼츠로 자르고**, **클릭을 부르는 문구와 자막을 넣어** 자동으로 편집해 주는 도구입니다.
+
+## 무엇을 해 주나요
+
+| 단계 | 하는 일 | 왜 (지속률·CTR) |
+|---|---|---|
+| 1. 분석 | 음성 인식(단어 단위 타이밍), 음량, 장면 전환 분석 | 재미있는 구간을 찾기 위한 재료 |
+| 2. 구간 선정 | Claude가 대본을 읽고 **첫 1~3초에 시선을 잡는**, 앞뒤 맥락 없이도 이해되는 구간을 고름 (API 키가 없으면 음량·말 밀도·장면 전환 점수로 자동 선정) | 초반 이탈 방지, 끝까지 보게 만듦 |
+| 3. 미리보기(티저) | 클립 속 가장 강렬한 2~3초를 맨 앞에 먼저 보여 줌 + "잠시 후 공개" | 결말이 궁금해서 계속 보게 됨 |
+| 4. 점프컷 | 말 없는 공백을 잘라내고, 컷마다 살짝 줌인/아웃 | 늘어지는 구간 제거, 화면 변화로 집중 유지 |
+| 5. 문구 | 화면 상단에 2줄 후킹 문구(둘째 줄 노란색), 업로드용 제목 생성 | CTR(클릭률) 상승 |
+| 6. 자막 | 1~3단어씩 크게 튀어나오는 자막, 핵심 단어는 노란색 강조 | 무음 시청자도 내용 파악 |
+| 7. 마무리 | 하단 진행바, 음량 -14 LUFS 정규화, 커버 이미지 생성 | 플랫폼 권장 음량, 끝까지 남은 시간 표시 |
+
+결과물: `short_01.mp4`(1080×1920, 30fps), `short_01.jpg`(커버), 제목·문구는 화면에서 수정 후 **다시 만들기** 가능.
+
+## 설치
+
+필요한 것: Python 3.10+, ffmpeg
+
+```bash
+pip install -r requirements.txt
+```
+
+AI 구간 선정을 쓰려면 Anthropic API 키를 설정하세요 (없어도 자동 분석으로 동작합니다).
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+## 사용법
+
+### 웹 화면
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
+
+브라우저에서 http://localhost:8000 → 영상 올리기 → **쇼츠 만들기**.
+완성된 쇼츠마다 상단 문구·제목·강조 단어·시작/끝 시간을 고치고 **수정 내용으로 다시 만들기**를 누르면 그 클립만 다시 렌더링됩니다.
+
+### 명령줄
+
+```bash
+python -m shorts_editor 원본.mp4 --count 3 --min-len 20 --max-len 45
+# 옵션: --layout crop  (세로로 꽉 채우기)  --no-ai  --no-teaser  --no-silence-cut  --no-transcribe
+```
+
+## 설정 (환경 변수)
+
+| 변수 | 기본값 | 설명 |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | (없음) | Claude 구간·문구 선정 |
+| `CLAUDE_MODEL` | `claude-opus-5-5` | 사용할 Claude 모델 |
+| `WHISPER_MODEL` | `small` | 음성 인식 모델 (`tiny`/`base`/`small`/`medium`/`large-v3`). 클수록 정확하지만 느림 |
+| `SHORTS_DATA_DIR` | `./data` | 업로드·결과 저장 폴더 |
+
+## 구조
+
+```
+app.py                     웹 서버 (FastAPI) — 업로드, 진행 상황, 재렌더, 다운로드
+static/index.html          웹 화면
+shorts_editor/
+  media.py                 ffprobe/ffmpeg 분석 (음량, 무음, 장면 전환)
+  transcribe.py            faster-whisper 음성 인식
+  planner.py               구간·문구 선정 (Claude / 자동 점수)
+  captions.py              컷 구성(무음 제거·줌·티저) + ASS 자막
+  render.py                ffmpeg 9:16 렌더링, 진행바, 음량 정규화
+  pipeline.py              전체 흐름
+fonts/BlackHanSans.ttf     자막 폰트 (SIL OFL)
+tests/                     pytest
+```
+
+## 테스트
+
+```bash
+python -m pytest -q
+```
