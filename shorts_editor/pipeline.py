@@ -24,7 +24,10 @@ def _noop(stage: str, pct: float) -> None:
 def analyze(src: str, workdir: Path, opts: Options, progress: Progress = _noop) -> dict:
     cache = workdir / "analysis.json"
     if cache.exists():
-        return json.loads(cache.read_text(encoding="utf-8"))
+        analysis = json.loads(cache.read_text(encoding="utf-8"))
+        if not (workdir / "transcript.txt").exists():
+            write_transcript(analysis, workdir / "transcript.txt")
+        return analysis
     progress("영상 정보 확인 중", 0.02)
     info = media.probe(src)
     analysis = {"probe": info, "envelope": [], "silences": [], "scenes": [], "transcript": []}
@@ -38,7 +41,14 @@ def analyze(src: str, workdir: Path, opts: Options, progress: Progress = _noop) 
         progress("음성 인식 중 (영상 길이에 따라 몇 분 걸릴 수 있어요)", 0.15)
         analysis["transcript"] = transcribe(src, opts.whisper_model, opts.language)
     cache.write_text(json.dumps(analysis, ensure_ascii=False), encoding="utf-8")
+    write_transcript(analysis, workdir / "transcript.txt")
     return analysis
+
+
+def write_transcript(analysis: dict, path: Path) -> None:
+    """구간·문구 기획용 대본: [시작-끝] 문장."""
+    lines = [f"[{s['start']:7.2f}-{s['end']:7.2f}] {s['text']}" for s in analysis.get("transcript", [])]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def all_words(analysis: dict) -> list[dict]:

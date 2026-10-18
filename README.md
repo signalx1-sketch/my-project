@@ -66,6 +66,15 @@ python -m shorts_editor 원본.mp4 --count 3 --min-len 20 --max-len 45
 #       --cta "풀영상은 고정 댓글에"  (마지막 3초 하단 안내)  --header float  (검은 바 없이 문구만)
 ```
 
+### 계획 파일로 렌더링 (구간·문구를 직접 정할 때)
+
+```bash
+python -m shorts_editor.planfile data/원본.plan.json          # 전부
+python -m shorts_editor.planfile data/원본.plan.json --only 1 # 2번째만 다시
+```
+
+계획 파일 예시: `examples/1015_아토피자가진단.plan.json` — 쇼츠마다 상단 문구, 제목, 이어 붙일 구간(`[시작 초, "마지막 단어"]`), 비포앤애프터 사진(질환·번호·시각), 음성 인식 오타 교정(`fixes`).
+
 ## 설정 (환경 변수)
 
 | 변수 | 기본값 | 설명 |

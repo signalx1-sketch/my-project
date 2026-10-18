@@ -212,18 +212,27 @@ SYSTEM_PROMPT = """당신은 조회수 상위 1% 유튜브 쇼츠 편집자입�
 미리보기(teaser)
 - 클립 안에서 가장 강렬한 1.5~3초(웃음, 반전, 핵심 한마디)를 골라 맨 앞에 미리 보여줍니다. 클립 앞쪽 40% 이후에서 고르세요. 마땅한 순간이 없으면 teaser_start, teaser_end 모두 0으로 두세요.
 
-hook_text (화면 상단 검은 바에 계속 떠 있는 문구)
-- 2줄, 줄바꿈은 \\n, 한 줄에 13자 이내. 강조할 핵심어는 [대괄호]로 감싸면 노란색으로 표시됩니다.
-- 시청자가 겪는 문제를 해결해 주는 문구로 쓰세요: "[증상/고민] + 해결·방법·이유" 구조.
-  예) "접촉성 피부염\\n[피부과 안 가고도 낫는 법]", "아토피 연고 발라도\\n[계속 재발하는 이유]", "이것만 알아도\\n[가려움 절반 줄어요]"
-- 숫자·대비(안 가고도, 이것만, 절대)·구체적 증상 단어를 쓰고, 답은 영상 안에 있게 하세요.
-- 영상 내용과 다른 낚시는 금지 (이탈률이 올라가 오히려 노출이 줄어듭니다).
+hook_text (화면 상단에 영상 내내 떠 있는 노란 문구 — CTR을 좌우하는 메인 문구)
+- 2줄, 줄바꿈은 \\n, 한 줄에 12자 이내 (길면 글자가 작아짐).
+- 환자가 지금 겪고 있는 문제를 정확히 찔러야 합니다. 시청자가 "어? 내 얘기네" 하고 멈추게.
+  · 1줄: 환자가 실제로 쓰는 말로 증상·상황·좌절을 구체적으로 (부위, 기간, 이미 해본 것)
+    예) "연고 끊으면 또 올라와요", "팔 안쪽·무릎 뒤 가려움", "대학병원도 못 고친 홍조"
+  · 2줄: 그 문제의 답·원인·방법을 약속 (답은 영상 안에 있게)
+    예) "이유는 따로 있습니다", "아토피인지 확인법", "이것부터 끊으세요"
+- 의학 용어보다 환자 표현을 우선 ("태선화" 대신 "피부가 두꺼워지고 거칠어짐").
+- 숫자·대비(안 가고도, 이것만, 절대)·기간을 쓰면 좋습니다.
+- 영상 내용과 다른 낚시, 완치 보장 같은 과장은 금지 (이탈률이 올라 노출이 오히려 줄어듭니다).
 
 title (업로드 제목)
 - 40자 이내, 증상 키워드를 맨 앞에 두고 해결/이유/방법을 약속하세요. 예) "아토피 이것만 알아도 가려움 줄어듭니다". 끝에 #shorts 와 관련 해시태그 1~2개.
 
 highlight_words
 - 자막에서 노란색으로 강조할 핵심 단어 3~8개. 대본에 실제로 나오는 단어 그대로 쓰세요.
+
+inserts (병원 치료 전후 사진 넣을 자리, 0~3개)
+- 대본에서 특정 질환의 증상·치료 효과를 말하는 순간을 골라 그 문장의 시작 시각(at)과 질환(category)을 적으세요.
+- category는 다음 중 하나: 아토피, 지루성피부염, 주사피부염·홍조, 접촉성피부염, 모낭염·여드름, 기타
+- 사진은 4초 이상 화면을 가리므로 서로 5초 이상 떨어지게 하고, 쇼츠 첫 3초에는 넣지 마세요.
 
 score: 예상 성과 0~100."""
 
@@ -242,11 +251,15 @@ PLAN_SCHEMA = {
                     "hook_text": {"type": "string"},
                     "title": {"type": "string"},
                     "highlight_words": {"type": "array", "items": {"type": "string"}},
+                    "inserts": {"type": "array", "items": {
+                        "type": "object",
+                        "properties": {"category": {"type": "string"}, "at": {"type": "number"}},
+                        "required": ["category", "at"], "additionalProperties": False}},
                     "reason": {"type": "string"},
                     "score": {"type": "number"},
                 },
                 "required": ["start", "end", "teaser_start", "teaser_end", "hook_text", "title",
-                             "highlight_words", "reason", "score"],
+                             "highlight_words", "inserts", "reason", "score"],
                 "additionalProperties": False,
             },
         }
@@ -323,6 +336,7 @@ def sanitize(plans: list[ShortPlan], analysis: dict, opts: Options) -> list[Shor
         if not opts.teaser:
             p.teaser_start = p.teaser_end = 0.0
         p.hook_text = p.hook_text.replace("\\n", "\n").strip()
+        p.inserts = [i for i in p.inserts if p.start + 3 <= float(i.get("at", -1)) < p.end - 2]
         out.append(p)
     return out[: opts.count]
 
