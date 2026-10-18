@@ -8,6 +8,7 @@
             [[시작 초, 끝 초], ...]          도 됨
 - fixes: 음성 인식 오타 교정 {"틀린 단어": "맞는 단어"} (자막에 반영)
 - options: Options 필드 덮어쓰기 (기본값이 더마허브 톤앤매너)
+- title_options: 업로드 제목 후보 (title이 추천안). 렌더링 후 titles.md 로 정리됨
 """
 import argparse
 import json
@@ -65,7 +66,21 @@ def run(plan_path: Path, only: set[int] | None = None) -> list[dict]:
         results.append(r)
         print(f"{r['file']}  {r['duration']}초  사진 {len(r['before_after'])}장  — {p.title}")
     (work / "shorts.json").write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_titles(plan, work / "titles.md")
     return results
+
+
+def write_titles(plan: dict, path: Path) -> None:
+    """쇼츠별 업로드 제목(추천안 + 후보)·상단 문구를 붙여넣기 쉽게 정리."""
+    lines = ["# 업로드 제목", ""]
+    for i, d in enumerate(plan["shorts"], 1):
+        lines += [f"## 쇼츠 {i:02d} — 상단 문구: {d['hook_text'].replace(chr(10), ' / ')}", "",
+                  f"- **추천** {d['title']}"]
+        lines += [f"- {t}" for t in d.get("title_options", []) if t != d["title"]]
+        if d.get("description"):
+            lines += ["", "설명란:", "", d["description"]]
+        lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> None:
