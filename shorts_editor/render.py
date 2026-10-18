@@ -42,9 +42,8 @@ def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, tota
     chains.append(f"{''.join(concat_in)}concat=n={len(parts)}:v=1:a=1[vc][ac]")
     cur = "vc"
     for j, (inp, t0, dur) in enumerate(overlays):
-        f = min(0.25, dur / 4)
-        chains.append(f"[{inp}:v]format=rgba,fade=t=in:st=0:d={f}:alpha=1,"
-                      f"fade=t=out:st={dur - f:.3f}:d={f}:alpha=1,setpts=PTS-STARTPTS+{t0:.3f}/TB[ov{j}]")
+        # 페이드 없이 딱 바뀌게 (반투명으로 겹쳐 보이면 지저분함)
+        chains.append(f"[{inp}:v]format=rgba,setpts=PTS-STARTPTS+{t0:.3f}/TB[ov{j}]")
         chains.append(f"[{cur}][ov{j}]overlay=(W-w)/2:(H-h)/2:eof_action=pass[vo{j}]")
         cur = f"vo{j}"
     post = f"[{cur}]ass={ass_name}:fontsdir={FONTS_DIR}"

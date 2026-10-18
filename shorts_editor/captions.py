@@ -181,7 +181,8 @@ def _hook_line(line: str, default_yellow: bool) -> str:
 
 def build_ass(plan: ShortPlan, parts: list[Part], words: list[dict], *, layout: str,
               total: float, font: str, src_w: int, src_h: int,
-              header_style: str = "bar", cta_text: str = "", style: TextStyle | None = None) -> str:
+              header_style: str = "bar", cta_text: str = "", related_text: str = "",
+              style: TextStyle | None = None) -> str:
     if style is None:  # 예전 방식 (Black Han Sans, 흰/노랑 2톤)
         style = TextStyle(header_font=font, caption_font=font, header_pt=96 / 0.3, caption_pt=84 / 0.3,
                           header_color="", header_bar=header_style == "bar", caption_italic=False,
@@ -252,6 +253,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             pop = "{\\fscx70\\fscy70\\t(0,180,\\fscx105\\fscy105)\\t(180,260,\\fscx100\\fscy100)}"
             events.append(f"Dialogue: 2,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
                           f"{{\\pos({OUT_W // 2},{int(hook_y)})}}{pop}" + "\\N".join(styled))
+    if related_text:
+        # 연관 동영상 유도 문구: 처음부터 끝까지 고정. 레퍼런스 실측 — 왼쪽 5%에서 시작,
+        # 중심 높이 89.5%, 글자 높이 화면의 2.2% (유튜브 '관련 동영상' 링크 바로 위를 가리킴)
+        rel_px = OUT_H * 0.022 / 0.86
+        events.append(f"Dialogue: 3,{_ts(0)},{_ts(total)},Hook,,0,0,0,,"
+                      f"{{\\an4\\q2\\pos({int(OUT_W * 0.05)},{int(OUT_H * 0.895)})"
+                      f"\\fs{ass_size(st.header_font, rel_px):.0f}\\bord0\\shad0}}{_esc(related_text)}")
     if cta_text:  # 마지막 3초 하단 안내 (예: 풀영상은 고정 댓글에서)
         events.append(f"Dialogue: 3,{_ts(max(0, total - 3))},{_ts(total)},Caption,,0,0,0,,"
                       f"{{\\pos({OUT_W // 2},{OUT_H - 120})\\fs52\\c{YELLOW}\\fad(200,0)}}{_esc(cta_text)}")

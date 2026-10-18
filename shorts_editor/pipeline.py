@@ -54,14 +54,14 @@ def render_short(src: str, workdir: Path, analysis: dict, plan: ShortPlan, opts:
     total = sum(p.dur for p in parts)
     ass = build_ass(plan, parts, words, layout=opts.layout, total=total, font="",
                     src_w=info["width"], src_h=info["height"] - opts.crop_bottom,
-                    cta_text=opts.cta_text, style=opts.text_style())
+                    cta_text=opts.cta_text, related_text=opts.related_text, style=opts.text_style())
     out = workdir / f"short_{index + 1:02d}.mp4"
     images, used = [], []
     for k, ins in enumerate(plan.inserts):
         t = to_output_time(parts, float(ins["at"]))
         if t is None:
             continue
-        dur = min(float(ins.get("duration", 3.0)), max(0.5, total - t))
+        dur = min(max(float(ins.get("duration", opts.photo_min_sec)), opts.photo_min_sec), max(0.5, total - t))
         pairs = find_pairs(ins.get("category", ""))
         pick = ins.get("pick", 0)
         pair = next((p for p in pairs if p["id"] == str(pick)), None) or \

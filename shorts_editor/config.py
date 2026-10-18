@@ -21,7 +21,7 @@ class Options:
     whisper_model: str = os.environ.get("WHISPER_MODEL", "small")
     cut_silence: bool = True       # 말 없는 구간 잘라내기(점프컷)
     teaser: bool = True            # 클립 속 하이라이트를 맨 앞에 미리보기로 붙이기
-    zoom_punch: bool = True        # 컷마다 살짝 줌인/아웃
+    zoom_punch: bool = False       # 컷마다 살짝 줌인/아웃 (기본 끔: 정신없다는 피드백)
     progress_bar: bool = False     # 하단 진행바
     header_style: str = "bar"      # bar: 상단 검은 바 / float: 배경 없이 외곽선 문구
     # 톤앤매너 (기본값: 더마허브 — 상단 지마켓산스 볼드 노랑 350pt, 자막 지마켓산스 볼드 이탤릭 흰색 250pt)
@@ -36,6 +36,8 @@ class Options:
     pt_scale: float = 0.33         # pt → 화면 픽셀 배율 (레퍼런스 실측: 350pt → 116px, 250pt → 83px)
     crop_bottom: int = 0           # 원본 하단을 잘라낼 픽셀 수 (원본에 자막이 박혀 있을 때)
     cta_text: str = ""             # 마지막 3초 하단 문구 (예: "풀영상은 고정 댓글에서")
+    related_text: str = "풀영상확인 ↓"  # 자막 아래 계속 떠 있는 연관 동영상 유도 문구 (비우면 없음)
+    photo_min_sec: float = 4.0     # 비포앤애프터 사진 최소 노출 시간
 
     @classmethod
     def from_dict(cls, d: dict) -> "Options":

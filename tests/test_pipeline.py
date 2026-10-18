@@ -174,3 +174,17 @@ def test_combined_photo(tmp_path):
     assert pairs[0]["id"] == "60" and "image" in pairs[0]
     out = make_photo(pairs[0]["image"], tmp_path / "p.png")
     assert Image.open(out).size == (1080, 620)  # 영상 높이만큼 검은 바탕
+
+
+def test_related_text_and_no_zoom():
+    from shorts_editor.config import Options
+    a = make_analysis()
+    words = [w for s in a["transcript"] for w in s["words"]]
+    plan = ShortPlan(start=20, end=45, title="t", hook_text="a\nb")
+    opts = Options()
+    parts = build_parts(plan, words, [], cut_silence=True, zoom_punch=opts.zoom_punch)
+    assert all(p.zoom == 1.0 for p in parts)
+    ass = build_ass(plan, parts, words, layout="black", total=10, font="", src_w=1920, src_h=1080,
+                    related_text=opts.related_text, style=opts.text_style())
+    line = next(l for l in ass.splitlines() if "풀영상확인" in l)
+    assert "\\an4" in line and "\\pos(54,1718)" in line and line.split(",")[1] == "0:00:00.00"
