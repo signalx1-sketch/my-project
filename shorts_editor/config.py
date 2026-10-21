@@ -37,6 +37,7 @@ class Options:
     crop_bottom: int = 0           # 원본 하단을 잘라낼 픽셀 수 (원본에 자막이 박혀 있을 때)
     cta_text: str = ""             # 마지막 3초 하단 문구 (예: "풀영상은 고정 댓글에서")
     related_text: str = "풀영상확인 ↓"  # 자막 아래 계속 떠 있는 연관 동영상 유도 문구 (비우면 없음)
+    related_y: float = 0.794       # 그 문구의 세로 위치(화면 높이 비율). 0.895는 모바일 앱 제목·채널명에 가려져 올림
     photo_min_sec: float = 4.0     # 비포앤애프터 사진 최소 노출 시간
 
     @classmethod

@@ -185,6 +185,6 @@ def test_related_text_and_no_zoom():
     parts = build_parts(plan, words, [], cut_silence=True, zoom_punch=opts.zoom_punch)
     assert all(p.zoom == 1.0 for p in parts)
     ass = build_ass(plan, parts, words, layout="black", total=10, font="", src_w=1920, src_h=1080,
-                    related_text=opts.related_text, style=opts.text_style())
+                    related_text=opts.related_text, related_y=opts.related_y, style=opts.text_style())
     line = next(l for l in ass.splitlines() if "풀영상확인" in l)
-    assert "\\an4" in line and "\\pos(54,1718)" in line and line.split(",")[1] == "0:00:00.00"
+    assert "\\an4" in line and "\\pos(54,1524)" in line and line.split(",")[1] == "0:00:00.00"

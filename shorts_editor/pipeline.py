@@ -64,7 +64,8 @@ def render_short(src: str, workdir: Path, analysis: dict, plan: ShortPlan, opts:
     total = sum(p.dur for p in parts)
     ass = build_ass(plan, parts, words, layout=opts.layout, total=total, font="",
                     src_w=info["width"], src_h=info["height"] - opts.crop_bottom,
-                    cta_text=opts.cta_text, related_text=opts.related_text, style=opts.text_style())
+                    cta_text=opts.cta_text, related_text=opts.related_text,
+                    related_y=opts.related_y, style=opts.text_style())
     out = workdir / f"short_{index + 1:02d}.mp4"
     images, used = [], []
     for k, ins in enumerate(plan.inserts):
