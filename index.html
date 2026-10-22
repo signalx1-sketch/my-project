@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>가온 워드</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Nanum+Gothic:wght@400;700&family=Nanum+Myeongjo:wght@400;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* Layout: one-screen app. App bar, toolbar, context bar, then a desk that holds an A4 sheet, then a status bar. */
+:root {
+  --desk: #e3e6e1;
+  --chrome: #f7f8f5;
+  --chrome-2: #eceee9;
+  --line: #cdd3cb;
+  --text: #1d2321;
+  --muted: #5b6661;
+  --accent: #23615d;
+  --accent-ink: #ffffff;
+  --accent-soft: #d5e7e3;
+  --danger: #a33a2c;
+  --shadow: rgba(24, 36, 33, 0.16);
+  /* Paper stays white in both themes, like a printed sheet. */
+  --paper: #ffffff;
+  --ink: #000000;
+  --page-rule: #dcdfda;
+  --ui: 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --desk: #141918; --chrome: #1e2321; --chrome-2: #262c2a; --line: #39423f;
+    --text: #e2e8e5; --muted: #9aa6a1; --accent: #7fc3ba; --accent-ink: #0d1a18;
+    --accent-soft: #263c39; --danger: #f08a7a; --shadow: rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --desk: #141918; --chrome: #1e2321; --chrome-2: #262c2a; --line: #39423f;
+  --text: #e2e8e5; --muted: #9aa6a1; --accent: #7fc3ba; --accent-ink: #0d1a18;
+  --accent-soft: #263c39; --danger: #f08a7a; --shadow: rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body { background: var(--desk); color: var(--text); font-family: var(--ui); overflow: hidden; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+button, select, input { font: inherit; color: inherit; }
+
+.app { height: 100%; display: grid; grid-template-rows: auto auto auto 1fr auto; min-height: 0; }
+
+/* App bar */
+.appbar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding-block: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--chrome); border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+.mark {
+  width: 26px; height: 26px; border-radius: 6px; background: var(--accent); color: var(--accent-ink);
+  display: grid; place-items: center; font-size: 14px; font-weight: 600;
+}
+.docname {
+  flex: 1 1 180px; min-width: 0; max-width: 420px; border: 1px solid transparent; background: transparent;
+  padding: 5px 8px; border-radius: 6px; font-size: 15px;
+}
+.docname:hover { border-color: var(--line); }
+.docname:focus { outline: none; border-color: var(--accent); background: var(--paper); color: #111; }
+.sample-chip {
+  font-size: 11px; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 99px;
+  background: var(--accent-soft); color: var(--text); white-space: nowrap;
+}
+.filebtns { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--chrome); cursor: pointer; white-space: nowrap; font-size: 13px;
+}
+.btn:hover { background: var(--chrome-2); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 500; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn svg { width: 16px; height: 16px; }
+.split { display: inline-flex; }
+.split .btn:first-child { border-radius: 7px 0 0 7px; }
+.split .btn:last-child { border-radius: 0 7px 7px 0; border-left: 1px solid rgba(255,255,255,0.35); padding: 0 6px; }
+
+/* Toolbar */
+.toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px;
+  padding-block: 6px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--chrome); border-bottom: 1px solid var(--line);
+}
+.group { display: flex; align-items: center; gap: 2px; padding-right: 4px; margin-right: 3px; border-right: 1px solid var(--line); }
+.group:last-child { border-right: 0; }
+.tb {
+  min-width: 30px; height: 30px; padding: 0 6px; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; cursor: pointer; display: inline-grid; place-items: center; font-size: 14px; position: relative;
+}
+.tb:hover { background: var(--chrome-2); }
+.tb[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.tb svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tb .glyph { font-family: Georgia, 'Times New Roman', serif; font-size: 16px; line-height: 1; }
+.colorbtn { display: inline-flex; align-items: center; }
+.colorbtn .swatchwrap { display: grid; justify-items: center; gap: 1px; }
+.colorbtn .bar { width: 16px; height: 4px; border-radius: 1px; }
+.colorbtn input[type=color] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.sel {
+  height: 30px; border: 1px solid var(--line); border-radius: 6px; background: var(--chrome); padding: 0 4px; font-size: 13px;
+}
+#styleSel { width: 84px; } #fontSel { width: 116px; } #sizeSel { width: 62px; } #lineSel { width: 70px; }
+.tb:focus-visible, .btn:focus-visible, .sel:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* Context bar */
+.ctxbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding-block: 6px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--accent-soft); border-bottom: 1px solid var(--line); font-size: 13px;
+}
+.ctxbar .label { font-weight: 600; margin-right: 4px; }
+.ctxbar .btn { height: 28px; padding: 0 10px; font-size: 12.5px; }
+.ctxbar input[type=range] { width: 140px; accent-color: var(--accent); }
+
+/* Desk and page */
+.desk {
+  overflow: auto; min-height: 0; position: relative;
+  padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.zoomwrap { width: max-content; margin: 0 auto; }
+.doc {
+  width: 210mm; min-height: 297mm; padding: 25.4mm;
+  background-color: var(--paper); color: var(--ink);
+  box-shadow: 0 1px 2px var(--shadow), 0 8px 28px var(--shadow);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(297mm - 1px), var(--page-rule) calc(297mm - 1px), var(--page-rule) 297mm);
+  outline: none; caret-color: #000;
+}
+.desk.dragover .doc { box-shadow: 0 0 0 3px var(--accent), 0 8px 28px var(--shadow); }
+.doc img.selected { outline: 2px solid #2b6cb0; outline-offset: 2px; }
+
+@media (max-width: 860px) {
+  .zoomwrap { width: 100%; }
+  .doc { width: 100%; min-height: 70vh; padding: 20px 18px; background-image: none; }
+}
+@media (max-width: 640px) {
+  .toolbar { flex-wrap: nowrap; overflow-x: auto; }
+  .group { flex: none; }
+  .brand .name { display: none; }
+  .btn .lbl { display: none; }
+  .saved-note { display: none; }
+  .desk { padding-block: 12px 32px; }
+}
+
+/* Status bar */
+.status {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted);
+  padding-block: 5px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  background: var(--chrome); border-top: 1px solid var(--line); font-variant-numeric: tabular-nums;
+}
+.status .grow { flex: 1; }
+.status .sel { height: 24px; font-size: 12px; }
+.saved-note { white-space: nowrap; }
+
+/* Find panel */
+.findpanel {
+  position: absolute; top: 10px; right: max(16px, env(safe-area-inset-right, 0px)); z-index: 5;
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 10px; padding: 10px;
+  box-shadow: 0 8px 24px var(--shadow); display: grid; gap: 8px; width: min(340px, calc(100% - 32px));
+}
+.findpanel .row { display: flex; gap: 6px; align-items: center; }
+.findpanel input[type=text] {
+  flex: 1; min-width: 0; height: 30px; border: 1px solid var(--line); border-radius: 6px; padding: 0 8px; background: var(--paper); color: #111;
+}
+.findpanel .btn { height: 28px; padding: 0 9px; font-size: 12.5px; }
+.findpanel .count { font-size: 12px; color: var(--muted); min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Popovers, dialogs, toast */
+.pop {
+  position: fixed; z-index: 30; background: var(--chrome); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 10px 30px var(--shadow); padding: 8px;
+}
+.menu { display: grid; min-width: 200px; }
+.menu button { text-align: left; border: 0; background: transparent; padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.menu button:hover, .menu button:focus-visible { background: var(--chrome-2); outline: none; }
+.menu small { display: block; color: var(--muted); font-size: 11.5px; }
+.grid-picker { display: grid; grid-template-columns: repeat(8, 18px); gap: 3px; }
+.grid-picker span { width: 18px; height: 18px; border: 1px solid var(--line); border-radius: 2px; background: var(--paper); cursor: pointer; }
+.grid-picker span.on { background: var(--accent-soft); border-color: var(--accent); }
+.grid-label { text-align: center; font-size: 12px; margin-top: 6px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 40; display: grid; place-items: center; padding: 16px; }
+.dialog {
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 12px; padding: 20px; width: min(420px, 100%);
+  box-shadow: 0 20px 50px var(--shadow); display: grid; gap: 12px;
+}
+.dialog h2 { margin: 0; font-size: 16px; font-weight: 600; text-wrap: balance; }
+.dialog p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+.dialog label { font-size: 12.5px; color: var(--muted); display: grid; gap: 4px; }
+.dialog input { height: 34px; border: 1px solid var(--line); border-radius: 6px; padding: 0 10px; background: var(--paper); color: #111; }
+.dialog .actions { display: flex; justify-content: flex-end; gap: 8px; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(44px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 50;
+  background: var(--text); color: var(--chrome); padding: 9px 16px; border-radius: 8px; font-size: 13px;
+  box-shadow: 0 8px 24px var(--shadow); max-width: calc(100% - 32px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .toast { animation: rise 0.18s ease-out; }
+  @keyframes rise { from { transform: translate(-50%, 6px); opacity: 0.4; } }
+}
+@media print {
+  .appbar, .toolbar, .ctxbar, .status, .findpanel { display: none !important; }
+  body { overflow: visible; background: #fff; }
+  .app { display: block; } .desk { overflow: visible; padding: 0; }
+  .doc { box-shadow: none; background-image: none; width: auto; min-height: 0; padding: 0; }
+  .doc .pb { break-after: page; border: 0; } .doc .pb::after { display: none; }
+}
+</style>
+<style id="docCss"></style>
+
+<div class="app">
+  <header class="appbar">
+    <div class="brand"><span class="mark" aria-hidden="true">가</span><span class="name">가온 워드</span></div>
+    <input id="docName" class="docname" type="text" value="제목 없는 문서" aria-label="문서 이름" spellcheck="false">
+    <span id="sampleChip" class="sample-chip" hidden>예시 문서</span>
+    <div class="filebtns">
+      <button class="btn" id="newBtn" type="button" title="새 문서"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></svg><span class="lbl">새 문서</span></button>
+      <button class="btn" id="openBtn" type="button" title="열기 (Ctrl+O)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg><span class="lbl">열기</span></button>
+      <div class="split">
+        <button class="btn primary" id="saveBtn" type="button" title="Word 문서로 저장 (Ctrl+S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5"/><path d="M5 20h14"/></svg><span class="lbl">.docx로 저장</span></button>
+        <button class="btn primary" id="saveMenuBtn" type="button" aria-label="다른 형식으로 저장" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+      </div>
+    </div>
+    <input id="fileInput" type="file" accept=".docx,.doc,.html,.htm,.txt,.md,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+    <input id="imgInput" type="file" accept="image/*" hidden>
+  </header>
+
+  <div class="toolbar" role="toolbar" aria-label="서식">
+    <div class="group">
+      <button class="tb" data-cmd="undo" title="실행 취소 (Ctrl+Z)" aria-label="실행 취소"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+      <button class="tb" data-cmd="redo" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행"><svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+    </div>
+    <div class="group">
+      <select id="styleSel" class="sel" aria-label="스타일">
+        <option value="p">본문</option><option value="h1">제목 1</option><option value="h2">제목 2</option>
+        <option value="h3">제목 3</option><option value="h4">제목 4</option><option value="blockquote">인용</option>
+      </select>
+      <select id="fontSel" class="sel" aria-label="글꼴"></select>
+      <select id="sizeSel" class="sel" aria-label="글자 크기"></select>
+    </div>
+    <div class="group">
+      <button class="tb" data-cmd="bold" title="굵게 (Ctrl+B)" aria-label="굵게" aria-pressed="false"><span class="glyph" style="font-weight:700">B</span></button>
+      <button class="tb" data-cmd="italic" title="기울임 (Ctrl+I)" aria-label="기울임" aria-pressed="false"><span class="glyph" style="font-style:italic">I</span></button>
+      <button class="tb" data-cmd="underline" title="밑줄 (Ctrl+U)" aria-label="밑줄" aria-pressed="false"><span class="glyph" style="text-decoration:underline">U</span></button>
+      <button class="tb" data-cmd="strikeThrough" title="취소선" aria-label="취소선" aria-pressed="false"><span class="glyph" style="text-decoration:line-through">S</span></button>
+      <button class="tb" data-cmd="superscript" title="위 첨자" aria-label="위 첨자" aria-pressed="false"><span class="glyph" style="font-size:14px">x<sup style="font-size:9px">2</sup></span></button>
+      <button class="tb" data-cmd="subscript" title="아래 첨자" aria-label="아래 첨자" aria-pressed="false"><span class="glyph" style="font-size:14px">x<sub style="font-size:9px">2</sub></span></button>
+      <label class="tb colorbtn" title="글자 색"><span class="swatchwrap"><span class="glyph" style="font-size:14px;font-weight:600">A</span><span class="bar" id="foreBar" style="background:#c00000"></span></span><input type="color" id="foreColor" value="#c00000" aria-label="글자 색"></label>
+      <label class="tb colorbtn" title="형광펜"><span class="swatchwrap"><svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="m9 11-5 5v3h3l5-5"/><path d="m13.5 6.5 4 4-6 6-4-4z"/></svg><span class="bar" id="hiliteBar" style="background:#ffff00"></span></span><input type="color" id="hiliteColor" value="#ffff00" aria-label="형광펜 색"></label>
+      <button class="tb" data-cmd="removeFormat" title="서식 지우기" aria-label="서식 지우기"><svg viewBox="0 0 24 24"><path d="M6 5h12M12 5 9 19"/><path d="m15 14 5 5m0-5-5 5"/></svg></button>
+    </div>
+    <div class="group">
+      <button class="tb" data-cmd="justifyLeft" title="왼쪽 맞춤" aria-label="왼쪽 맞춤" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg></button>
+      <button class="tb" data-cmd="justifyCenter" title="가운데 맞춤" aria-label="가운데 맞춤" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg></button>
+      <button class="tb" data-cmd="justifyRight" title="오른쪽 맞춤" aria-label="오른쪽 맞춤" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg></button>
+      <button class="tb" data-cmd="justifyFull" title="양쪽 맞춤" aria-label="양쪽 맞춤" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
+      <select id="lineSel" class="sel" aria-label="줄 간격" title="줄 간격">
+        <option value="">줄 간격</option><option value="1">1.0</option><option value="1.08">1.08</option><option value="1.15">1.15</option>
+        <option value="1.5">1.5</option><option value="2">2.0</option><option value="2.5">2.5</option><option value="3">3.0</option>
+      </select>
+    </div>
+    <div class="group">
+      <button class="tb" data-cmd="insertUnorderedList" title="글머리 기호" aria-label="글머리 기호" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M10 7h10M10 12h10M10 17h10"/><circle cx="5" cy="7" r="1.2" fill="currentColor"/><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="5" cy="17" r="1.2" fill="currentColor"/></svg></button>
+      <button class="tb" data-cmd="insertOrderedList" title="번호 매기기" aria-label="번호 매기기" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M10 7h10M10 12h10M10 17h10"/><path d="M4 5h1.5v4" stroke-width="1.5"/><path d="M4 13.5c0-1.2 2.6-1.2 2.6.2 0 .9-2.6 1.8-2.6 3.3h2.7" stroke-width="1.5"/></svg></button>
+      <button class="tb" data-cmd="outdent" title="내어쓰기 (Shift+Tab)" aria-label="내어쓰기"><svg viewBox="0 0 24 24"><path d="M4 5h16M11 10h9M11 14h9M4 19h16"/><path d="m7 9-3 3 3 3"/></svg></button>
+      <button class="tb" data-cmd="indent" title="들여쓰기 (Tab)" aria-label="들여쓰기"><svg viewBox="0 0 24 24"><path d="M4 5h16M11 10h9M11 14h9M4 19h16"/><path d="m4 9 3 3-3 3"/></svg></button>
+    </div>
+    <div class="group">
+      <button class="tb" id="tableBtn" title="표 삽입" aria-label="표 삽입"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9.5h18M3 15h18M9 4v16M15 4v16"/></svg></button>
+      <button class="tb" id="imageBtn" title="그림 삽입" aria-label="그림 삽입"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg></button>
+      <button class="tb" id="linkBtn" title="링크 (Ctrl+K)" aria-label="링크 삽입"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></button>
+      <button class="tb" id="pbBtn" title="페이지 나누기 (Ctrl+Enter)" aria-label="페이지 나누기"><svg viewBox="0 0 24 24"><path d="M5 3v6h14V3M5 21v-6h14v6"/><path d="M3 12h2M8 12h2M13 12h2M18 12h3"/></svg></button>
+    </div>
+    <div class="group">
+      <button class="tb" id="findBtn" title="찾기 및 바꾸기 (Ctrl+F)" aria-label="찾기 및 바꾸기"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/></svg></button>
+    </div>
+  </div>
+
+  <div class="ctxbar" id="ctxTable" hidden>
+    <span class="label">표</span>
+    <button class="btn" data-tbl="rowAbove" type="button">위에 행 추가</button>
+    <button class="btn" data-tbl="rowBelow" type="button">아래에 행 추가</button>
+    <button class="btn" data-tbl="colLeft" type="button">왼쪽에 열 추가</button>
+    <button class="btn" data-tbl="colRight" type="button">오른쪽에 열 추가</button>
+    <button class="btn" data-tbl="delRow" type="button">행 삭제</button>
+    <button class="btn" data-tbl="delCol" type="button">열 삭제</button>
+    <button class="btn" data-tbl="delTable" type="button">표 삭제</button>
+  </div>
+  <div class="ctxbar" id="ctxImage" hidden>
+    <span class="label">그림</span>
+    <label for="imgWidth">너비</label>
+    <input type="range" id="imgWidth" min="10" max="100" step="5" value="100">
+    <span id="imgWidthVal" style="min-width:40px;font-variant-numeric:tabular-nums">100%</span>
+    <button class="btn" id="imgDelete" type="button">그림 삭제</button>
+  </div>
+
+  <main class="desk" id="desk">
+    <div class="findpanel" id="findPanel" hidden>
+      <div class="row"><input type="text" id="findText" placeholder="찾을 내용" aria-label="찾을 내용"><span class="count" id="findCount"></span></div>
+      <div class="row"><input type="text" id="replaceText" placeholder="바꿀 내용" aria-label="바꿀 내용"></div>
+      <div class="row">
+        <button class="btn" id="findNext" type="button">다음 찾기</button>
+        <button class="btn" id="replaceOne" type="button">바꾸기</button>
+        <button class="btn" id="replaceAll" type="button">모두 바꾸기</button>
+        <button class="btn" id="findClose" type="button" aria-label="닫기">닫기</button>
+      </div>
+    </div>
+    <div class="zoomwrap" id="zoomWrap">
+      <article id="editor" class="doc" contenteditable="true" spellcheck="false" aria-label="문서 본문"></article>
+    </div>
+  </main>
+
+  <footer class="status">
+    <span id="stPages">1쪽</span>
+    <span id="stWords">0 단어</span>
+    <span id="stChars">0 글자</span>
+    <span class="grow"></span>
+    <span class="saved-note" id="stSaved">이 브라우저에 자동 보관됨</span>
+    <select id="zoomSel" class="sel" aria-label="확대/축소">
+      <option value="0.5">50%</option><option value="0.75">75%</option><option value="0.9">90%</option>
+      <option value="1" selected>100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="2">200%</option>
+    </select>
+  </footer>
+</div>
+
+<script>
+'use strict';
+/* ============================================================
+   Shared constants
+   ============================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const ed = $('#editor');
+const DEFAULT_FONT = '맑은 고딕';
+const DEFAULT_HP = 22;                 // 11pt in half-points
+const CONTENT_W_PX = 601.7;            // A4 width minus two 2.54cm margins at 96dpi
+const PAGE_H_PX = 1122.5;              // 297mm
+const FONTS = [
+  ['맑은 고딕', "'맑은 고딕','Malgun Gothic','Noto Sans KR','Apple SD Gothic Neo',sans-serif"],
+  ['바탕', "'바탕',Batang,'Noto Serif KR',AppleMyungjo,serif"],
+  ['굴림', "'굴림',Gulim,'Nanum Gothic','Noto Sans KR',sans-serif"],
+  ['돋움', "'돋움',Dotum,'Nanum Gothic','Noto Sans KR',sans-serif"],
+  ['나눔고딕', "'나눔고딕','Nanum Gothic',sans-serif"],
+  ['나눔명조', "'나눔명조','Nanum Myeongjo',serif"],
+  ['Noto Sans KR', "'Noto Sans KR',sans-serif"],
+  ['Noto Serif KR', "'Noto Serif KR',serif"],
+  ['Calibri', "Calibri,Carlito,'Noto Sans KR',sans-serif"],
+  ['Arial', "Arial,Helvetica,'Noto Sans KR',sans-serif"],
+  ['Times New Roman', "'Times New Roman',Times,'Noto Serif KR',serif"],
+  ['Georgia', "Georgia,'Noto Serif KR',serif"],
+  ['Courier New', "'Courier New',Courier,monospace"],
+];
+const FONT_ALIASES = { 'malgun gothic': '맑은 고딕', 'batang': '바탕', 'gulim': '굴림', 'dotum': '돋움', 'nanum gothic': '나눔고딕', 'nanumgothic': '나눔고딕', 'nanum myeongjo': '나눔명조', 'nanummyeongjo': '나눔명조' };
+const SIZES = [8, 9, 10, 10.5, 11, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 48, 72];
+// Heading defaults shared by the on-screen CSS and the exported styles.xml (sizes in half-points).
+const HEADINGS = {
+  H1: { hp: 32, color: '2F5496', before: 240, after: 0, italic: false },
+  H2: { hp: 26, color: '2F5496', before: 40, after: 0, italic: false },
+  H3: { hp: 24, color: '1F3763', before: 40, after: 0, italic: false },
+  H4: { hp: 22, color: '2F5496', before: 40, after: 0, italic: true },
+  H5: { hp: 22, color: '2F5496', before: 40, after: 0, italic: false },
+  H6: { hp: 22, color: '1F3763', before: 40, after: 0, italic: false },
+};
+
+function canonicalFont(name) {
+  const n = String(name || '').trim().replace(/^['"]|['"]$/g, '');
+  const alias = FONT_ALIASES[n.toLowerCase()];
+  if (alias) return alias;
+  const hit = FONTS.find(f => f[0].toLowerCase() === n.toLowerCase());
+  return hit ? hit[0] : n;
+}
+function fontStack(name) {
+  const c = canonicalFont(name);
+  const hit = FONTS.find(f => f[0] === c);
+  return hit ? hit[1] : `'${c.replace(/'/g, '')}',${FONTS[0][1]}`;
+}
+function firstFamily(css) { return canonicalFont(String(css || '').split(',')[0]); }
+
+/* Document CSS: used on screen and embedded in HTML exports. */
+const DOC_CSS = `
+.doc { font-family: ${FONTS[0][1]}; font-size: 11pt; line-height: 1.08; white-space: pre-wrap; tab-size: 4; word-break: keep-all; overflow-wrap: break-word; }
+.doc > :first-child { margin-top: 0; }
+.doc p { margin: 0 0 8pt; }
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6 { font-weight: normal; line-height: 1.08; margin: 2pt 0 0; }
+${Object.entries(HEADINGS).map(([t, h]) => `.doc ${t.toLowerCase()} { font-size: ${h.hp / 2}pt; color: #${h.color}; margin-top: ${h.before / 20}pt; margin-bottom: ${h.after / 20}pt;${h.italic ? ' font-style: italic;' : ''} }`).join('\n')}
+.doc h1 + p, .doc h2 + p, .doc h3 + p, .doc h4 + p { margin-top: 0; }
+.doc blockquote { margin: 0 0 8pt; padding-left: 36pt; color: #404040; font-style: italic; }
+.doc ul, .doc ol { margin: 0 0 8pt; padding-left: 36pt; }
+.doc li { margin: 0; }
+.doc li > p { margin: 0; }
+.doc li > ul, .doc li > ol { margin: 0; }
+.doc table { border-collapse: collapse; width: 100%; margin: 0 0 8pt; table-layout: fixed; }
+.doc td, .doc th { border: 0.5pt solid #000; padding: 0 5.4pt; vertical-align: top; text-align: left; }
+.doc td > p:last-child, .doc th > p:last-child { margin-bottom: 0; }
+.doc th { font-weight: bold; }
+.doc a { color: #0563C1; text-decoration: underline; }
+.doc img { max-width: 100%; height: auto; vertical-align: bottom; }
+.doc hr { border: 0; border-top: 0.75pt solid #000; margin: 0 0 8pt; }
+.doc .pb { display: block; height: 0; border: 0; border-top: 1px dashed #8a948f; margin: 18px 0; position: relative; user-select: none; }
+.doc .pb::after { content: '페이지 나누기'; position: absolute; left: 50%; top: -8px; transform: translateX(-50%); background: #fff; color: #6b7570; font: 11px/16px ${'system-ui'}, sans-serif; padding: 0 8px; white-space: nowrap; }
+`;
+$('#docCss').textContent = DOC_CSS;
+
+/* ============================================================
+   Small helpers
+   ============================================================ */
+function toast(msg, ms = 2600) {
+  const old = $('.toast'); if (old) old.remove();
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), ms);
+}
+const xmlEsc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const htmlEsc = xmlEsc;
+function rgbToHex(c) {
+  if (!c) return null;
+  if (c[0] === '#') { let h = c.slice(1); if (h.length === 3) h = h.split('').map(x => x + x).join(''); return h.toUpperCase(); }
+  const m = c.match(/rgba?\(([^)]+)\)/); if (!m) return null;
+  const p = m[1].split(/[ ,/]+/).filter(Boolean).map(Number);
+  if (p.length > 3 && p[3] === 0) return null;
+  return p.slice(0, 3).map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+function cssLenToPx(v) {
+  if (!v) return 0; const n = parseFloat(v); if (isNaN(n)) return 0;
+  if (v.endsWith('pt')) return n * 96 / 72; if (v.endsWith('cm')) return n * 96 / 2.54; if (v.endsWith('mm')) return n * 96 / 25.4;
+  if (v.endsWith('in')) return n * 96; if (v.endsWith('em')) return n * 14.67; return n;
+}
+const BLOCK = new Set(['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'UL', 'OL', 'LI', 'TABLE', 'BLOCKQUOTE', 'PRE', 'HR', 'SECTION', 'ARTICLE', 'HEADER', 'FOOTER', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TD', 'TH', 'FIGURE', 'ADDRESS', 'MAIN', 'NAV', 'ASIDE', 'DL', 'DT', 'DD', 'CAPTION']);
+const isBlock = n => n && n.nodeType === 1 && (BLOCK.has(n.tagName) || n.classList.contains('pb'));
+const hasBlockChild = el => [...el.children].some(isBlock);
+
+/* ============================================================
+   Selection management
+   ============================================================ */
+let savedRange = null;
+function selInEditor() {
+  const s = getSelection(); if (!s.rangeCount) return null;
+  const r = s.getRangeAt(0);
+  return ed.contains(r.commonAncestorContainer) ? r : null;
+}
+function saveSel() { const r = selInEditor(); if (r) savedRange = r.cloneRange(); }
+function restoreSel() {
+  ed.focus({ preventScroll: true });
+  if (savedRange && ed.contains(savedRange.commonAncestorContainer)) {
+    const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange);
+  }
+}
+function exec(cmd, val = null) { restoreSel(); document.execCommand(cmd, false, val); saveSel(); onChange(); updateState(); }
+function currentBlock(node) {
+  let n = node && (node.nodeType === 3 ? node.parentNode : node);
+  while (n && n !== ed) { if (isBlock(n) && !['UL', 'OL', 'TABLE', 'TBODY', 'THEAD', 'TR'].includes(n.tagName)) return n; n = n.parentNode; }
+  return null;
+}
+function selectedBlocks() {
+  const r = savedRange || selInEditor(); if (!r) return [];
+  if (r.collapsed) { const b = currentBlock(r.startContainer); return b ? [b] : []; }
+  const out = [];
+  ed.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,blockquote,div,pre,td,th').forEach(el => {
+    if (hasBlockChild(el)) return;
+    if (r.intersectsNode(el)) out.push(el);
+  });
+  return out;
+}
+
+/* Apply an inline CSS property to the selection (font size / family). */
+function applyInlineStyle(prop, value) {
+  restoreSel();
+  const sel = getSelection(); if (!sel.rangeCount) return;
+  const r = sel.getRangeAt(0);
+  if (r.collapsed) {
+    const span = document.createElement('span'); span.style[prop] = value; span.textContent = '​';
+    r.insertNode(span);
+    const nr = document.createRange(); nr.setStart(span.firstChild, 1); nr.collapse(true);
+    sel.removeAllRanges(); sel.addRange(nr);
+  } else {
+    document.execCommand('styleWithCSS', false, false);
+    document.execCommand('fontSize', false, '7');
+    document.execCommand('styleWithCSS', false, true);
+    const made = [];
+    ed.querySelectorAll('font[size="7"]').forEach(f => {
+      const span = document.createElement('span'); span.style[prop] = value;
+      f.querySelectorAll('[style]').forEach(x => { x.style[prop] = ''; if (!x.getAttribute('style')) x.removeAttribute('style'); });
+      while (f.firstChild) span.appendChild(f.firstChild);
+      f.replaceWith(span); made.push(span);
+    });
+    if (made.length) {
+      const nr = document.createRange(); nr.setStartBefore(made[0]); nr.setEndAfter(made[made.length - 1]);
+      sel.removeAllRanges(); sel.addRange(nr);
+    }
+  }
+  saveSel(); onChange(); updateState();
+}
+
+/* ============================================================
+   Toolbar wiring
+   ============================================================ */
+const fontSel = $('#fontSel'), sizeSel = $('#sizeSel'), styleSel = $('#styleSel'), lineSel = $('#lineSel');
+FONTS.forEach(([n, stack]) => { const o = new Option(n, n); o.style.fontFamily = stack; fontSel.add(o); });
+SIZES.forEach(s => sizeSel.add(new Option(String(s), String(s))));
+sizeSel.value = '11';
+
+document.querySelectorAll('.tb, .btn, .menu button').forEach(b => b.addEventListener('mousedown', e => { if (!e.target.closest('input')) e.preventDefault(); }));
+document.querySelectorAll('[data-cmd]').forEach(b => b.addEventListener('click', () => {
+  const c = b.dataset.cmd;
+  if (c === 'indent' || c === 'outdent') return indentBlocks(c === 'indent');
+  exec(c);
+}));
+styleSel.addEventListener('change', () => { exec('formatBlock', '<' + styleSel.value + '>'); });
+fontSel.addEventListener('change', () => applyInlineStyle('fontFamily', fontStack(fontSel.value)));
+sizeSel.addEventListener('change', () => applyInlineStyle('fontSize', sizeSel.value + 'pt'));
+lineSel.addEventListener('change', () => {
+  const v = lineSel.value; if (!v) return;
+  selectedBlocks().forEach(b => { b.style.lineHeight = v; });
+  restoreSel(); onChange();
+});
+$('#foreColor').addEventListener('input', e => { $('#foreBar').style.background = e.target.value; });
+$('#foreColor').addEventListener('change', e => exec('foreColor', e.target.value));
+$('#hiliteColor').addEventListener('input', e => { $('#hiliteBar').style.background = e.target.value; });
+$('#hiliteColor').addEventListener('change', e => exec('hiliteColor', e.target.value));
+document.querySelectorAll('.colorbtn').forEach(l => l.addEventListener('mousedown', saveSel));
+
+function indentBlocks(inward) {
+  restoreSel();
+  const r = selInEditor();
+  if (r && r.startContainer && (r.startContainer.nodeType === 1 ? r.startContainer : r.startContainer.parentNode).closest('li')) {
+    document.execCommand(inward ? 'indent' : 'outdent'); onChange(); return;
+  }
+  selectedBlocks().forEach(b => {
+    const cur = cssLenToPx(b.style.marginLeft);
+    const next = Math.max(0, cur + (inward ? 48 : -48));
+    b.style.marginLeft = next ? next + 'px' : '';
+  });
+  onChange();
+}
+
+/* Toolbar state */
+function updateState() {
+  const r = selInEditor();
+  if (!r) return;
+  ['bold', 'italic', 'underline', 'strikeThrough', 'superscript', 'subscript', 'insertUnorderedList', 'insertOrderedList'].forEach(c => {
+    const b = document.querySelector(`[data-cmd="${c}"]`); let v = false;
+    try { v = document.queryCommandState(c); } catch (e) {}
+    b.setAttribute('aria-pressed', String(!!v));
+  });
+  const node = r.startContainer.nodeType === 3 ? r.startContainer.parentNode : r.startContainer;
+  const el = node.nodeType === 1 ? node : ed;
+  const cs = getComputedStyle(el);
+  const fam = firstFamily(cs.fontFamily);
+  if (![...fontSel.options].some(o => o.value === fam)) fontSel.add(new Option(fam, fam));
+  fontSel.value = fam;
+  const pt = Math.round(parseFloat(cs.fontSize) * 0.75 * 2) / 2;
+  if (![...sizeSel.options].some(o => o.value === String(pt))) {
+    const o = new Option(String(pt), String(pt));
+    const after = [...sizeSel.options].find(x => parseFloat(x.value) > pt); sizeSel.add(o, after || null);
+  }
+  sizeSel.value = String(pt);
+  const blk = currentBlock(r.startContainer);
+  const tag = blk ? blk.tagName.toLowerCase() : 'p';
+  styleSel.value = [...styleSel.options].some(o => o.value === tag) ? tag : 'p';
+  const align = blk ? getComputedStyle(blk).textAlign : 'left';
+  const amap = { left: 'justifyLeft', start: 'justifyLeft', center: 'justifyCenter', right: 'justifyRight', end: 'justifyRight', justify: 'justifyFull' };
+  ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'].forEach(c => document.querySelector(`[data-cmd="${c}"]`).setAttribute('aria-pressed', String(amap[align] === c)));
+  lineSel.value = blk && blk.style.lineHeight && [...lineSel.options].some(o => o.value === blk.style.lineHeight) ? blk.style.lineHeight : '';
+  const cell = el.closest && el.closest('td,th');
+  $('#ctxTable').hidden = !(cell && ed.contains(cell));
+}
+document.addEventListener('selectionchange', () => { if (selInEditor()) { saveSel(); updateState(); } });
+
+/* ============================================================
+   Popovers and dialogs
+   ============================================================ */
+let openPop = null;
+function closePop() { if (openPop) { openPop.remove(); openPop = null; } }
+function showPop(anchor, el) {
+  closePop(); el.classList.add('pop'); document.body.appendChild(el); openPop = el;
+  const a = anchor.getBoundingClientRect(); const w = el.offsetWidth;
+  el.style.top = Math.round(a.bottom + 6) + 'px';
+  el.style.left = Math.round(Math.max(8, Math.min(a.left, innerWidth - w - 8))) + 'px';
+}
+document.addEventListener('mousedown', e => { if (openPop && !openPop.contains(e.target) && !e.target.closest('#tableBtn,#saveMenuBtn')) closePop(); });
+
+function dialog({ title, body, fields = [], okText = '확인', cancelText = '취소', danger = false }) {
+  return new Promise(resolve => {
+    const scrim = document.createElement('div'); scrim.className = 'scrim';
+    const d = document.createElement('div'); d.className = 'dialog'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+    d.innerHTML = `<h2>${htmlEsc(title)}</h2>${body ? `<p>${htmlEsc(body)}</p>` : ''}` +
+      fields.map((f, i) => `<label>${htmlEsc(f.label)}<input id="dlgField${i}" type="${f.type || 'text'}" value="${htmlEsc(f.value || '')}" placeholder="${htmlEsc(f.placeholder || '')}"></label>`).join('') +
+      `<div class="actions"><button class="btn" type="button" data-a="cancel">${htmlEsc(cancelText)}</button><button class="btn primary" type="button" data-a="ok"${danger ? ' style="background:var(--danger);border-color:var(--danger)"' : ''}>${htmlEsc(okText)}</button></div>`;
+    scrim.appendChild(d); document.body.appendChild(scrim);
+    const done = ok => { scrim.remove(); resolve(ok ? fields.map((_, i) => $('#dlgField' + i, d).value) : null); };
+    d.addEventListener('click', e => { const a = e.target.closest('[data-a]'); if (a) done(a.dataset.a === 'ok'); });
+    scrim.addEventListener('mousedown', e => { if (e.target === scrim) done(false); });
+    d.addEventListener('keydown', e => { if (e.key === 'Escape') done(false); if (e.key === 'Enter') done(true); });
+    (d.querySelector('input') || d.querySelector('[data-a="ok"]')).focus();
+  });
+}
+
+/* Table picker */
+$('#tableBtn').addEventListener('click', e => {
+  if (openPop) { closePop(); return; }
+  saveSel();
+  const el = document.createElement('div');
+  el.innerHTML = '<div class="grid-picker"></div><div class="grid-label">표 크기를 고르세요</div>';
+  const grid = el.firstChild, label = el.lastChild;
+  for (let r = 1; r <= 8; r++) for (let c = 1; c <= 8; c++) {
+    const s = document.createElement('span'); s.dataset.r = r; s.dataset.c = c; grid.appendChild(s);
+  }
+  grid.addEventListener('mouseover', ev => {
+    const s = ev.target.closest('span'); if (!s) return;
+    grid.querySelectorAll('span').forEach(x => x.classList.toggle('on', +x.dataset.r <= +s.dataset.r && +x.dataset.c <= +s.dataset.c));
+    label.textContent = `${s.dataset.r}행 × ${s.dataset.c}열`;
+  });
+  grid.addEventListener('mousedown', ev => ev.preventDefault());
+  grid.addEventListener('click', ev => {
+    const s = ev.target.closest('span'); if (!s) return; closePop(); insertTable(+s.dataset.r, +s.dataset.c);
+  });
+  showPop(e.currentTarget, el);
+});
+function insertTable(rows, cols) {
+  let h = '<table><tbody>';
+  for (let r = 0; r < rows; r++) { h += '<tr>'; for (let c = 0; c < cols; c++) h += '<td><p><br></p></td>'; h += '</tr>'; }
+  h += '</tbody></table><p><br></p>';
+  exec('insertHTML', h);
+}
+function tableOp(op) {
+  const r = savedRange; if (!r) return;
+  const n = r.startContainer.nodeType === 3 ? r.startContainer.parentNode : r.startContainer;
+  const cell = n.closest && n.closest('td,th'); if (!cell || !ed.contains(cell)) return;
+  const tr = cell.parentNode, table = cell.closest('table'), idx = cell.cellIndex;
+  const width = Math.max(...[...table.rows].map(row => [...row.cells].reduce((a, c) => a + (c.colSpan || 1), 0)));
+  const newCell = () => { const td = document.createElement('td'); td.innerHTML = '<p><br></p>'; return td; };
+  const newRow = () => { const row = document.createElement('tr'); for (let i = 0; i < width; i++) row.appendChild(newCell()); return row; };
+  if (op === 'rowAbove') tr.before(newRow());
+  if (op === 'rowBelow') tr.after(newRow());
+  if (op === 'colLeft' || op === 'colRight') [...table.rows].forEach(row => {
+    const ref = row.cells[Math.min(idx, row.cells.length - 1)];
+    if (!ref) row.appendChild(newCell()); else if (op === 'colLeft') ref.before(newCell()); else ref.after(newCell());
+  });
+  if (op === 'delRow') { tr.remove(); if (!table.rows.length) table.remove(); }
+  if (op === 'delCol') { [...table.rows].forEach(row => { if (row.cells[idx]) row.cells[idx].remove(); }); if (!table.rows[0] || !table.rows[0].cells.length) table.remove(); }
+  if (op === 'delTable') table.remove();
+  if (!ed.contains(table)) $('#ctxTable').hidden = true;
+  onChange();
+}
+document.querySelectorAll('[data-tbl]').forEach(b => b.addEventListener('click', () => tableOp(b.dataset.tbl)));
+
+/* Images */
+let selectedImg = null;
+$('#imageBtn').addEventListener('click', () => { saveSel(); $('#imgInput').click(); });
+$('#imgInput').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  const url = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(f); });
+  exec('insertHTML', `<img src="${url}" alt="">`);
+});
+function selectImage(img) {
+  if (selectedImg) selectedImg.classList.remove('selected');
+  selectedImg = img;
+  $('#ctxImage').hidden = !img;
+  if (!img) return;
+  img.classList.add('selected');
+  const w = img.style.width.endsWith('%') ? parseFloat(img.style.width) : Math.min(100, Math.round(img.getBoundingClientRect().width / zoom / CONTENT_W_PX * 100 / 5) * 5);
+  $('#imgWidth').value = w; $('#imgWidthVal').textContent = w + '%';
+}
+ed.addEventListener('click', e => selectImage(e.target.tagName === 'IMG' ? e.target : null));
+$('#imgWidth').addEventListener('input', e => {
+  if (!selectedImg) return; selectedImg.style.width = e.target.value + '%'; selectedImg.style.height = 'auto';
+  $('#imgWidthVal').textContent = e.target.value + '%'; onChange();
+});
+$('#imgDelete').addEventListener('click', () => { if (selectedImg) { selectedImg.remove(); selectImage(null); onChange(); } });
+
+/* Links */
+async function linkFlow() {
+  saveSel();
+  const r = savedRange;
+  const n = r && (r.startContainer.nodeType === 3 ? r.startContainer.parentNode : r.startContainer);
+  const existing = n && n.closest && n.closest('a');
+  const res = await dialog({ title: existing ? '링크 편집' : '링크 삽입', fields: [{ label: '주소', value: existing ? existing.getAttribute('href') : 'https://', placeholder: 'https://example.com' }], okText: existing ? '저장' : '삽입' });
+  if (!res) { restoreSel(); return; }
+  let url = res[0].trim();
+  if (!url || url === 'https://') { if (existing) { existing.replaceWith(...existing.childNodes); onChange(); } return; }
+  if (!/^(https?:|mailto:|#)/i.test(url)) url = 'https://' + url;
+  if (existing) { existing.setAttribute('href', url); onChange(); return; }
+  if (r && r.collapsed) exec('insertHTML', `<a href="${htmlEsc(url)}">${htmlEsc(url)}</a>`);
+  else exec('createLink', url);
+}
+$('#linkBtn').addEventListener('click', linkFlow);
+ed.addEventListener('click', e => {
+  const a = e.target.closest('a');
+  if (a && (e.ctrlKey || e.metaKey)) { e.preventDefault(); const w = document.createElement('a'); w.href = a.href; w.target = '_blank'; w.rel = 'noopener'; w.click(); }
+});
+
+/* Page break */
+function insertPageBreak() { exec('insertHTML', '<div class="pb" contenteditable="false"></div><p><br></p>'); }
+$('#pbBtn').addEventListener('click', insertPageBreak);
+
+/* ============================================================
+   Find & replace
+   ============================================================ */
+const findPanel = $('#findPanel'), findText = $('#findText'), replaceText = $('#replaceText'), findCount = $('#findCount');
+function openFind() { saveSel(); findPanel.hidden = false; const s = getSelection().toString(); if (s && s.length < 80) findText.value = s; findText.focus(); findText.select(); countMatches(); }
+$('#findBtn').addEventListener('click', () => findPanel.hidden ? openFind() : (findPanel.hidden = true));
+$('#findClose').addEventListener('click', () => { findPanel.hidden = true; restoreSel(); });
+function textNodes() { const w = document.createTreeWalker(ed, NodeFilter.SHOW_TEXT); const a = []; while (w.nextNode()) a.push(w.currentNode); return a; }
+function countMatches() {
+  const q = findText.value; if (!q) { findCount.textContent = ''; return 0; }
+  let n = 0; textNodes().forEach(t => { n += t.data.split(q).length - 1; });
+  findCount.textContent = n ? `${n}개` : '없음'; return n;
+}
+findText.addEventListener('input', countMatches);
+function findNext() {
+  const q = findText.value; if (!q) return false;
+  const nodes = textNodes(); if (!nodes.length) return false;
+  const r = savedRange;
+  let startIdx = 0, startOff = 0;
+  if (r) { const i = nodes.indexOf(r.endContainer); if (i >= 0) { startIdx = i; startOff = r.endOffset; } }
+  for (let k = 0; k <= nodes.length; k++) {
+    const i = (startIdx + k) % nodes.length; const t = nodes[i];
+    const from = k === 0 ? startOff : 0;
+    const at = t.data.indexOf(q, from);
+    if (at >= 0) {
+      const nr = document.createRange(); nr.setStart(t, at); nr.setEnd(t, at + q.length);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(nr); savedRange = nr.cloneRange();
+      (t.parentElement || ed).scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return true;
+    }
+  }
+  toast('찾는 내용이 없습니다'); return false;
+}
+$('#findNext').addEventListener('click', findNext);
+findText.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); findNext(); } if (e.key === 'Escape') findPanel.hidden = true; });
+$('#replaceOne').addEventListener('click', () => {
+  const q = findText.value; if (!q) return;
+  const r = savedRange;
+  if (r && r.toString() === q && ed.contains(r.commonAncestorContainer)) {
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    document.execCommand('insertText', false, replaceText.value); saveSel(); onChange();
+  }
+  findNext(); countMatches();
+});
+$('#replaceAll').addEventListener('click', () => {
+  const q = findText.value; if (!q) return;
+  let n = 0;
+  textNodes().forEach(t => { const parts = t.data.split(q); if (parts.length > 1) { n += parts.length - 1; t.data = parts.join(replaceText.value); } });
+  onChange(); countMatches(); toast(n ? `${n}개를 바꿨습니다` : '찾는 내용이 없습니다');
+});
+
+/* ============================================================
+   HTML sanitizer (for paste and opening .html files)
+   ============================================================ */
+const ALLOWED_TAGS = new Set(['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BR', 'B', 'STRONG', 'I', 'EM', 'U', 'S', 'STRIKE', 'DEL', 'INS', 'SUB', 'SUP', 'SPAN', 'A', 'UL', 'OL', 'LI', 'TABLE', 'THEAD', 'TBODY', 'TFOOT', 'TR', 'TD', 'TH', 'IMG', 'BLOCKQUOTE', 'HR', 'PRE', 'CODE', 'FONT', 'MARK']);
+const DROP_TAGS = new Set(['SCRIPT', 'STYLE', 'META', 'LINK', 'TITLE', 'HEAD', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'MATH', 'NOSCRIPT', 'TEMPLATE', 'BUTTON', 'INPUT', 'SELECT', 'TEXTAREA', 'XML', 'O:P', 'COLGROUP', 'COL']);
+const ALLOWED_CSS = ['font-weight', 'font-style', 'text-decoration', 'text-decoration-line', 'color', 'background-color', 'font-size', 'font-family', 'text-align', 'line-height', 'margin-left', 'text-indent', 'vertical-align', 'width', 'list-style-type'];
+function sanitizeHtml(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const out = document.createElement('div');
+  cleanInto(doc.body, out, false);
+  trimBlocks(out);
+  return out.innerHTML;
+}
+function cleanInto(src, dst, inPre) {
+  const kids = [...src.childNodes];
+  kids.forEach((n, i) => {
+    if (n.nodeType === 3) {
+      let d = n.data;
+      if (!inPre) d = d.replace(/[\r\n\t ]+/g, ' ');
+      if (!d.trim()) {
+        const prev = kids[i - 1], next = kids[i + 1];
+        if (['TABLE', 'TBODY', 'THEAD', 'TFOOT', 'TR', 'UL', 'OL'].includes(dst.tagName) || !prev || !next || isBlock(prev) || isBlock(next)) return;
+      }
+      dst.appendChild(document.createTextNode(d)); return;
+    }
+    if (n.nodeType !== 1) return;
+    const tag = n.tagName.toUpperCase();
+    if (DROP_TAGS.has(tag) || tag.includes(':')) return;
+    if (!ALLOWED_TAGS.has(tag)) { cleanInto(n, dst, inPre); return; }
+    const el = document.createElement(tag === 'FONT' ? 'span' : tag === 'MARK' ? 'span' : tag);
+    if (tag === 'FONT') {
+      if (n.getAttribute('face')) el.style.fontFamily = fontStack(n.getAttribute('face').split(',')[0]);
+      if (n.getAttribute('color')) el.style.color = n.getAttribute('color');
+      const sz = { 1: 8, 2: 10, 3: 12, 4: 14, 5: 18, 6: 24, 7: 36 }[n.getAttribute('size')]; if (sz) el.style.fontSize = sz + 'pt';
+    }
+    if (tag === 'MARK') el.style.backgroundColor = '#ffff00';
+    if (n.style) for (const p of ALLOWED_CSS) {
+      let v = n.style.getPropertyValue(p); if (!v) continue;
+      if (p === 'font-family') v = fontStack(v.split(',')[0]);
+      if (p === 'width' && !['IMG', 'TD', 'TH'].includes(tag)) continue;
+      el.style.setProperty(p, v);
+    }
+    if (tag === 'A') { const h = n.getAttribute('href') || ''; if (/^(https?:|mailto:|#)/i.test(h)) el.setAttribute('href', h); }
+    if (tag === 'IMG') { const s = n.getAttribute('src') || ''; if (/^(data:image\/|https?:)/i.test(s)) el.setAttribute('src', s); else return; el.alt = n.getAttribute('alt') || ''; const w = n.getAttribute('width'); if (w && !el.style.width) el.style.width = (/%$/.test(w) ? w : w + 'px'); }
+    if (tag === 'TD' || tag === 'TH') { ['colspan', 'rowspan'].forEach(a => { if (n.getAttribute(a)) el.setAttribute(a, n.getAttribute(a)); }); }
+    if (tag === 'OL' && n.getAttribute('start')) el.setAttribute('start', n.getAttribute('start'));
+    if (n.classList && n.classList.contains('pb')) { el.className = 'pb'; el.setAttribute('contenteditable', 'false'); }
+    if (n.style && (n.style.pageBreakBefore === 'always' || n.style.breakBefore === 'page')) dst.appendChild(Object.assign(document.createElement('div'), { className: 'pb', contentEditable: 'false' }));
+    cleanInto(n, el, inPre || tag === 'PRE');
+    if (el.tagName === 'SPAN' && !el.getAttribute('style')) { while (el.firstChild) dst.appendChild(el.firstChild); return; }
+    dst.appendChild(el);
+  });
+}
+function trimBlocks(root) {
+  root.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li,td,th,div,blockquote').forEach(b => {
+    if (b.closest('pre')) return;
+    const w = document.createTreeWalker(b, NodeFilter.SHOW_TEXT); const t = []; while (w.nextNode()) t.push(w.currentNode);
+    if (t.length) { t[0].data = t[0].data.replace(/^ +/, ''); t[t.length - 1].data = t[t.length - 1].data.replace(/ +$/, ''); }
+  });
+}
+ed.addEventListener('paste', e => {
+  const cd = e.clipboardData; if (!cd) return;
+  const html = cd.getData('text/html'), text = cd.getData('text/plain');
+  const imgFile = [...cd.files || []].find(f => f.type.startsWith('image/'));
+  e.preventDefault();
+  if (html) document.execCommand('insertHTML', false, sanitizeHtml(html));
+  else if (imgFile) { const fr = new FileReader(); fr.onload = () => { document.execCommand('insertHTML', false, `<img src="${fr.result}" alt="">`); onChange(); }; fr.readAsDataURL(imgFile); }
+  else document.execCommand('insertText', false, text);
+  onChange();
+});
+
+/* ============================================================
+   DOCX export
+   ============================================================ */
+const NS_DOC = 'xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"';
+const XML_HEAD = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n';
+
+async function buildDocx() {
+  // Convert images Word can't read (webp, svg, remote) into PNG data first.
+  const imgData = new Map();
+  for (const img of ed.querySelectorAll('img')) {
+    const m = (img.getAttribute('src') || '').match(/^data:image\/(png|jpe?g|gif);base64,/i);
+    if (m) { imgData.set(img, img.getAttribute('src')); continue; }
+    try {
+      if (!img.complete) await new Promise(r => { img.onload = img.onerror = r; });
+      const c = document.createElement('canvas'); c.width = img.naturalWidth || 1; c.height = img.naturalHeight || 1;
+      c.getContext('2d').drawImage(img, 0, 0); imgData.set(img, c.toDataURL('image/png'));
+    } catch (e) { /* tainted or broken image: skipped */ }
+  }
+  const ctx = { rels: [], media: [], nums: [], nextRel: 10, nextImg: 1, imgData };
+  let body = blocksXml(ed, ctx, {});
+  if (!body) body = '<w:p/>';
+  const sect = '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="851" w:footer="992" w:gutter="0"/><w:cols w:space="425"/><w:docGrid w:linePitch="360"/></w:sectPr>';
+  const docXml = `${XML_HEAD}<w:document ${NS_DOC}><w:body>${body}${sect}</w:body></w:document>`;
+
+  const zip = new JSZip();
+  const imgExts = new Set(ctx.media.map(m => m.ext));
+  zip.file('[Content_Types].xml', `${XML_HEAD}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${[...imgExts].map(e => `<Default Extension="${e}" ContentType="image/${e === 'jpg' ? 'jpeg' : e}"/>`).join('')}<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`);
+  zip.file('_rels/.rels', `${XML_HEAD}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>`);
+  const rel = (id, type, target, ext) => `<Relationship Id="${id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/${type}" Target="${xmlEsc(target)}"${ext ? ' TargetMode="External"' : ''}/>`;
+  zip.file('word/_rels/document.xml.rels', `${XML_HEAD}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${rel('rId1', 'styles', 'styles.xml')}${rel('rId2', 'numbering', 'numbering.xml')}${rel('rId3', 'settings', 'settings.xml')}${ctx.rels.map(r => rel(r.id, r.type, r.target, r.ext)).join('')}</Relationships>`);
+  zip.file('word/document.xml', docXml);
+  zip.file('word/styles.xml', stylesXml());
+  zip.file('word/numbering.xml', numberingXml(ctx.nums));
+  zip.file('word/settings.xml', `${XML_HEAD}<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:defaultTabStop w:val="720"/><w:characterSpacingControl w:val="doNotCompress"/><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>`);
+  const now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+  zip.file('docProps/core.xml', `${XML_HEAD}<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xmlEsc(docName())}</dc:title><dc:creator>가온 워드</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`);
+  zip.file('docProps/app.xml', `${XML_HEAD}<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Gaon Word</Application></Properties>`);
+  ctx.media.forEach(m => zip.file('word/media/' + m.name, m.b64, { base64: true }));
+  return zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+}
+
+function blocksXml(container, ctx, opt) {
+  let out = '', inl = [];
+  const flush = () => { if (inl.some(n => n.nodeType !== 3 || n.data.trim() || n.data.includes(' '))) out += paraXml(inl, container, ctx, opt); inl = []; };
+  for (const n of container.childNodes) {
+    if (n.nodeType === 3 || (n.nodeType === 1 && !isBlock(n))) { inl.push(n); continue; }
+    if (n.nodeType !== 1) continue;
+    flush(); out += blockXml(n, ctx, opt);
+  }
+  flush();
+  return out;
+}
+function blockXml(el, ctx, opt) {
+  const t = el.tagName;
+  if (el.classList.contains('pb')) return '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+  if (t === 'HR') return '<w:p><w:pPr><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="auto"/></w:pBdr></w:pPr></w:p>';
+  if (t === 'TABLE') return tableXml(el, ctx);
+  if (t === 'UL' || t === 'OL') return listXml(el, ctx, 0);
+  if (['THEAD', 'TBODY', 'TFOOT', 'TR', 'TD', 'TH'].includes(t)) return blocksXml(el, ctx, opt);
+  if (hasBlockChild(el)) return blocksXml(el, ctx, opt);
+  return paraXml([...el.childNodes], el, ctx, opt);
+}
+function listXml(list, ctx, ilvl) {
+  const ordered = list.tagName === 'OL';
+  ctx.nums.push({ abs: ordered ? 1 : 0, ilvl, start: ordered ? (parseInt(list.getAttribute('start'), 10) || 1) : null });
+  const numId = ctx.nums.length;
+  let out = '';
+  for (const li of list.children) {
+    if (li.tagName !== 'LI') { out += blockXml(li, ctx, {}); continue; }
+    let inl = [], first = true;
+    const emit = (nodes, blockEl) => { out += paraXml(nodes, blockEl, ctx, first ? { num: { numId, ilvl } } : { listIndent: ilvl }); first = false; };
+    for (const n of li.childNodes) {
+      if (n.nodeType === 1 && (n.tagName === 'UL' || n.tagName === 'OL')) { if (inl.length || first) emit(inl, li); inl = []; out += listXml(n, ctx, Math.min(ilvl + 1, 8)); }
+      else if (isBlock(n)) { if (inl.length) emit(inl, li); inl = []; if (hasBlockChild(n) || n.tagName === 'TABLE') out += blockXml(n, ctx, {}); else emit([...n.childNodes], n); }
+      else inl.push(n);
+    }
+    if (inl.length || first) emit(inl, li);
+  }
+  return out;
+}
+function paraXml(nodes, el, ctx, opt) {
+  const cs = getComputedStyle(el);
+  const tag = el.tagName;
+  let ppr = '';
+  if (HEADINGS[tag]) ppr += `<w:pStyle w:val="Heading${tag[1]}"/>`;
+  else if (opt.num || opt.listIndent != null) ppr += '<w:pStyle w:val="ListParagraph"/>';
+  else if (tag === 'BLOCKQUOTE' || el.closest('blockquote')) ppr += '<w:pStyle w:val="Quote"/>';
+  if (opt.num) ppr += `<w:numPr><w:ilvl w:val="${opt.num.ilvl}"/><w:numId w:val="${opt.num.numId}"/></w:numPr>`;
+  const lh = parseFloat(el.style.lineHeight);
+  let sp = '';
+  if (el.style.marginTop) sp += ` w:before="${Math.round(cssLenToPx(el.style.marginTop) * 15)}"`;
+  if (el.style.marginBottom) sp += ` w:after="${Math.round(cssLenToPx(el.style.marginBottom) * 15)}"`;
+  if (lh && /^[\d.]+$/.test(el.style.lineHeight)) sp += ` w:line="${Math.round(240 * lh)}" w:lineRule="auto"`;
+  if (sp) ppr += `<w:spacing${sp}/>`;
+  if (opt.listIndent != null) ppr += `<w:ind w:left="${720 * (opt.listIndent + 1)}"/>`;
+  else if (!opt.num && tag !== 'BLOCKQUOTE' && !['TD', 'TH', 'LI'].includes(tag)) {
+    const left = Math.round(cssLenToPx(el.style.marginLeft) * 15), first = Math.round(cssLenToPx(el.style.textIndent) * 15);
+    if (left || first) ppr += `<w:ind${left ? ` w:left="${left}"` : ''}${first > 0 ? ` w:firstLine="${first}"` : first < 0 ? ` w:hanging="${-first}"` : ''}/>`;
+  }
+  const jc = { center: 'center', right: 'right', end: 'right', justify: 'both' }[cs.textAlign];
+  if (jc) ppr += `<w:jc w:val="${jc}"/>`;
+  const runs = nodes.map(n => inlineXml(n, ctx, el, false)).join('');
+  return `<w:p>${ppr ? `<w:pPr>${ppr}</w:pPr>` : ''}${runs}</w:p>`;
+}
+function inlineXml(node, ctx, block, inLink) {
+  if (node.nodeType === 3) return textRun(node, block, inLink);
+  if (node.nodeType !== 1) return '';
+  const t = node.tagName;
+  if (t === 'BR') return '<w:r><w:br/></w:r>';
+  if (t === 'IMG') return imageXml(node, ctx);
+  if (node.classList.contains('pb')) return '<w:r><w:br w:type="page"/></w:r>';
+  if (t === 'A' && node.getAttribute('href') && !inLink) {
+    const href = node.getAttribute('href');
+    const inner = [...node.childNodes].map(c => inlineXml(c, ctx, block, true)).join('');
+    if (href.startsWith('#')) return `<w:hyperlink w:anchor="${xmlEsc(href.slice(1))}">${inner}</w:hyperlink>`;
+    const id = 'rId' + (ctx.nextRel++); ctx.rels.push({ id, type: 'hyperlink', target: href, ext: true });
+    return `<w:hyperlink r:id="${id}" w:history="1">${inner}</w:hyperlink>`;
+  }
+  return [...node.childNodes].map(c => inlineXml(c, ctx, block, inLink)).join('');
+}
+function textRun(node, block, inLink) {
+  const text = node.data.replace(/​/g, '');
+  if (!text) return '';
+  const rpr = runProps(node.parentElement, block, inLink);
+  let body = '';
+  text.split(/(\t|\n)/).forEach(part => {
+    if (part === '\t') body += '<w:tab/>';
+    else if (part === '\n') body += '<w:br/>';
+    else if (part) body += `<w:t xml:space="preserve">${xmlEsc(part.replace(/ /g, ' '))}</w:t>`;
+  });
+  return `<w:r>${rpr ? `<w:rPr>${rpr}</w:rPr>` : ''}${body}</w:r>`;
+}
+function runProps(el, block, inLink) {
+  const cs = getComputedStyle(el);
+  const head = HEADINGS[block.tagName];
+  let underline = false, strike = false, vert = null, bg = null;
+  for (let n = el; n && n !== ed; n = n.parentElement) {
+    const t = n.tagName, st = n.style;
+    if (t === 'U' || t === 'INS') underline = true;
+    if (t === 'S' || t === 'STRIKE' || t === 'DEL') strike = true;
+    const deco = (st.textDecorationLine || st.textDecoration || '');
+    if (deco.includes('underline')) underline = true;
+    if (deco.includes('line-through')) strike = true;
+    if (!vert && (t === 'SUP' || st.verticalAlign === 'super')) vert = 'superscript';
+    if (!vert && (t === 'SUB' || st.verticalAlign === 'sub')) vert = 'subscript';
+    if (!bg && n !== block && st.backgroundColor) bg = rgbToHex(st.backgroundColor);
+    if (n === block) break;
+  }
+  let r = '';
+  if (inLink) r += '<w:rStyle w:val="Hyperlink"/>';
+  const fam = firstFamily(cs.fontFamily);
+  if (fam && fam !== DEFAULT_FONT) r += `<w:rFonts w:ascii="${xmlEsc(fam)}" w:hAnsi="${xmlEsc(fam)}" w:eastAsia="${xmlEsc(fam)}" w:cs="${xmlEsc(fam)}"/>`;
+  if (parseInt(cs.fontWeight, 10) >= 600 && !(block.tagName === 'TH' && el === block)) r += '<w:b/>';
+  if (cs.fontStyle === 'italic' && !(head && head.italic) && block.tagName !== 'BLOCKQUOTE') r += '<w:i/>';
+  if (strike) r += '<w:strike/>';
+  const color = rgbToHex(cs.color);
+  const defColor = head ? head.color : (inLink ? '0563C1' : '000000');
+  if (color && color !== defColor && !(inLink && color === '0563C1') && !(block.closest('blockquote') && color === '404040')) r += `<w:color w:val="${color}"/>`;
+  let hp = Math.round(parseFloat(cs.fontSize) * 0.75 * 2);
+  if (vert) { // sub/sup render smaller on screen; keep the surrounding size
+    const p = el.closest('sup,sub,[style*="vertical-align"]'); if (p && p.parentElement) hp = Math.round(parseFloat(getComputedStyle(p.parentElement).fontSize) * 1.5);
+  }
+  if (hp && hp !== (head ? head.hp : DEFAULT_HP)) r += `<w:sz w:val="${hp}"/><w:szCs w:val="${hp}"/>`;
+  if (underline && !inLink) r += '<w:u w:val="single"/>';
+  if (bg) r += `<w:shd w:val="clear" w:color="auto" w:fill="${bg}"/>`;
+  if (vert) r += `<w:vertAlign w:val="${vert}"/>`;
+  return r;
+}
+function imageXml(img, ctx) {
+  const data = ctx.imgData.get(img); if (!data) return '';
+  const m = data.match(/^data:image\/(png|jpe?g|gif);base64,(.*)$/i); if (!m) return '';
+  const ext = m[1].toLowerCase() === 'jpeg' ? 'jpg' : m[1].toLowerCase();
+  const n = ctx.nextImg++; const name = `image${n}.${ext}`;
+  ctx.media.push({ name, ext, b64: m[2] });
+  const id = 'rId' + (ctx.nextRel++); ctx.rels.push({ id, type: 'image', target: 'media/' + name });
+  let wpx = img.getBoundingClientRect().width / zoom;
+  if (!wpx) wpx = img.style.width.endsWith('%') ? parseFloat(img.style.width) / 100 * CONTENT_W_PX : Math.min(img.naturalWidth || 200, CONTENT_W_PX);
+  const ratio = img.naturalWidth ? img.naturalHeight / img.naturalWidth : 0.75;
+  const cx = Math.round(wpx * 9525), cy = Math.round(wpx * ratio * 9525);
+  return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="${n}" name="그림 ${n}"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${n}" name="${name}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${id}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+}
+function tableXml(tbl, ctx) {
+  const rows = [...tbl.rows]; if (!rows.length) return '';
+  const grid = []; let ncols = 0;
+  rows.forEach((tr, r) => {
+    grid[r] = grid[r] || []; let c = 0;
+    for (const cell of tr.cells) {
+      while (grid[r][c]) c++;
+      const cspan = Math.max(1, cell.colSpan || 1), rspan = Math.max(1, Math.min(cell.rowSpan || 1, rows.length - r));
+      for (let i = 0; i < rspan; i++) { grid[r + i] = grid[r + i] || []; for (let j = 0; j < cspan; j++) grid[r + i][c + j] = { cell, r0: r, c0: c, cspan }; }
+      c += cspan;
+    }
+  });
+  rows.forEach((_, r) => { ncols = Math.max(ncols, grid[r].length); });
+  // Column widths from the rendered layout, scaled to the text width (9026 twips).
+  const total = 9026; let widths = new Array(ncols).fill(0);
+  for (let c = 0; c < ncols; c++) for (let r = 0; r < rows.length; r++) { const g = grid[r][c]; if (g && g.cspan === 1) { widths[c] = g.cell.getBoundingClientRect().width || 0; break; } }
+  if (widths.some(w => !w)) widths = new Array(ncols).fill(1);
+  const sum = widths.reduce((a, b) => a + b, 0); widths = widths.map(w => Math.round(w / sum * total));
+  let out = `<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="${total}" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblLook w:val="04A0" w:firstRow="1" w:lastRow="0" w:firstColumn="1" w:lastColumn="0" w:noHBand="0" w:noVBand="1"/></w:tblPr><w:tblGrid>${widths.map(w => `<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>`;
+  rows.forEach((tr, r) => {
+    const header = tr.parentNode.tagName === 'THEAD';
+    out += `<w:tr>${header ? '<w:trPr><w:tblHeader/></w:trPr>' : ''}`;
+    for (let c = 0; c < ncols;) {
+      const g = grid[r][c];
+      if (!g) { out += `<w:tc><w:tcPr><w:tcW w:w="${widths[c]}" w:type="dxa"/></w:tcPr><w:p/></w:tc>`; c++; continue; }
+      const w = widths.slice(c, c + g.cspan).reduce((a, b) => a + b, 0);
+      let tcpr = `<w:tcW w:w="${w}" w:type="dxa"/>`;
+      if (g.cspan > 1) tcpr += `<w:gridSpan w:val="${g.cspan}"/>`;
+      if (g.r0 === r && g.cell.rowSpan > 1) tcpr += '<w:vMerge w:val="restart"/>';
+      else if (g.r0 < r) tcpr += '<w:vMerge/>';
+      const bg = rgbToHex(g.cell.style.backgroundColor);
+      if (bg) tcpr += `<w:shd w:val="clear" w:color="auto" w:fill="${bg}"/>`;
+      const va = { middle: 'center', bottom: 'bottom' }[g.cell.style.verticalAlign];
+      if (va) tcpr += `<w:vAlign w:val="${va}"/>`;
+      let content = g.r0 === r ? blocksXml(g.cell, ctx, {}) : '';
+      if (!content.includes('<w:p') || content.endsWith('</w:tbl>')) content += '<w:p/>';
+      out += `<w:tc><w:tcPr>${tcpr}</w:tcPr>${content}</w:tc>`;
+      c += g.cspan;
+    }
+    out += '</w:tr>';
+  });
+  return out + '</w:tbl>';
+}
+function stylesXml() {
+  const font = xmlEsc(DEFAULT_FONT);
+  const heads = Object.entries(HEADINGS).map(([t, h]) => {
+    const n = t[1];
+    return `<w:style w:type="paragraph" w:styleId="Heading${n}"><w:name w:val="heading ${n}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="${h.before}" w:after="${h.after}"/><w:outlineLvl w:val="${n - 1}"/></w:pPr><w:rPr><w:color w:val="${h.color}"/>${h.italic ? '<w:i/>' : ''}<w:sz w:val="${h.hp}"/><w:szCs w:val="${h.hp}"/></w:rPr></w:style>`;
+  }).join('');
+  return `${XML_HEAD}<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="${font}" w:eastAsia="${font}" w:hAnsi="${font}" w:cs="${font}"/><w:kern w:val="2"/><w:sz w:val="${DEFAULT_HP}"/><w:szCs w:val="${DEFAULT_HP}"/><w:lang w:val="en-US" w:eastAsia="ko-KR" w:bidi="ar-SA"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="160" w:line="259" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>`
+    + `<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>`
+    + heads
+    + `<w:style w:type="paragraph" w:styleId="ListParagraph"><w:name w:val="List Paragraph"/><w:basedOn w:val="Normal"/><w:uiPriority w:val="34"/><w:qFormat/><w:pPr><w:ind w:left="720"/><w:contextualSpacing/></w:pPr></w:style>`
+    + `<w:style w:type="paragraph" w:styleId="Quote"><w:name w:val="Quote"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:uiPriority w:val="29"/><w:qFormat/><w:pPr><w:ind w:left="720"/></w:pPr><w:rPr><w:i/><w:color w:val="404040"/></w:rPr></w:style>`
+    + `<w:style w:type="character" w:default="1" w:styleId="DefaultParagraphFont"><w:name w:val="Default Paragraph Font"/><w:uiPriority w:val="1"/><w:semiHidden/></w:style>`
+    + `<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:basedOn w:val="DefaultParagraphFont"/><w:uiPriority w:val="99"/><w:rPr><w:color w:val="0563C1"/><w:u w:val="single"/></w:rPr></w:style>`
+    + `<w:style w:type="table" w:default="1" w:styleId="TableNormal"><w:name w:val="Normal Table"/><w:uiPriority w:val="99"/><w:semiHidden/><w:tblPr><w:tblInd w:w="0" w:type="dxa"/><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="108" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="108" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style>`
+    + `<w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:basedOn w:val="TableNormal"/><w:uiPriority w:val="39"/><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr></w:style>`
+    + `</w:styles>`;
+}
+function numberingXml(nums) {
+  const bullets = ['●', '○', '■'];
+  const fmts = [['decimal', '%1.'], ['lowerLetter', '%2.'], ['lowerRoman', '%3.']];
+  const lvl = (i, fmt, text, extra = '') => `<w:lvl w:ilvl="${i}"><w:start w:val="1"/><w:numFmt w:val="${fmt}"/><w:lvlText w:val="${text}"/><w:lvlJc w:val="left"/><w:pPr><w:ind w:left="${720 * (i + 1)}" w:hanging="360"/></w:pPr>${extra}</w:lvl>`;
+  let abs0 = '<w:abstractNum w:abstractNumId="0"><w:multiLevelType w:val="hybridMultilevel"/>';
+  let abs1 = '<w:abstractNum w:abstractNumId="1"><w:multiLevelType w:val="hybridMultilevel"/>';
+  for (let i = 0; i < 9; i++) {
+    abs0 += lvl(i, 'bullet', bullets[i % 3]);
+    const f = fmts[i % 3]; abs1 += lvl(i, f[0], `%${i + 1}.`);
+  }
+  abs0 += '</w:abstractNum>'; abs1 += '</w:abstractNum>';
+  const numXml = nums.map((n, i) => `<w:num w:numId="${i + 1}"><w:abstractNumId w:val="${n.abs}"/>${n.start != null ? `<w:lvlOverride w:ilvl="${n.ilvl}"><w:startOverride w:val="${n.start}"/></w:lvlOverride>` : ''}</w:num>`).join('');
+  return `${XML_HEAD}<w:numbering xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">${abs0}${abs1}${numXml}</w:numbering>`;
+}
+
+/* ============================================================
+   DOCX import
+   ============================================================ */
+const kids = el => el ? [...el.children] : [];
+const child = (el, name) => el ? kids(el).find(c => c.localName === name) || null : null;
+const attr = (el, name) => { if (!el) return null; for (const a of el.attributes) if (a.localName === name) return a.value; return null; };
+const onOff = el => { if (!el) return undefined; const v = attr(el, 'val'); return !(v === '0' || v === 'false' || v === 'off'); };
+const HL = { yellow: 'FFFF00', green: '00FF00', cyan: '00FFFF', magenta: 'FF00FF', blue: '0000FF', red: 'FF0000', darkBlue: '000080', darkCyan: '008080', darkGreen: '008000', darkMagenta: '800080', darkRed: '800000', darkYellow: '808000', darkGray: '808080', lightGray: 'C0C0C0', black: '000000', white: 'FFFFFF' };
+
+async function importDocx(buf) {
+  const zip = await JSZip.loadAsync(buf);
+  const read = async p => { const f = zip.file(p); return f ? f.async('string') : null; };
+  const parse = s => s ? new DOMParser().parseFromString(s, 'application/xml') : null;
+  // Locate the main document part through the package relationships.
+  let mainPath = 'word/document.xml';
+  const pkgRels = parse(await read('_rels/.rels'));
+  if (pkgRels) for (const r of pkgRels.getElementsByTagName('*')) if (r.localName === 'Relationship' && /officeDocument$/.test(r.getAttribute('Type') || '')) mainPath = r.getAttribute('Target').replace(/^\//, '');
+  const dir = mainPath.includes('/') ? mainPath.slice(0, mainPath.lastIndexOf('/') + 1) : '';
+  const doc = parse(await read(mainPath));
+  if (!doc || !doc.documentElement || doc.getElementsByTagName('parsererror').length) throw new Error('문서 본문을 읽을 수 없습니다.');
+  const relsDoc = parse(await read(dir + '_rels/' + mainPath.slice(dir.length) + '.rels'));
+  const rels = {};
+  if (relsDoc) for (const r of relsDoc.getElementsByTagName('*')) if (r.localName === 'Relationship') rels[r.getAttribute('Id')] = { target: r.getAttribute('Target'), external: r.getAttribute('TargetMode') === 'External', type: r.getAttribute('Type') || '' };
+  const relTarget = type => { const r = Object.values(rels).find(x => x.type.endsWith('/' + type)); return r ? (r.target.startsWith('/') ? r.target.slice(1) : dir + r.target) : null; };
+  const stylesDoc = parse(await read(relTarget('styles') || dir + 'styles.xml'));
+  const numDoc = parse(await read(relTarget('numbering') || dir + 'numbering.xml'));
+  const themeDoc = parse(await read(relTarget('theme') || dir + 'theme/theme1.xml'));
+
+  // Theme fonts
+  const theme = { minorLatin: null, majorLatin: null, minorEa: null, majorEa: null };
+  if (themeDoc) {
+    for (const kind of ['minor', 'major']) {
+      const f = [...themeDoc.getElementsByTagName('*')].find(e => e.localName === kind + 'Font'); if (!f) continue;
+      const latin = child(f, 'latin'), ea = child(f, 'ea');
+      theme[kind + 'Latin'] = attr(latin, 'typeface') || null;
+      const hang = kids(f).find(e => e.localName === 'font' && attr(e, 'script') === 'Hang');
+      theme[kind + 'Ea'] = (attr(ea, 'typeface') || '') || (hang && attr(hang, 'typeface')) || null;
+    }
+  }
+  const themeFont = v => !v ? null : /^minor/.test(v) ? (/EastAsia/.test(v) ? theme.minorEa : theme.minorLatin) : (/EastAsia/.test(v) ? theme.majorEa : theme.majorLatin);
+
+  // Styles
+  const styles = {}; let defRPr = null, defPPr = null, defaultParaStyle = null;
+  if (stylesDoc) {
+    const root = stylesDoc.documentElement;
+    const dd = child(root, 'docDefaults');
+    defRPr = child(child(dd, 'rPrDefault'), 'rPr'); defPPr = child(child(dd, 'pPrDefault'), 'pPr');
+    kids(root).filter(s => s.localName === 'style').forEach(s => {
+      const id = attr(s, 'styleId');
+      styles[id] = { type: attr(s, 'type'), name: (attr(child(s, 'name'), 'val') || id || '').toLowerCase(), basedOn: attr(child(s, 'basedOn'), 'val'), pPr: child(s, 'pPr'), rPr: child(s, 'rPr') };
+      if (attr(s, 'type') === 'paragraph' && ['1', 'true', 'on'].includes(attr(s, 'default'))) defaultParaStyle = id;
+    });
+  }
+  const chain = id => { const a = []; const seen = new Set(); while (id && styles[id] && !seen.has(id)) { seen.add(id); a.unshift(styles[id]); id = styles[id].basedOn; } return a; };
+  const headingLevel = id => {
+    for (const s of chain(id).reverse()) {
+      let m = s.name.match(/^heading\s*(\d)$/) || s.name.match(/^제목\s*(\d)$/);
+      if (m) return Math.min(+m[1], 6);
+      if (s.name === 'title') return 1; if (s.name === 'subtitle') return 2;
+    }
+    const m = String(id || '').match(/^heading(\d)$/i); return m ? Math.min(+m[1], 6) : 0;
+  };
+  const isQuote = id => chain(id).some(s => /quote|인용/.test(s.name));
+
+  // Numbering
+  const abstracts = {}, nums = {};
+  if (numDoc) {
+    kids(numDoc.documentElement).forEach(e => {
+      if (e.localName === 'abstractNum') {
+        const lv = {}; kids(e).filter(l => l.localName === 'lvl').forEach(l => { lv[attr(l, 'ilvl')] = { fmt: attr(child(l, 'numFmt'), 'val') || 'decimal', start: parseInt(attr(child(l, 'start'), 'val'), 10) || 1 }; });
+        abstracts[attr(e, 'abstractNumId')] = { lv, link: attr(child(e, 'numStyleLink'), 'val') };
+      }
+      if (e.localName === 'num') nums[attr(e, 'numId')] = attr(child(e, 'abstractNumId'), 'val');
+    });
+  }
+  const listInfo = (numId, ilvl) => {
+    const a = abstracts[nums[numId]]; const l = a && (a.lv[ilvl] || a.lv['0']);
+    const fmt = l ? l.fmt : 'decimal';
+    const css = { decimal: 'decimal', lowerLetter: 'lower-alpha', upperLetter: 'upper-alpha', lowerRoman: 'lower-roman', upperRoman: 'upper-roman', ganada: 'hangul', chosung: 'hangul-consonant', decimalZero: 'decimal-leading-zero' }[fmt] || 'decimal';
+    return { ordered: fmt !== 'bullet' && fmt !== 'none', css, start: l ? l.start : 1 };
+  };
+
+  // Images: preload every referenced picture as a data URL.
+  const images = {};
+  const mimeOf = p => ({ png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', bmp: 'image/bmp', webp: 'image/webp', svg: 'image/svg+xml', tif: 'image/tiff', tiff: 'image/tiff' })[p.split('.').pop().toLowerCase()];
+  for (const [id, r] of Object.entries(rels)) {
+    if (!/\/image$/.test(r.type) || r.external) continue;
+    const p = r.target.startsWith('/') ? r.target.slice(1) : normalizePath(dir + r.target);
+    const f = zip.file(p); const mime = mimeOf(p);
+    if (f && mime) images[id] = `data:${mime};base64,` + await f.async('base64');
+  }
+
+  // Property readers
+  function readRPr(rPr, o) {
+    if (!rPr) return o;
+    for (const c of kids(rPr)) {
+      switch (c.localName) {
+        case 'b': o.b = onOff(c); break;
+        case 'i': o.i = onOff(c); break;
+        case 'u': o.u = (attr(c, 'val') || 'single') !== 'none'; break;
+        case 'strike': case 'dstrike': o.strike = onOff(c); break;
+        case 'vertAlign': o.vert = attr(c, 'val'); break;
+        case 'sz': o.hp = parseInt(attr(c, 'val'), 10) || o.hp; break;
+        case 'color': { const v = attr(c, 'val'); if (v && v !== 'auto') o.color = v.toUpperCase(); else if (v === 'auto') o.color = null; break; }
+        case 'highlight': { const v = HL[attr(c, 'val')]; if (v) o.bg = v; break; }
+        case 'shd': { const f = attr(c, 'fill'); if (f && f !== 'auto' && !o.bg) o.bg = f.toUpperCase(); break; }
+        case 'rFonts': {
+          const ascii = attr(c, 'ascii') || themeFont(attr(c, 'asciiTheme')) || attr(c, 'hAnsi') || themeFont(attr(c, 'hAnsiTheme'));
+          const ea = attr(c, 'eastAsia') || themeFont(attr(c, 'eastAsiaTheme'));
+          if (ascii) o.font = ascii; if (ea) o.fontEa = ea; break;
+        }
+        case 'vanish': o.hidden = onOff(c); break;
+        case 'caps': o.caps = onOff(c); break;
+        case 'rStyle': o.rStyle = attr(c, 'val'); break;
+      }
+    }
+    return o;
+  }
+  function readPPr(pPr, o) {
+    if (!pPr) return o;
+    for (const c of kids(pPr)) {
+      switch (c.localName) {
+        case 'jc': o.jc = attr(c, 'val'); break;
+        case 'ind': {
+          const l = attr(c, 'left') ?? attr(c, 'start'); if (l != null) o.left = parseInt(l, 10) || 0;
+          const f = attr(c, 'firstLine'), h = attr(c, 'hanging');
+          if (f != null) o.first = parseInt(f, 10) || 0; if (h != null) o.first = -(parseInt(h, 10) || 0);
+          break;
+        }
+        case 'spacing': {
+          const line = attr(c, 'line'), rule = attr(c, 'lineRule');
+          if (line && (!rule || rule === 'auto')) o.line = parseInt(line, 10) / 240;
+          const bf = attr(c, 'before'), af = attr(c, 'after');
+          if (bf != null) o.before = parseInt(bf, 10) || 0; if (af != null) o.after = parseInt(af, 10) || 0;
+          break;
+        }
+        case 'numPr': { const id = attr(child(c, 'numId'), 'val'); const lv = attr(child(c, 'ilvl'), 'val'); if (id != null) o.numId = id; if (lv != null) o.ilvl = parseInt(lv, 10) || 0; break; }
+        case 'pageBreakBefore': o.pageBreak = onOff(c); break;
+        case 'pStyle': o.pStyle = attr(c, 'val'); break;
+      }
+    }
+    return o;
+  }
+
+  const hasCJK = s => /[ᄀ-ᇿ　-鿿가-힯＀-￯]/.test(s);
+
+  function runStyle(base, rPr, text) {
+    const o = Object.assign({}, base);
+    if (rPr) { const rs = attr(child(rPr, 'rStyle'), 'val'); if (rs) chain(rs).forEach(s => readRPr(s.rPr, o)); }
+    readRPr(rPr, o);
+    return o;
+  }
+  function styledNode(text, o, isHeading) {
+    const css = [];
+    if (o.b) css.push('font-weight:bold'); else if (o.b === false && isHeading) css.push('font-weight:normal');
+    if (o.i) css.push('font-style:italic');
+    const deco = [o.u && 'underline', o.strike && 'line-through'].filter(Boolean);
+    if (deco.length) css.push('text-decoration-line:' + deco.join(' '));
+    const fontName = (hasCJK(text) && o.fontEa) ? o.fontEa : (o.font || o.fontEa);
+    if (fontName && canonicalFont(fontName) !== DEFAULT_FONT) css.push(`font-family:${fontStack(fontName)}`);
+    if (o.hp && (isHeading || o.hp !== DEFAULT_HP)) css.push(`font-size:${o.hp / 2}pt`);
+    if (o.color && o.color !== '000000') css.push(`color:#${o.color}`);
+    if (o.bg) css.push(`background-color:#${o.bg}`);
+    if (o.caps) css.push('text-transform:uppercase');
+    let node;
+    if (css.length) { node = document.createElement('span'); node.setAttribute('style', css.join(';')); node.textContent = text; }
+    else node = document.createTextNode(text);
+    if (o.vert === 'superscript' || o.vert === 'subscript') { const w = document.createElement(o.vert === 'superscript' ? 'sup' : 'sub'); w.appendChild(node); node = w; }
+    return node;
+  }
+
+  // Converts runs and inline containers into DOM nodes appended to target.
+  function inlines(parent, target, pctx) {
+    for (const c of kids(parent)) {
+      switch (c.localName) {
+        case 'r': runNodes(c, target, pctx); break;
+        case 'hyperlink': {
+          const a = document.createElement('a');
+          const rid = attr(c, 'id'); const anchor = attr(c, 'anchor');
+          if (rid && rels[rid]) a.setAttribute('href', rels[rid].target); else if (anchor) a.setAttribute('href', '#' + anchor);
+          inlines(c, a, Object.assign({}, pctx, { link: true }));
+          target.appendChild(a); break;
+        }
+        case 'ins': case 'smartTag': case 'fldSimple': case 'customXml': case 'bdo': case 'dir': case 'sdtContent': case 'moveTo':
+          inlines(c, target, pctx); break;
+        case 'sdt': inlines(child(c, 'sdtContent'), target, pctx); break;
+        case 'oMath': case 'oMathPara': {
+          const t = [...c.getElementsByTagName('*')].filter(e => e.localName === 't').map(e => e.textContent).join('');
+          if (t) { const i = document.createElement('i'); i.textContent = t; target.appendChild(i); }
+          break;
+        }
+      }
+    }
+  }
+  function runNodes(r, target, pctx) {
+    const rPr = child(r, 'rPr');
+    let o = runStyle(pctx.base, rPr, '');
+    if (o.hidden) return;
+    if (pctx.link) { o = Object.assign({}, o); if (o.color === '0563C1') o.color = null; o.u = false; }
+    let buf = '';
+    const flush = () => { if (buf) { target.appendChild(styledNode(buf, o, pctx.heading)); buf = ''; } };
+    for (const c of kids(r)) {
+      switch (c.localName) {
+        case 't': buf += c.textContent; break;
+        case 'tab': buf += '\t'; break;
+        case 'noBreakHyphen': buf += '‑'; break;
+        case 'sym': { const ch = attr(c, 'char'); if (ch) { let code = parseInt(ch, 16); if (code >= 0xF000) code -= 0xF000; buf += String.fromCharCode(code); } break; }
+        case 'br': case 'cr': {
+          flush();
+          if (attr(c, 'type') === 'page') pctx.pageBreak = (pctx.hasText ? 'after' : 'before');
+          else target.appendChild(document.createElement('br'));
+          break;
+        }
+        case 'drawing': case 'pict': case 'object': {
+          flush();
+          for (const e of c.getElementsByTagName('*')) {
+            if (e.localName === 'blip' || e.localName === 'imagedata') {
+              const id = attr(e, 'embed') || attr(e, 'id'); if (!id || !images[id]) continue;
+              const img = document.createElement('img'); img.src = images[id]; img.alt = '';
+              const ext = [...c.getElementsByTagName('*')].find(x => x.localName === 'extent');
+              if (ext) { const px = (parseInt(attr(ext, 'cx'), 10) || 0) / 9525; if (px) img.style.width = Math.round(px) + 'px'; }
+              target.appendChild(img); pctx.hasText = true; break;
+            }
+          }
+          // Text boxes: keep their text inline.
+          const box = [...c.getElementsByTagName('*')].find(e => e.localName === 'txbxContent');
+          if (box) kids(box).filter(p => p.localName === 'p').forEach(p => { inlines(p, target, pctx); target.appendChild(document.createElement('br')); });
+          break;
+        }
+      }
+    }
+    if (buf) pctx.hasText = true;
+    flush();
+  }
+
+  function paragraph(p) {
+    const pPrEl = child(p, 'pPr');
+    const direct = readPPr(pPrEl, {});
+    const styleId = direct.pStyle || defaultParaStyle;
+    const pp = {}; readPPr(defPPr, pp); chain(styleId).forEach(s => readPPr(s.pPr, pp)); Object.assign(pp, direct);
+    const level = headingLevel(styleId);
+    const tag = level ? 'h' + level : (isQuote(styleId) ? 'blockquote' : 'p');
+    const base = {};
+    if (!level) { readRPr(defRPr, base); if (base.hp == null) base.hp = 20; chain(styleId).forEach(s => readRPr(s.rPr, base)); }
+    const el = document.createElement(tag);
+    const align = { center: 'center', right: 'right', end: 'right', both: 'justify', distribute: 'justify' }[pp.jc];
+    if (align) el.style.textAlign = align;
+    if (pp.line && Math.abs(pp.line - 1.08) > 0.02) el.style.lineHeight = String(Math.round(pp.line * 100) / 100);
+    const listed = pp.numId && pp.numId !== '0' && nums[pp.numId] != null;
+    if (!listed && !level && tag !== 'blockquote') {
+      if (pp.left) el.style.marginLeft = Math.round(pp.left / 15) + 'px';
+      if (pp.first) el.style.textIndent = Math.round(pp.first / 15) + 'px';
+      if (pp.after != null && pp.after !== 160) el.style.marginBottom = (pp.after / 20) + 'pt';
+      if (pp.before) el.style.marginTop = (pp.before / 20) + 'pt';
+    }
+    const pctx = { base, heading: !!level, hasText: false, pageBreak: null };
+    inlines(p, el, pctx);
+    if (!el.textContent && !el.querySelector('img,br')) el.appendChild(document.createElement('br'));
+    return { el, listed, numId: pp.numId, ilvl: pp.ilvl || 0, pageBefore: pp.pageBreak || pctx.pageBreak === 'before', pageAfter: pctx.pageBreak === 'after', empty: !el.textContent.trim() && !el.querySelector('img') };
+  }
+
+  function table(tbl) {
+    const t = document.createElement('table'); const thead = document.createElement('thead'); const tbody = document.createElement('tbody');
+    const origin = {};
+    const rows = kids(tbl).filter(e => e.localName === 'tr');
+    rows.forEach(tr => {
+      const row = document.createElement('tr');
+      const trPr = child(tr, 'trPr');
+      let col = parseInt(attr(child(trPr, 'gridBefore'), 'val'), 10) || 0;
+      const cells = [];
+      kids(tr).forEach(e => { if (e.localName === 'tc') cells.push(e); else if (e.localName === 'sdt') kids(child(e, 'sdtContent')).forEach(x => x.localName === 'tc' && cells.push(x)); });
+      cells.forEach(tc => {
+        const tcPr = child(tc, 'tcPr');
+        const span = parseInt(attr(child(tcPr, 'gridSpan'), 'val'), 10) || 1;
+        const vm = child(tcPr, 'vMerge');
+        if (vm && attr(vm, 'val') !== 'restart' && origin[col]) { origin[col].rowSpan += 1; col += span; return; }
+        const td = document.createElement('td');
+        if (span > 1) td.colSpan = span;
+        const fill = attr(child(tcPr, 'shd'), 'fill'); if (fill && fill !== 'auto') td.style.backgroundColor = '#' + fill;
+        const va = attr(child(tcPr, 'vAlign'), 'val'); if (va === 'center') td.style.verticalAlign = 'middle'; else if (va === 'bottom') td.style.verticalAlign = 'bottom';
+        blocks(tc, td);
+        if (!td.firstChild) td.innerHTML = '<p><br></p>';
+        if (vm && attr(vm, 'val') === 'restart') origin[col] = td; else delete origin[col];
+        row.appendChild(td); col += span;
+      });
+      (child(trPr, 'tblHeader') && !tbody.rows.length ? thead : tbody).appendChild(row);
+    });
+    if (thead.rows.length) t.appendChild(thead);
+    t.appendChild(tbody);
+    return t;
+  }
+
+  function blocks(container, out) {
+    let stack = []; // [{ilvl, list, numId}]
+    const pb = () => Object.assign(document.createElement('div'), { className: 'pb', contentEditable: 'false' });
+    const handle = node => {
+      switch (node.localName) {
+        case 'p': {
+          const r = paragraph(node);
+          if (r.pageBefore) { stack = []; out.appendChild(pb()); if (r.empty && !r.listed && !r.pageAfter) return; }
+          if (r.listed) {
+            const info = listInfo(r.numId, r.ilvl);
+            while (stack.length && stack[stack.length - 1].ilvl > r.ilvl) stack.pop();
+            let top = stack[stack.length - 1];
+            if (top && top.ilvl === r.ilvl && (top.numId !== r.numId || top.ordered !== info.ordered)) { stack.pop(); top = stack[stack.length - 1]; }
+            if (!top || top.ilvl < r.ilvl) {
+              const list = document.createElement(info.ordered ? 'ol' : 'ul');
+              if (info.ordered && info.css !== 'decimal') list.style.listStyleType = info.css;
+              if (info.ordered && info.start !== 1) list.setAttribute('start', info.start);
+              const parentLi = top && top.list.lastElementChild;
+              (parentLi || out).appendChild(list);
+              top = { ilvl: r.ilvl, list, numId: r.numId, ordered: info.ordered }; stack.push(top);
+            }
+            const li = document.createElement('li');
+            const el = r.el; if (el.style.textAlign) li.style.textAlign = el.style.textAlign; if (el.style.lineHeight) li.style.lineHeight = el.style.lineHeight;
+            while (el.firstChild) li.appendChild(el.firstChild);
+            top.list.appendChild(li);
+          } else { stack = []; out.appendChild(r.el); }
+          if (r.pageAfter) { stack = []; out.appendChild(pb()); }
+          break;
+        }
+        case 'tbl': stack = []; out.appendChild(table(node)); break;
+        case 'sdt': kids(child(node, 'sdtContent')).forEach(handle); break;
+        case 'customXml': case 'ins': kids(node).forEach(handle); break;
+      }
+    };
+    kids(container).forEach(handle);
+  }
+
+  const body = child(doc.documentElement, 'body');
+  const out = document.createElement('div');
+  blocks(body, out);
+  // Drop a trailing empty paragraph Word adds after a final table or break.
+  return out.innerHTML || '<p><br></p>';
+}
+function normalizePath(p) { const parts = []; p.split('/').forEach(s => { if (s === '..') parts.pop(); else if (s && s !== '.') parts.push(s); }); return parts.join('/'); }
+
+/* ============================================================
+   File handling
+   ============================================================ */
+function docName() { return ($('#docName').value || '제목 없는 문서').trim().replace(/[\\/:*?"<>|]+/g, '_'); }
+async function offerFile(filename, data) {
+  let dl = null;
+  try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e) { dl = null; }
+  if (dl) {
+    try { await dl.save({ filename, data }); toast(`${filename} 저장됨`); return; }
+    catch (e) { if (e && e.code === 'declined') { toast('저장을 취소했습니다'); return; } if (e && e.code === 'rate_limited') { toast('잠시 후 다시 시도해 주세요'); return; } }
+  }
+  const blob = data instanceof Blob ? data : new Blob([data]);
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast(`${filename} 저장됨`);
+}
+async function saveDocx() {
+  try { const blob = await buildDocx(); await offerFile(docName() + '.docx', blob); }
+  catch (e) { console.error(e); toast('Word 파일을 만드는 중 문제가 생겼습니다: ' + e.message, 4000); }
+}
+function exportHtml() {
+  const clone = ed.cloneNode(true); clone.removeAttribute('contenteditable'); clone.removeAttribute('id');
+  clone.querySelectorAll('.selected').forEach(x => x.classList.remove('selected'));
+  const html = `<!doctype html>\n<html lang="ko"><head><meta charset="utf-8"><title>${htmlEsc(docName())}</title><style>body{background:#f2f2f2;margin:0;padding:24px}.doc{background:#fff;margin:0 auto;width:210mm;padding:25.4mm;box-sizing:border-box}${DOC_CSS}</style></head><body>${clone.outerHTML}</body></html>`;
+  offerFile(docName() + '.html', html);
+}
+function exportTxt() { offerFile(docName() + '.txt', ed.innerText.replace(/​/g, '')); }
+
+$('#saveBtn').addEventListener('click', saveDocx);
+$('#saveMenuBtn').addEventListener('click', e => {
+  if (openPop) { closePop(); return; }
+  const m = document.createElement('div'); m.className = 'menu'; m.setAttribute('role', 'menu');
+  m.innerHTML = `<button type="button" role="menuitem" data-f="docx">Word 문서 (.docx)<small>Microsoft Word, 한컴오피스, LibreOffice에서 열림</small></button><button type="button" role="menuitem" data-f="html">웹 페이지 (.html)<small>서식을 유지한 HTML</small></button><button type="button" role="menuitem" data-f="txt">일반 텍스트 (.txt)<small>서식 없이 글자만</small></button>`;
+  m.addEventListener('click', ev => { const b = ev.target.closest('[data-f]'); if (!b) return; closePop(); ({ docx: saveDocx, html: exportHtml, txt: exportTxt })[b.dataset.f](); });
+  showPop(e.currentTarget, m);
+  const r = m.getBoundingClientRect(); const a = e.currentTarget.getBoundingClientRect();
+  m.style.left = Math.max(8, a.right - r.width) + 'px';
+});
+
+$('#openBtn').addEventListener('click', () => $('#fileInput').click());
+$('#fileInput').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; if (f) openFile(f); });
+async function openFile(f) {
+  const ext = (f.name.split('.').pop() || '').toLowerCase();
+  const base = f.name.replace(/\.[^.]+$/, '');
+  try {
+    let html;
+    if (ext === 'docx' || ext === 'docm' || ext === 'dotx') html = await importDocx(await f.arrayBuffer());
+    else if (ext === 'doc') { toast('이전 Word 형식(.doc)은 열 수 없습니다. Word에서 .docx로 저장한 뒤 열어 주세요.', 5000); return; }
+    else if (ext === 'html' || ext === 'htm') html = sanitizeHtml(await f.text());
+    else html = (await f.text()).replace(/\r\n?/g, '\n').split('\n').map(l => `<p>${l ? htmlEsc(l) : '<br>'}</p>`).join('');
+    loadContent(html, base, false);
+    toast(`${f.name} 열림`);
+  } catch (err) {
+    console.error(err);
+    toast(`${f.name}을(를) 열 수 없습니다. 손상되었거나 지원하지 않는 형식입니다.`, 4500);
+  }
+}
+const desk = $('#desk');
+desk.addEventListener('dragover', e => { if ([...e.dataTransfer.types].includes('Files')) { e.preventDefault(); desk.classList.add('dragover'); } });
+desk.addEventListener('dragleave', e => { if (e.target === desk) desk.classList.remove('dragover'); });
+desk.addEventListener('drop', e => {
+  desk.classList.remove('dragover');
+  const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (!f) return;
+  e.preventDefault();
+  if (f.type.startsWith('image/')) { const fr = new FileReader(); fr.onload = () => { ed.focus(); document.execCommand('insertHTML', false, `<img src="${fr.result}" alt="">`); onChange(); }; fr.readAsDataURL(f); }
+  else openFile(f);
+});
+
+$('#newBtn').addEventListener('click', async () => {
+  const ok = await dialog({ title: '새 문서를 시작할까요?', body: '지금 문서는 지워집니다. 필요하면 먼저 .docx로 저장하세요.', okText: '새 문서', danger: true });
+  if (ok) { loadContent('<p><br></p>', '제목 없는 문서', false); ed.focus(); }
+});
+
+/* ============================================================
+   Document state, autosave, status
+   ============================================================ */
+const STORE_KEY = 'gaon-word-draft-v1';
+let isSample = false, saveTimer = null, statTimer = null;
+function loadContent(html, name, sample) {
+  ed.innerHTML = html; $('#docName').value = name; isSample = sample; $('#sampleChip').hidden = !sample;
+  selectImage(null); $('#ctxTable').hidden = true; savedRange = null;
+  ed.querySelectorAll('.pb').forEach(p => p.setAttribute('contenteditable', 'false'));
+  updateStats(); if (!sample) persist();
+  $('.desk').scrollTop = 0;
+}
+function persist() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify({ html: ed.innerHTML, name: $('#docName').value, at: Date.now() })); $('#stSaved').textContent = '이 브라우저에 자동 보관됨'; }
+  catch (e) { $('#stSaved').textContent = '자동 보관을 사용할 수 없음'; }
+}
+function onChange() {
+  if (isSample) { isSample = false; $('#sampleChip').hidden = true; }
+  clearTimeout(saveTimer); saveTimer = setTimeout(persist, 700);
+  clearTimeout(statTimer); statTimer = setTimeout(updateStats, 250);
+}
+ed.addEventListener('input', onChange);
+$('#docName').addEventListener('input', onChange);
+function updateStats() {
+  const text = ed.innerText.replace(/​/g, '');
+  const words = (text.match(/\S+/g) || []).length;
+  const chars = text.replace(/\n/g, '').length;
+  const pbs = ed.querySelectorAll('.pb').length;
+  const pages = innerWidth > 860 ? Math.max(Math.ceil(ed.offsetHeight / PAGE_H_PX), pbs + 1) : pbs + 1;
+  $('#stPages').textContent = `${pages}쪽`;
+  $('#stWords').textContent = `${words.toLocaleString('ko-KR')} 단어`;
+  $('#stChars').textContent = `${chars.toLocaleString('ko-KR')} 글자`;
+}
+
+/* Zoom */
+let zoom = 1;
+$('#zoomSel').addEventListener('change', e => { zoom = parseFloat(e.target.value); $('#zoomWrap').style.zoom = zoom; });
+
+/* Keyboard */
+document.addEventListener('keydown', e => {
+  const mod = e.ctrlKey || e.metaKey;
+  if (e.key === 'Escape') { closePop(); if (!findPanel.hidden) findPanel.hidden = true; }
+  if (!mod) return;
+  const k = e.key.toLowerCase();
+  if (k === 's') { e.preventDefault(); saveDocx(); }
+  else if (k === 'o') { e.preventDefault(); $('#fileInput').click(); }
+  else if (k === 'f' || k === 'h') { e.preventDefault(); openFind(); }
+  else if (k === 'k' && selInEditor()) { e.preventDefault(); linkFlow(); }
+  else if (k === 'enter' && selInEditor()) { e.preventDefault(); saveSel(); insertPageBreak(); }
+  else if (k === 'e' && selInEditor()) { e.preventDefault(); exec('justifyCenter'); }
+  else if (k === 'l' && selInEditor()) { e.preventDefault(); exec('justifyLeft'); }
+  else if (k === 'r' && selInEditor()) { e.preventDefault(); exec('justifyRight'); }
+  else if (k === 'j' && selInEditor()) { e.preventDefault(); exec('justifyFull'); }
+});
+ed.addEventListener('keydown', e => {
+  if (e.key === 'Tab') {
+    e.preventDefault(); saveSel();
+    const r = selInEditor(); const n = r && (r.startContainer.nodeType === 3 ? r.startContainer.parentNode : r.startContainer);
+    if (n && n.closest && n.closest('li')) indentBlocks(!e.shiftKey);
+    else if (e.shiftKey) indentBlocks(false);
+    else { document.execCommand('insertText', false, '\t'); onChange(); }
+  }
+  if ((e.key === 'Backspace' || e.key === 'Delete') && selectedImg) { e.preventDefault(); selectedImg.remove(); selectImage(null); onChange(); }
+});
+
+/* ============================================================
+   Start-up
+   ============================================================ */
+document.execCommand('defaultParagraphSeparator', false, 'p');
+document.execCommand('styleWithCSS', false, true);
+
+const SAMPLE = `
+<h1>2026년 4분기 신제품 출시 계획</h1>
+<p><span style="color:#595959">작성: 제품기획팀 · 2026년 10월 22일</span></p>
+<p>이 문서는 <b>가온 워드</b>로 만든 예시 문서입니다. 내용을 고치거나, 위의 <b>열기</b>로 내 Word 파일(.docx)을 불러와 편집한 뒤 <b>.docx로 저장</b>하면 Microsoft Word에서 그대로 열 수 있습니다.</p>
+<h2>1. 목표</h2>
+<p>연말 성수기에 맞춰 신규 라인업 3종을 출시하고, 출시 후 8주 안에 <span style="background-color:#ffff00">누적 판매 12,000대</span>를 달성합니다.</p>
+<ul><li>온라인 사전 예약 4,000건 확보</li><li>오프라인 체험 매장 25곳 운영<ul><li>수도권 15곳, 지방 10곳</li></ul></li><li>고객 만족도 4.5점(5점 만점) 이상 유지</li></ul>
+<h2>2. 주요 일정</h2>
+<table><thead><tr><th style="background-color:#dfe9e7">단계</th><th style="background-color:#dfe9e7">기간</th><th style="background-color:#dfe9e7">담당</th></tr></thead><tbody>
+<tr><td><p>최종 품질 검증</p></td><td><p>10월 27일 – 11월 7일</p></td><td><p>품질관리팀</p></td></tr>
+<tr><td><p>사전 예약 오픈</p></td><td><p>11월 10일</p></td><td><p>마케팅팀</p></td></tr>
+<tr><td><p>정식 출시</p></td><td><p>11월 24일</p></td><td><p>영업본부</p></td></tr>
+</tbody></table>
+<h2>3. 진행 순서</h2>
+<ol><li>제품별 가격 확정 및 승인</li><li>유통 채널별 물량 배분</li><li>출시 행사 준비<ol><li>장소 섭외</li><li>초청 명단 확정</li></ol></li></ol>
+<h3>참고 사항</h3>
+<p style="text-align:justify">예산 집행은 <i>분기 예산 운영 지침</i>을 따르며, 변경 사항은 매주 목요일 회의에서 공유합니다. 부품 수급이 지연될 경우 출시일을 <u>최대 1주</u> 조정할 수 있습니다. 탄소 배출 목표는 CO<sub>2</sub> 기준 전년 대비 10% 감축입니다.</p>
+`;
+
+(function start() {
+  let draft = null;
+  try { draft = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { draft = null; }
+  if (draft && draft.html) loadContent(draft.html, draft.name || '제목 없는 문서', false);
+  else loadContent(SAMPLE.trim(), '4분기 신제품 출시 계획', true);
+  addEventListener('resize', updateStats);
+  if (document.fonts) document.fonts.ready.then(updateStats);
+})();
+</script>
+
+</body>
+</html>
