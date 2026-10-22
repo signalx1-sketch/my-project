@@ -1,6 +1,11 @@
 # 가온 워드
 
-브라우저에서 바로 쓰는 MS Word 호환 워드 프로세서입니다. 설치 없이 `index.html`을 브라우저로 열면 됩니다.
+브라우저에서 바로 쓰는 MS Word 호환 워드 프로세서입니다. 설치할 것은 없습니다.
+
+## PC에서 열기
+
+- **`gaon-word-offline.html`** (권장): 받아서 더블클릭하면 됩니다. 인터넷이 없어도 모든 기능이 동작합니다. 글꼴은 PC에 설치된 것(Windows는 맑은 고딕, 바탕, 굴림, 돋움 등)을 씁니다.
+- `index.html`: 인터넷에서 압축 도구와 웹 글꼴(나눔고딕, Noto 등)을 불러오는 버전입니다.
 
 ## 할 수 있는 일
 
@@ -30,4 +35,5 @@
 ## 구조
 
 - `src/gaon-word.html` – 앱 전체 (HTML, CSS, JS 한 파일). .docx 읽기/쓰기는 직접 구현했고, 압축 처리에만 [JSZip](https://stuk.github.io/jszip/)을 CDN으로 불러옵니다.
-- `build.sh` – `src/gaon-word.html`을 감싸 바로 열 수 있는 `index.html`을 만듭니다. 소스를 고친 뒤 실행하세요.
+- `vendor/jszip.min.js` – 오프라인 버전에 넣는 JSZip 3.10.1 (MIT 라이선스)
+- `build.sh` – `src/gaon-word.html`로 `index.html`과 `gaon-word-offline.html`을 만듭니다. 소스를 고친 뒤 실행하세요.
