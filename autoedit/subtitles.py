@@ -4,7 +4,24 @@ from dataclasses import dataclass
 from .cuts import _ends_sentence, is_filler
 from .timeline import Timeline
 
-MAX_CHARS = 14      # 한 줄 최대 글자 수 (공백 제외)
+# 자막 스타일. 기본은 더마허브 레퍼런스 영상(youtu.be/dybUda36l7A)의 자막:
+# Pretendard Bold, 화면 높이 3~3.5% 크기, 흰 글자 + 테두리 없이 반투명 검정 박스, 하단 중앙 한 줄(10~25자),
+# 강조색/애니메이션 없음, 화자·슬라이드·자료 화면 위 어디서나 같은 모양.
+CAPTION_STYLES = {
+    "reference": {
+        "font": "Pretendard",  # 굵기는 Bold 칸(-1)으로 고른다 (libass는 'Pretendard Bold'라는 이름으로 못 찾는다)
+        "line": "52,&H00FFFFFF,&H00FFFFFF,&H80000000,&H80000000,-1,0,0,0,100,100,0,0,3,12,0,2,80,80,54,1",
+        "max_chars": 22, "max_words": 7, "highlight": False,
+    },
+    # 예전 스타일: 어그로체 M 큰 글씨 + 검은 테두리, 핵심 단어 노란색
+    "aggro": {
+        "font": None,  # fonts.caption_fonts()가 고른 글꼴
+        "line": "86,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,6,2,2,80,80,70,1",
+        "max_chars": 14, "max_words": 6, "highlight": True,
+    },
+}
+DEFAULT_CAPTION_STYLE = "reference"
+MAX_CHARS = 14      # 한 줄 최대 글자 수 (공백 제외) - 스타일마다 바뀐다
 MAX_WORDS = 6       # 한 줄 최대 어절 수
 LINE_GAP = 0.5      # 출력 시간 기준으로 이만큼 비면 줄을 끊는다
 POP_MIN_GAP = 20.0  # 강조 효과음 최소 간격 (자주 나면 거슬린다)
@@ -21,9 +38,9 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,{cap},86,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,6,2,2,80,80,70,1
+Style: Cap,{cap},{capline}
 Style: Label,{big},44,&H00FFFFFF,&H00FFFFFF,&H38141414,&H38141414,0,0,0,0,100,100,0,0,3,14,0,7,56,56,52,1
-Style: Logo,Pretendard Bold,34,&H10FFFFFF,&H10FFFFFF,&H50000000,&H00000000,0,0,0,0,100,100,0,0,1,3,1,9,56,56,56,1
+Style: Logo,Pretendard,34,&H10FFFFFF,&H10FFFFFF,&H50000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,1,9,56,56,56,1
 Style: Big,{big},110,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,7,3,5,120,120,0,1
 Style: Sub,{big},48,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,5,120,120,0,1
 Style: Cta,{big},58,&H00FFFFFF,&H00FFFFFF,&H202020E0,&H202020E0,0,0,0,0,100,100,0,0,3,18,0,8,80,80,70,1
@@ -73,13 +90,13 @@ def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[Ou
     return out
 
 
-def group_lines(ws: list[OutWord]) -> list[list[OutWord]]:
+def group_lines(ws: list[OutWord], max_chars: int = MAX_CHARS, max_words: int = MAX_WORDS) -> list[list[OutWord]]:
     lines: list[list[OutWord]] = []
     cur: list[OutWord] = []
     for w in ws:
         if cur:
             chars = sum(len(x.text) for x in cur) + len(w.text)
-            if (chars > MAX_CHARS or len(cur) >= MAX_WORDS or w.s - cur[-1].e > LINE_GAP
+            if (chars > max_chars or len(cur) >= max_words or w.s - cur[-1].e > LINE_GAP
                     or w.section != cur[-1].section or _ends_sentence(cur[-1].text)):
                 lines.append(cur)
                 cur = []
@@ -109,23 +126,26 @@ def _visible(start: float, end: float, hide: list[tuple[float, float]]) -> list[
 
 def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
               fonts: tuple[str, str] = ("Pretendard ExtraBold", "Pretendard ExtraBold"),
-              hide: list[tuple[float, float]] = ()) -> tuple[str, list[tuple[float, str]]]:
+              hide: list[tuple[float, float]] = (), style: str = DEFAULT_CAPTION_STYLE
+              ) -> tuple[str, list[tuple[float, str]]]:
     """ASS 자막 문자열과 효과음 이벤트 [(시간, 종류)] 를 돌려준다.
 
     hide: 슬라이드가 화면을 덮는 구간. 슬라이드에 섹션 이름이 있어서 이 동안은 좌상단 챕터 라벨과
     큰 챕터 제목을 숨긴다 (아래 자막은 그대로 둔다).
     """
     hide = list(hide)
+    cs = CAPTION_STYLES[style]
     events: list[str] = []
     sfx: list[tuple[float, str]] = []
-    keywords = [k for k in plan.get("keywords", []) if k.strip()]
+    # 강조색을 쓰지 않는 스타일이면 키워드 강조(와 그 팝 효과음)도 끈다
+    keywords = [k for k in plan.get("keywords", []) if k.strip()] if cs["highlight"] else []
     total = tl.duration
 
     def add(layer: int, start: float, end: float, style: str, text: str):
         events.append(f"Dialogue: {layer},{ts(start)},{ts(end)},{style},,0,0,0,,{text}")
 
     # 자막
-    lines = group_lines(map_words(words, tl, plan.get("fix", {})))
+    lines = group_lines(map_words(words, tl, plan.get("fix", {})), cs["max_chars"], cs["max_words"])
     last_pop = -POP_MIN_GAP
     for i, line in enumerate(lines):
         start = line[0].s
@@ -184,5 +204,6 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
             "{\\fad(150,200)\\fscx80\\fscy80\\t(0,180,\\fscx100\\fscy100)}구독 · 좋아요 · 알림설정")
         sfx.append((total - CTA_SEC, "ding"))
 
-    header = HEADER.replace("{cap}", fonts[0]).replace("{big}", fonts[1])
+    header = (HEADER.replace("{capline}", cs["line"]).replace("{cap}", cs["font"] or fonts[0])
+              .replace("{big}", fonts[1]))
     return header + "\n".join(events) + "\n", sorted(sfx)

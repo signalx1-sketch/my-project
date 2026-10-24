@@ -36,6 +36,8 @@ def main():
                    help="슬라이드 글꼴: readable(Pretendard, 작은 글씨 키움) 또는 original(파일에 지정된 글꼴)")
     p.add_argument("--face", type=float, default=broll.FACE_TARGET,
                    help="본편에서 얼굴이 그대로 보이는 시간 비율 목표 (기본 0.2)")
+    p.add_argument("--caption-style", choices=list(subtitles.CAPTION_STYLES), default=subtitles.DEFAULT_CAPTION_STYLE,
+                   help="자막 모양: reference(더마허브 레퍼런스: Pretendard, 반투명 박스) 또는 aggro(어그로체 큰 글씨)")
     p.add_argument("--channel", default="더마허브", help="우상단 로고 글자")
     p.add_argument("--no-ai", action="store_true", help="Claude API를 쓰지 않는다")
     p.add_argument("--model", default="large-v3-turbo", help="음성 인식 모델")
@@ -102,7 +104,8 @@ def main():
               f"전체 화면 자료 {len(cnt['full'])}개 {sum(p.dur for p in cnt['full']):.0f}초, 팝업 {len(cnt['side'])}개 "
               f"/ 본편 중 얼굴 {100 * (1 - cover / body_len):.0f}%")
     hide = [(p.start, p.start + p.dur) for p in placements if p.mode == "slide"]
-    ass, sfx = subtitles.build_ass(words, tl, plan, args.channel, fonts.caption_fonts(), hide)
+    ass, sfx = subtitles.build_ass(words, tl, plan, args.channel, fonts.caption_fonts(), hide,
+                                   args.caption_style)
     # 전체 화면 자료는 화면 전환 자체가 효과라서 소리를 넣지 않고, 얼굴 옆 팝업에만 작게 넣는다
     sfx = sorted(sfx + [(p.start, "pop") for p in placements if p.mode == "side"])
     src_len = sentences[-1].end if sentences else 0
