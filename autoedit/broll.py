@@ -29,6 +29,7 @@ SIDE_MIN = 2.2
 SIDE_GAP = 12.0      # 팝업 사이 최소 간격
 FACE_KEEP = 1.5      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
 FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
+FACE_SHORT = 2.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 얼굴로 둔다
@@ -387,13 +388,22 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             continue
         bd.add(pick, "full", t, dur)
 
-    # 5. 자료 사이에 남은 아주 짧은 얼굴 조각(깜빡임)은 앞 자료를 늘려서 메운다
+    # 5. 자료 사이에 잠깐(2초 미만) 얼굴이 비치는 곳은 화면이 깜빡이는 것처럼 어색하다.
+    #    챕터 시작/팝업 자리가 아니면 앞 자료를 늘려서(안 되면 뒤 자료를 당겨서) 메운다
     for s0, e0 in bd.face_windows():
-        if e0 - s0 >= FACE_MIN or any(ks < e0 and s0 < ke for ks, ke in keep_face):
+        if e0 - s0 >= FACE_SHORT or any(ks < e0 - 0.05 and s0 + 0.05 < ke for ks, ke in keep_face):
             continue
-        prev = next((p for p in bd.placed if p.mode != "side" and abs(p.start + p.dur - s0) < 0.05), None)
+        full = [p for p in bd.placed if p.mode != "side"]
+        prev = next((p for p in full if abs(p.start + p.dur - s0) < 0.05), None)
+        nxt = next((p for p in full if abs(p.start - e0) < 0.05), None)
         if prev and (prev.asset.kind != "video" or prev.dur + (e0 - s0) <= prev.asset.duration - 0.2):
             prev.dur = round(snap(e0) - prev.start, 4)
+        elif nxt and nxt.asset.kind != "video":
+            nxt.dur = round(nxt.start + nxt.dur - snap(s0), 4)
+            nxt.start = snap(s0)
+        elif prev and nxt:  # 둘 다 길이가 정해진 영상이면 앞 영상을 끝까지 쓰고 뒤를 당긴다
+            room = prev.asset.duration - 0.2 - prev.dur
+            prev.dur = round(prev.dur + max(0.0, room), 4)
     return sorted(bd.placed, key=lambda p: p.start)
 
 

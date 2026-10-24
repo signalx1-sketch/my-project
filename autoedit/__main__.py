@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from . import broll, cuts, fonts, motion, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
+from . import broll, cuts, fonts, motion, motion_hf, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
 
 
 def load_dotenv(path: Path):
@@ -73,7 +73,10 @@ def main():
         sl = slides_mod.load(args.slides.resolve(), work, readable=args.slide_font == "readable")
         matched = slides_mod.match(sl, sentences, words, plan.get("chapters", []))
         # 슬라이드를 움직이는 카드로 (숫자 카운트업, 줄마다 등장, 막대 비교). 못 만들면 정지 이미지
-        cards = None if args.no_motion else motion.render(args.slides.resolve(), work)
+        # HyperFrames로 만들고, 쓸 수 없으면 자체 렌더러(Playwright)로 대신한다
+        cards = None
+        if not args.no_motion:
+            cards = motion_hf.render(args.slides.resolve(), work) or motion.render(args.slides.resolve(), work)
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}",
                                              cards[m["slide"].no][0] if cards and m["slide"].no in cards else m["slide"].path,
                                              "slide", 0.0, m["slide"].text), "t": m["t"]} for m in matched]

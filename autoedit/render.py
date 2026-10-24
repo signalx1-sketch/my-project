@@ -1,5 +1,7 @@
 """ffmpeg로 클립을 자르고 줌을 넣어 이어 붙인 뒤, 자막/효과음/배경음악을 입혀 최종 영상을 만든다."""
+import os
 import subprocess
+import sys
 import wave
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -50,6 +52,31 @@ def thin_sfx(events: list[tuple[float, str]], duration: float) -> list[tuple[flo
         if all(abs(t - k) >= gap for k, _ in kept):
             kept.append((t, kind))
     return sorted(kept)
+
+
+OPENMONTAGE_DIRS = [os.environ.get("OPENMONTAGE_DIR", ""), str(Path.home() / "tools" / "OpenMontage"),
+                    "/home/user/tools/OpenMontage"]
+
+
+def enhance_voice(speech: Path, out: Path) -> Path:
+    """OpenMontage의 audio_enhance(clean_speech 프리셋: 저역/고역 정리, 잡음 게이트, 압축)로 목소리를 다듬는다.
+    OpenMontage가 없으면 원본을 그대로 쓴다."""
+    om = next((Path(d) for d in OPENMONTAGE_DIRS if d and (Path(d) / "tools" / "audio" / "audio_enhance.py").exists()), None)
+    if om is None:
+        return speech
+    code = ("import sys,json;sys.path.insert(0,sys.argv[1]);from tools.audio.audio_enhance import AudioEnhance;"
+            "r=AudioEnhance().execute({'input_path':sys.argv[2],'output_path':sys.argv[3],'preset':'clean_speech',"
+            "'audio_codec':'pcm_s16le'});print(json.dumps({'ok':r.success,'error':getattr(r,'error',None)}))")
+    tmp = out.with_name(out.stem + "_om.wav")
+    r = subprocess.run([sys.executable, "-c", code, str(om), str(speech), str(tmp)], capture_output=True, text=True, cwd=om)
+    if r.returncode != 0 or not tmp.exists():
+        print(f"  OpenMontage 음성 정리 실패, 원본 음성을 씁니다: {(r.stderr or r.stdout)[-300:]}")
+        return speech
+    # loudnorm이 192kHz로 올려 놓으므로 편집기 기준(48kHz 스테레오)으로 되돌린다
+    run(["ffmpeg", "-v", "error", "-y", "-i", str(tmp), "-ar", str(SR), "-ac", "2", "-c:a", "pcm_s16le", str(out)])
+    tmp.unlink(missing_ok=True)
+    print("  OpenMontage로 목소리 정리 (clean_speech)")
+    return out
 
 
 def run(cmd: list[str]):
@@ -144,6 +171,7 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
     _concat([p[0] for p in parts], video, ["-c", "copy"])
     _concat([p[1] for p in parts], speech, ["-c", "copy"])
 
+    speech = enhance_voice(speech, work / "speech_clean.wav")
     sfx = work / "sfx.wav"
     build_sfx_track(sfx_events, tl.duration, sfx)
     ass_path = work / "subs.ass"

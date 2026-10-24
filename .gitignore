@@ -6,3 +6,4 @@ __pycache__/
 *.mov
 *.wav
 assets/fonts/SBAggroM.*
+assets/vendor/
