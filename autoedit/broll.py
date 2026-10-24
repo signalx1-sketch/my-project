@@ -459,7 +459,7 @@ def ffmpeg_inputs(placements: list[Placement]) -> list[str]:
 def _full_image(path: Path, d: float) -> str:
     """사진을 화면 전체에 천천히 확대하며 보여준다. 16:9와 많이 다르면(도표, 전후 사진, 제품) 잘리지 않게
     흐린 배경 위에 원본 비율로 얹는다."""
-    frames = int(d * 30)
+    frames = round(d * 30) + 2  # 버림으로 한 프레임 모자라면 끝에서 얼굴이 비친다 (남는 건 trim이 자른다)
     w, h = _dims(path)
     zoom = (f"zoompan=z='1+0.0010*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}"
             f":s=1920x1080:fps=30")
