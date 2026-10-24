@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from . import broll, cuts, fonts, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
+from . import broll, cuts, fonts, motion, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
 
 
 def load_dotenv(path: Path):
@@ -34,6 +34,8 @@ def main():
     p.add_argument("--slides", type=Path, help="발표 슬라이드(pptx). 말하는 순간에 맞춰 화면 전체에 띄운다")
     p.add_argument("--slide-font", choices=["readable", "original"], default="readable",
                    help="슬라이드 글꼴: readable(Pretendard, 작은 글씨 키움) 또는 original(파일에 지정된 글꼴)")
+    p.add_argument("--no-motion", action="store_true",
+                   help="슬라이드를 모션 그래픽 카드로 만들지 않고 정지 이미지로 쓴다")
     p.add_argument("--face", type=float, default=broll.FACE_TARGET,
                    help="본편에서 얼굴이 그대로 보이는 시간 비율 목표 (기본 0.2)")
     p.add_argument("--caption-style", choices=list(subtitles.CAPTION_STYLES), default=subtitles.DEFAULT_CAPTION_STYLE,
@@ -70,8 +72,11 @@ def main():
     if args.slides:
         sl = slides_mod.load(args.slides.resolve(), work, readable=args.slide_font == "readable")
         matched = slides_mod.match(sl, sentences, words, plan.get("chapters", []))
-        slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}", m["slide"].path, "slide", 0.0,
-                                             m["slide"].text), "t": m["t"]} for m in matched]
+        # 슬라이드를 움직이는 카드로 (숫자 카운트업, 줄마다 등장, 막대 비교). 못 만들면 정지 이미지
+        cards = None if args.no_motion else motion.render(args.slides.resolve(), work)
+        slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}",
+                                             cards[m["slide"].no][0] if cards and m["slide"].no in cards else m["slide"].path,
+                                             "slide", 0.0, m["slide"].text), "t": m["t"]} for m in matched]
         # 슬라이드에 적힌 용어로 자막 오타를 고친다 (직접 적은 fix가 우선)
         auto_fix = slides_mod.term_fixes(sl, words)
         plan["fix"] = {**auto_fix, **plan.get("fix", {})}

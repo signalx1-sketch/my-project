@@ -436,6 +436,8 @@ def ffmpeg_inputs(placements: list[Placement]) -> list[str]:
         a = p.asset
         if a.kind == "image" and p.mode == "full":
             args += ["-i", str(a.path)]  # 한 장만 읽고 zoompan이 필요한 프레임 수만큼 만든다
+        elif a.kind == "slide" and a.path.suffix == ".mp4":
+            args += ["-i", str(a.path)]  # 모션 그래픽 카드: 앞부분만 움직이고 나머지는 마지막 장면을 늘린다
         elif a.kind in ("image", "slide"):
             args += ["-loop", "1", "-framerate", "30", "-t", f"{p.dur}", "-i", str(a.path)]
         else:
@@ -477,6 +479,8 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
             fades += f",fade=t=out:st={max(0, d - FADE)}:d={FADE}:alpha=1"
         if p.mode == "slide":
             prep = "fps=30,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2"
+            if p.asset.path.suffix == ".mp4":
+                prep += f",tpad=stop_mode=clone:stop_duration={d + 1:.2f}"
             pos = "0:0"
         elif p.mode == "full":
             if p.asset.kind == "image":
