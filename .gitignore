@@ -7,3 +7,5 @@ __pycache__/
 *.wav
 assets/fonts/SBAggroM.*
 assets/vendor/
+remotion/node_modules/
+remotion/out/

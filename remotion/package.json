@@ -1,0 +1,12 @@
+{
+  "name": "dermahub-remotion",
+  "private": true,
+  "type": "module",
+  "description": "Remotion(React로 영상 만들기) 작업 공간. scripts/setup_tools.sh가 npm install로 설치한다.",
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.538"
+  }
+}
