@@ -35,6 +35,23 @@ SFX_SOURCES = {
 SFX_GAIN = {"whoosh": 0.6, "pop": 0.45, "ding": 0.5}
 
 
+SFX_EVERY = 30.0      # 본편 효과음은 30초에 하나 꼴 (1분에 1~2개)
+SFX_EDGE = 30.0       # 처음/끝 30초는 조금 더 자주 (인트로, 엔딩)
+SFX_EDGE_EVERY = 6.0
+SFX_PRIORITY = {"ding": 0, "whoosh": 1, "pop": 2}
+
+
+def thin_sfx(events: list[tuple[float, str]], duration: float) -> list[tuple[float, str]]:
+    """효과음이 너무 잦으면 거슬린다. 중요한 것(딩 > 휙 > 팝)부터 남기고 간격이 좁은 것은 뺀다."""
+    kept: list[tuple[float, str]] = []
+    for t, kind in sorted(events, key=lambda e: (SFX_PRIORITY.get(e[1], 9), e[0])):
+        edge = t < SFX_EDGE or t > duration - SFX_EDGE
+        gap = SFX_EDGE_EVERY if edge else SFX_EVERY
+        if all(abs(t - k) >= gap for k, _ in kept):
+            kept.append((t, kind))
+    return sorted(kept)
+
+
 def run(cmd: list[str]):
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode != 0:

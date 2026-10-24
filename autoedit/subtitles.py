@@ -76,33 +76,94 @@ def fix_text(text: str, fixes: dict[str, str]) -> str:
 
 
 def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[OutWord]:
-    """원본 단어들을 출력 타임라인 시간으로 옮기고 잘못 인식된 용어를 고친다 (잘려나간 단어는 빠진다)."""
+    """원본 단어들을 출력 타임라인 시간으로 옮기고 잘못 인식된 용어를 고친다 (잘려나간 단어는 빠진다).
+
+    음성 인식의 단어 시간에는 앞뒤 쉼이 붙어 있어서 무음을 자른 경계에 걸치는 경우가 많다.
+    그래서 단어가 가장 많이 겹치는 클립에 붙이고, 그 클립 안으로 시간을 잘라 넣는다.
+    """
     out: list[OutWord] = []
-    for c in tl.clips:
-        if c.kind == "bumper":
+    clips = [c for c in tl.clips if c.kind != "bumper"]
+    for w in words:
+        if is_filler(w["w"]) or w.get("drop"):
             continue
-        for w in words:
-            if w["s"] >= c.src_start - 0.03 and w["e"] <= c.src_end + 0.08 and not is_filler(w["w"]):
-                s = c.out_start + max(0.0, w["s"] - c.src_start)
-                e = min(c.out_start + c.dur, c.out_start + (w["e"] - c.src_start))
-                out.append(OutWord(fix_text(w["w"], fixes), s, max(e, s + 0.05), c.kind))
+        for kind in ("hook", "body"):  # 콜드 오픈에 쓰인 문장은 본편에도 한 번 더 나온다
+            best, ov = None, 0.05
+            for c in clips:
+                if c.kind != kind:
+                    continue
+                o = min(w["e"], c.src_end) - max(w["s"], c.src_start)
+                if o > ov:
+                    best, ov = c, o
+            if best is None:
+                continue
+            c = best
+            s = c.out_start + max(0.0, w["s"] - c.src_start)
+            e = min(c.out_start + c.dur, c.out_start + (w["e"] - c.src_start))
+            out.append(OutWord(fix_text(w["w"], fixes), s, max(e, s + 0.05), c.kind))
     out.sort(key=lambda w: w.s)
     return out
 
 
+# 이 글자로 끝나는 어절 뒤에서 끊으면 의미 단위로 자연스럽다 (연결어미, 조사, 쉼표)
+GOOD_BREAK = (",", "고", "서", "면", "며", "데", "는", "은", "도", "를", "을", "에", "게", "지만", "니까", "요", "죠")
+
+
+def _chars(ws: list[OutWord]) -> int:
+    return sum(len(x.text) for x in ws)
+
+
+def _balanced(seg: list[OutWord], max_chars: int, max_words: int) -> list[list[OutWord]]:
+    """한 덩어리를 줄 수가 가장 적고 길이가 고르게, 되도록 의미 단위에서 끊는다.
+
+    "…좋아하지 / 않아요"처럼 두세 글자만 다음 줄로 밀리는 것을 막는다.
+    """
+    n = len(seg)
+    total = _chars(seg)
+    k = max(-(-total // max_chars), -(-n // max_words))
+    target = total / k
+    INF = float("inf")
+    # best[j]: 앞에서 j어절까지 줄로 나눴을 때 (줄 수, 비용)
+    best: list[tuple[float, float]] = [(0, 0.0)] + [(INF, INF)] * n
+    back = [0] * (n + 1)
+    for j in range(1, n + 1):
+        for i in range(j - 1, -1, -1):
+            line = seg[i:j]
+            c = _chars(line)
+            if c > max_chars and j - i > 1 or j - i > max_words:
+                break
+            cost = (c - target) ** 2
+            if c < 5 and n > 1:
+                cost += 200  # 너무 짧은 줄
+            if j < n and not seg[j - 1].text.rstrip().endswith(GOOD_BREAK):
+                cost += 25   # 의미 단위가 아닌 곳에서 끊음
+            cand = (best[i][0] + 1, best[i][1] + cost)
+            if cand < best[j]:
+                best[j], back[j] = cand, i
+    out, j = [], n
+    while j > 0:
+        out.append(seg[back[j]:j])
+        j = back[j]
+    return out[::-1]
+
+
 def group_lines(ws: list[OutWord], max_chars: int = MAX_CHARS, max_words: int = MAX_WORDS) -> list[list[OutWord]]:
-    lines: list[list[OutWord]] = []
+    """자막 줄 나누기. 문장 끝, 긴 쉼, 구간(콜드 오픈/본편)이 바뀌는 곳에서 먼저 끊고,
+    그 안에서 길면 고르게 나눈다."""
+    segs: list[list[OutWord]] = []
     cur: list[OutWord] = []
     for w in ws:
-        if cur:
-            chars = sum(len(x.text) for x in cur) + len(w.text)
-            if (chars > max_chars or len(cur) >= max_words or w.s - cur[-1].e > LINE_GAP
-                    or w.section != cur[-1].section or _ends_sentence(cur[-1].text)):
-                lines.append(cur)
-                cur = []
+        if cur and (w.s - cur[-1].e > LINE_GAP or w.section != cur[-1].section or _ends_sentence(cur[-1].text)):
+            segs.append(cur)
+            cur = []
         cur.append(w)
     if cur:
-        lines.append(cur)
+        segs.append(cur)
+    lines: list[list[OutWord]] = []
+    for seg in segs:
+        if _chars(seg) <= max_chars and len(seg) <= max_words:
+            lines.append(seg)
+        else:
+            lines.extend(_balanced(seg, max_chars, max_words))
     return lines
 
 

@@ -385,3 +385,43 @@ def to_sentence(t: float, sentences: list[Sentence]) -> tuple[int, float]:
         if s.start <= t + 1e-6:
             cur = s
     return cur.idx, round(max(0.0, t - cur.start), 2)
+
+
+# 용어 뒤에 붙는 조사 (사전 단어에서 떼고 비교한다)
+PARTICLES = ("으로", "에서", "보다", "까지", "이나", "이며", "은", "는", "이", "가", "을", "를", "도", "로", "와", "과",
+             "에", "의", "나", "만")
+
+
+def _stem(tok: str) -> str:
+    changed = True
+    while changed:  # "스테로이드와도"처럼 조사가 겹친 경우
+        changed = False
+        for p in PARTICLES:
+            if tok.endswith(p) and len(tok) - len(p) >= 2:
+                tok, changed = tok[: -len(p)], True
+                break
+    return tok
+
+
+def term_fixes(slides: list[Slide], words: list[dict], min_len: int = 4) -> dict[str, str]:
+    """슬라이드에 적힌 용어로 음성 인식 오타를 찾는다 (\"캐토코나졸\" → \"케토코나졸\", \"타크롤리무스\" → \"타크로리무스\").
+
+    슬라이드 용어(조사를 뗀 4글자 이상)와 마지막 글자가 아닌 곳에서 한 글자만 다르고, 그 자체는 슬라이드에 없는
+    말을 고친다. 끝 글자가 다른 경우는 어미 차이("요청하면/요청하시")라서 건드리지 않는다.
+    """
+    vocab = {_stem(t) for s in slides for t in re.findall(r"[가-힣]+", s.text)}
+    # 용어(명사)만 본다. "있습니다", "막으면서" 같은 서술어는 뺀다
+    vocab = {t for t in vocab if len(t) >= min_len and t[-1] not in "다서고요면죠며지게니까"}
+    fixes: dict[str, str] = {}
+    for w in words:
+        tok = re.sub(r"[^가-힣]", "", w["w"])
+        for t in vocab:
+            if len(tok) < len(t):
+                continue
+            head, rest = tok[: len(t)], tok[len(t):]
+            if head == t or head in vocab or (rest and _stem(tok) != head):
+                continue
+            diff = [i for i in range(len(t)) if head[i] != t[i]]
+            if len(diff) == 1 and diff[0] < len(t) - 1:
+                fixes[head] = t
+    return fixes

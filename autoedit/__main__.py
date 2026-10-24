@@ -54,10 +54,11 @@ def main():
 
     print("1/4 음성 인식")
     words = transcribe.transcribe(src, work / "words.json", args.model)
+    n_rep = cuts.mark_repeats(words)  # 같은 말을 바로 다시 한 곳은 마지막 것만 남긴다
     sentences = cuts.split_sentences(words)
     (work / "sentences.txt").write_text(
         "\n".join(f"[{s.idx}] ({s.start:.1f}s) {s.text}" for s in sentences), encoding="utf-8")
-    print(f"  단어 {len(words)}개, 문장 {len(sentences)}개 → {work / 'sentences.txt'}")
+    print(f"  단어 {len(words)}개, 문장 {len(sentences)}개 (반복한 말 {n_rep}단어 제거) → {work / 'sentences.txt'}")
 
     print("2/4 편집 계획")
     plan = plan_mod.make_plan(sentences, args.plan, work / "plan.json", use_ai=not args.no_ai)
@@ -71,6 +72,11 @@ def main():
         matched = slides_mod.match(sl, sentences, words, plan.get("chapters", []))
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}", m["slide"].path, "slide", 0.0,
                                              m["slide"].text), "t": m["t"]} for m in matched]
+        # 슬라이드에 적힌 용어로 자막 오타를 고친다 (직접 적은 fix가 우선)
+        auto_fix = slides_mod.term_fixes(sl, words)
+        plan["fix"] = {**auto_fix, **plan.get("fix", {})}
+        if auto_fix:
+            print("  슬라이드 용어로 자막 교정: " + ", ".join(f"{a}→{b}" for a, b in auto_fix.items()))
         (work / "slides.json").write_text(json.dumps(
             [{"slide": m["slide"].no, "t": m["t"], "matched": m["matched"], "text": m["slide"].text} for m in matched],
             ensure_ascii=False, indent=0), encoding="utf-8")
@@ -107,7 +113,7 @@ def main():
     ass, sfx = subtitles.build_ass(words, tl, plan, args.channel, fonts.caption_fonts(), hide,
                                    args.caption_style)
     # 전체 화면 자료는 화면 전환 자체가 효과라서 소리를 넣지 않고, 얼굴 옆 팝업에만 작게 넣는다
-    sfx = sorted(sfx + [(p.start, "pop") for p in placements if p.mode == "side"])
+    sfx = render.thin_sfx(sfx + [(p.start, "pop") for p in placements if p.mode == "side"], tl.duration)
     src_len = sentences[-1].end if sentences else 0
     print(f"  {src_len / 60:.1f}분 → {tl.duration / 60:.1f}분 (클립 {len(tl.clips)}개, 효과음 {len(sfx)}개)")
     (work / "timeline.json").write_text(

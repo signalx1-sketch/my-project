@@ -64,6 +64,35 @@ def split_sentences(words: list[dict], max_gap: float = 0.7) -> list[Sentence]:
     return sentences
 
 
+def _norm(w: str) -> str:
+    return re.sub(r"[^가-힣A-Za-z0-9]", "", w)
+
+
+def mark_repeats(words: list[dict], max_n: int = 5) -> int:
+    """같은 말을 바로 이어서 다시 한 경우("지금 당장은 지금 당장은") 앞의 것을 지우고 마지막 것만 남긴다.
+
+    지울 단어에 drop=True를 표시하고 지운 단어 수를 돌려준다. 짧은 말(1어절)은 2글자 이상일 때만 본다.
+    """
+    n_drop = 0
+    i = 0
+    while i < len(words):
+        for n in range(max_n, 0, -1):
+            a = [_norm(w["w"]) for w in words[i:i + n]]
+            b = [_norm(w["w"]) for w in words[i + n:i + 2 * n]]
+            if len(b) < n or a != b or not all(a) or (n == 1 and len(a[0]) < 2):
+                continue
+            # 두 번째 말이 한참 뒤에 나오면 반복이 아니라 다른 문장이다
+            if words[i + n]["s"] - words[i + n - 1]["e"] > 1.5:
+                continue
+            for w in words[i:i + n]:
+                w["drop"] = True
+            n_drop += n
+            i += n - 1
+            break
+        i += 1
+    return n_drop
+
+
 def detect_silences(video: Path, out_json: Path) -> list[tuple[float, float]]:
     """실제 오디오 음량으로 무음 구간을 찾는다. 음성 인식 타임스탬프는 쉬는 구간까지 단어에 붙여버려서 믿을 수 없다."""
     if out_json.exists():
@@ -96,7 +125,8 @@ def _subtract(ranges: list[list[float]], holes: list[tuple[float, float]]) -> li
 def keep_ranges(words: list[dict], start: float, end: float,
                 silences: list[tuple[float, float]] = ()) -> list[tuple[float, float]]:
     """[start, end] 원본 구간 안에서 말하는 부분만 남긴 (시작, 끝) 목록."""
-    spoken = [w for w in words if w["s"] >= start - 0.01 and w["e"] <= end + 0.01 and not is_filler(w["w"])]
+    spoken = [w for w in words if w["s"] >= start - 0.01 and w["e"] <= end + 0.01
+              and not is_filler(w["w"]) and not w.get("drop")]
     ranges: list[list[float]] = []
     for w in spoken:
         s, e = max(start, w["s"] - PAD_START), min(end, w["e"] + PAD_END)
