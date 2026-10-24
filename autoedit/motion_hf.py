@@ -170,7 +170,7 @@ def _text_card(c: Card, cid: str, style: str, tl: _TL) -> str:
     n = len(c.paras)
     S = f"#{cid}"
     if style == "maskrise":
-        tl.add(f"{S} .li", {"yPercent": 105}, ({"yPercent": 0, "ease": "expo.out", "stagger": 0.12, "_n": n}), 0.12, 0.75)
+        tl.add(f"{S} .li", {"yPercent": 70}, ({"yPercent": 0, "ease": "expo.out", "stagger": 0.12, "_n": n}), 0.12, 0.75)
     elif style == "blurword":
         nw = sum(len(r.text.split()) for p in c.paras for r in p)
         tl.add(f"{S} .w", {"opacity": 0, "filter": "blur(10px)"},
@@ -201,7 +201,7 @@ def _text_card(c: Card, cid: str, style: str, tl: _TL) -> str:
         tl.add(f"#{cid}l0", {"opacity": 0, "scale": 1.35, "filter": "blur(6px)"},
                {"opacity": 1, "scale": 1, "filter": "blur(0px)", "ease": "expo.out"}, 0.08, 0.45)
         if n > 1:
-            tl.add(f"{S} .ln:not(#{cid}l0) .li", {"yPercent": 105},
+            tl.add(f"{S} .ln:not(#{cid}l0) .li", {"yPercent": 70},
                    ({"yPercent": 0, "ease": "expo.out", "stagger": 0.1, "_n": n - 1}), 0.32, 0.6)
     cls = "card text center" if centered else "card text"
     return cls, body
@@ -227,7 +227,7 @@ def _stat_card(c: Card, cid: str, variant: int, tl: _TL, compare: bool) -> tuple
     for j, (sid, steps) in enumerate(all_strips):
         frac = steps / (steps + 1) * 100
         tl.add(f"#{sid}", {"yPercent": 0}, {"yPercent": -frac, "ease": "expo.out"}, 0.1 + 0.05 * j, 1.1)
-    tl.add(f"#{cid} .ln:not(.hero) .li", {"yPercent": 105},
+    tl.add(f"#{cid} .ln:not(.hero) .li", {"yPercent": 70},
            ({"yPercent": 0, "ease": "expo.out", "stagger": 0.1, "_n": max(1, len(c.paras) - 1)}), 0.7, 0.6)
     if compare:
         vals = [float(v) for v in re.findall(r"(\d+(?:\.\d+)?)\s*%", " ".join(r.text for p in c.paras for r in p))][:2]
@@ -279,7 +279,7 @@ def _paper_card(c: Card, cid: str, tl: _TL) -> tuple[str, str]:
     tl.add(f"#{cid}p", {"x": 140, "opacity": 0, "filter": "blur(8px)"},
            {"x": 0, "opacity": 1, "filter": "blur(0px)", "ease": "expo.out"}, 0.05, 0.7)
     tl.add(f"#{cid}pb", {"scaleY": 0}, {"scaleY": 1, "ease": "power3.inOut"}, 0.3, 0.6)
-    tl.add(f"#{cid} .ln:not(.quote) .li", {"yPercent": 105},
+    tl.add(f"#{cid} .ln:not(.quote) .li", {"yPercent": 70},
            ({"yPercent": 0, "ease": "expo.out", "stagger": 0.09, "_n": n}), 0.35, 0.55)
     nq = sum(len(r.text.split()) for p in c.paras if any(r.italic for r in p) for r in p)
     if nq:

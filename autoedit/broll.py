@@ -506,8 +506,11 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
             prep = (f"fps=30,scale={bw - 16}:{bh - 16}:force_original_aspect_ratio=decrease,"
                     f"pad=iw+16:ih+16:8:8:white,tpad=stop_mode=clone:stop_duration=0.5")
             pos = f"{SIDE_X}:(H-h)/2-40"
-        parts.append(f"[{i}:v]{prep},setsar=1,trim=duration={d},{fades},"
-                     f"setpts=PTS-STARTPTS+{p.start}/TB[br{n}]")
+        # 시작 시각은 프레임 번호(정수)로 준다. 초를 그대로 쓰면 34.1333×30=1023.999가 1023으로 내려가서
+        # 자료가 한 프레임 일찍 끝나고 그 틈에 얼굴이 한 프레임 비친다
+        frame0 = round(p.start * 30)
+        parts.append(f"[{i}:v]{prep},setsar=1,trim=duration={d},{fades},settb=1/30,"
+                     f"setpts=PTS-STARTPTS+{frame0}[br{n}]")
         nxt = f"vb{n}"
         parts.append(f"[{cur}][br{n}]overlay={pos}:eof_action=pass[{nxt}]")
         cur = nxt
