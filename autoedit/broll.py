@@ -451,8 +451,8 @@ def ffmpeg_inputs(placements: list[Placement]) -> list[str]:
         elif a.kind in ("image", "slide"):
             args += ["-loop", "1", "-framerate", "30", "-t", f"{p.dur}", "-i", str(a.path)]
         else:
-            ss = max(0.0, min(a.duration - p.dur, a.duration * 0.25))
-            args += ["-ss", f"{ss:.2f}", "-t", f"{p.dur}", "-i", str(a.path)]
+            ss = max(0.0, min(a.duration - p.dur - 0.3, a.duration * 0.25))
+            args += ["-ss", f"{ss:.2f}", "-t", f"{p.dur + 0.3:.3f}", "-i", str(a.path)]
     return args
 
 
@@ -497,12 +497,14 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
                 # 분기(split)가 들어가는 필터는 라벨을 이 자료 번호로 고유하게 바꾼다
                 prep = _full_image(p.asset.path, d).replace("[f", f"[f{n}_")
             else:
-                prep = "fps=30,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080"
+                # 원본 프레임 수가 모자라 끝에서 한 프레임 얼굴이 비치지 않게 마지막 장면을 조금 늘려 둔다
+                prep = ("fps=30,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,"
+                        "tpad=stop_mode=clone:stop_duration=0.5")
             pos = "0:0"
         else:
             bw, bh = SIDE_BOX
             prep = (f"fps=30,scale={bw - 16}:{bh - 16}:force_original_aspect_ratio=decrease,"
-                    f"pad=iw+16:ih+16:8:8:white")
+                    f"pad=iw+16:ih+16:8:8:white,tpad=stop_mode=clone:stop_duration=0.5")
             pos = f"{SIDE_X}:(H-h)/2-40"
         parts.append(f"[{i}:v]{prep},setsar=1,trim=duration={d},{fades},"
                      f"setpts=PTS-STARTPTS+{p.start}/TB[br{n}]")
