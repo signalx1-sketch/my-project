@@ -76,6 +76,11 @@ def main():
     silences = cuts.detect_silences(src, work / "silences.json")
     # 숨소리, 쩝 소리, 잡음처럼 소리는 있지만 말이 아닌 구간도 잘라낸다
     nonspeech = cuts.detect_nonspeech(src, work / "nonspeech.json")
+    # 음성 검출이 '말이 아님'이라고 해도 인식된 단어와 겹치면 자르지 않는다 (단어 가운데가 잘려 말이 씹힌다)
+    n0 = len(nonspeech)
+    nonspeech = [h for h in nonspeech if not any(w["s"] + 0.03 < h[1] and h[0] < w["e"] - 0.03 for w in words)]
+    if n0 != len(nonspeech):
+        print(f"  단어와 겹치는 숨소리 구간 {n0 - len(nonspeech)}개는 자르지 않음")
     silences = sorted(set(silences) | set(nonspeech))
     retakes = cuts.find_retakes(sentences, words)
     if retakes:

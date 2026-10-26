@@ -32,6 +32,7 @@ SIDE_GAP = 12.0      # 팝업 사이 최소 간격
 FACE_KEEP = 1.5      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
 FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
 FACE_SHORT = 2.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
+MAX_NO_FACE = 16.0   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 얼굴로 둔다
@@ -437,6 +438,30 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         elif prev and nxt:  # 둘 다 길이가 정해진 영상이면 앞 영상을 끝까지 쓰고 뒤를 당긴다
             room = prev.asset.duration - 0.2 - prev.dur
             prev.dur = round(prev.dur + max(0.0, room), 4)
+    # 6. 얼굴이 너무 오래 안 나오면 (카드와 자료가 MAX_NO_FACE초 넘게 이어지면) 가운데쯤의 자료 화면 하나를 뺀다
+    for _ in range(100):
+        full = sorted((p for p in bd.placed if p.mode != "side"), key=lambda p: p.start)
+        runs, cur = [], []
+        for p in full:
+            if cur and p.start - (cur[-1].start + cur[-1].dur) > 0.05:
+                runs.append(cur)
+                cur = []
+            cur.append(p)
+        if cur:
+            runs.append(cur)
+        fixed = False
+        for r in runs:
+            r0, r1 = r[0].start, r[-1].start + r[-1].dur
+            if r1 - r0 <= MAX_NO_FACE:
+                continue
+            mid = (r0 + r1) / 2
+            cands = [p for p in r if p.mode == "full" and p.start - r0 >= 4 and r1 - (p.start + p.dur) >= 4]
+            if not cands:
+                continue
+            bd.placed.remove(min(cands, key=lambda p: abs(p.start + p.dur / 2 - mid)))
+            fixed = True
+        if not fixed:
+            break
     return sorted(bd.placed, key=lambda p: p.start)
 
 
@@ -509,7 +534,9 @@ def _full_image(path: Path, d: float) -> str:
 TRANS = 0.4  # 전환 길이 (초)
 IN_FROM_FACE = {"slide": ["wipe", "fade", "iris"], "full": ["iris", "push", "wipe", "fade"]}
 OUT_TO_FACE = {"slide": ["fade", "wipe"], "full": ["fade", "pushout", "wipe"]}
-BETWEEN = {"slide-slide": ["dissolve"], "full-full": ["cut", "dissolve", "push"], "mixed": ["dissolve", "wipe", "cut"]}
+# 카드끼리 디졸브하면 앞 카드 글자가 뒤 카드 글자와 겹쳐 지저분하다 (2026-10-26 지적): 카드끼리는 컷(새 카드가
+# 스스로 움직이며 등장한다)과 밀어 넣기를 번갈아 쓰고, 카드와 영상 사이도 글자가 겹치지 않는 와이프/밀기/컷
+BETWEEN = {"slide-slide": ["cut", "push"], "full-full": ["cut", "dissolve", "push"], "mixed": ["wipe", "push", "cut"]}
 CUT_MAX = 1 / 3  # 그냥 컷으로 넘기는 전환은 전체의 1/3까지
 
 
@@ -547,11 +574,16 @@ def assign_transitions(placements: list[Placement]):
         p.tout = pick("out-" + kind, OUT_TO_FACE[kind]) if nxt is None else ""
     # 컷이 너무 많으면 디졸브로 바꾼다
     ts = [p for p in full if p.tin] + [p for p in full if p.tout]
-    cuts = [p for p in full if p.tin == "cut" and p.card != "part"]
+    def card_to_card(p):
+        prv = next((q for q in full if abs(q.start + q.dur - p.start) < 0.05), None)
+        return p.mode == "slide" and prv is not None and prv.mode == "slide"
+    # 카드끼리의 컷은 새 카드의 등장 애니메이션이 전환 역할을 하므로 세지 않는다
+    cuts = [p for p in full if p.tin == "cut" and p.card != "part" and not card_to_card(p)]
+    ts = [p for p in ts if not (p.tin == "cut" and card_to_card(p))]
     over = len(cuts) - int(len(ts) * CUT_MAX)
     for p in cuts[:max(0, over)]:
-        p.tin = "dissolve"
         prv = next((q for q in full if abs(q.start + q.dur - p.start) < 0.05), None)
+        p.tin = "push" if p.mode == "slide" or (prv and prv.mode == "slide") else "dissolve"
         if prv:
             prv.extend = TRANS
 

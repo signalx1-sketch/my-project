@@ -59,7 +59,8 @@ OPENMONTAGE_DIRS = [os.environ.get("OPENMONTAGE_DIR", ""), str(Path.home() / "to
 
 
 # 입 클릭(쩝, 짭 하는 짧은 충격음) 제거 + 배경 잡음 약하게 걷어내기. 말소리는 건드리지 않도록 약하게 건다
-MOUTH_NOISE_AF = "adeclick=w=55:o=75:t=2,afftdn=nr=10:nf=-42:tn=1"
+# 잡음 제거를 세게 걸거나(nr 10, 잡음 추적) 고음을 깎으면 목소리가 먹먹하고 물속처럼 들린다 (2026-10-26 지적)
+MOUTH_NOISE_AF = "adeclick=w=55:o=75:t=2,afftdn=nr=6:nf=-45"
 
 
 def clean_mouth_noise(speech: Path, out: Path) -> Path:
@@ -69,24 +70,44 @@ def clean_mouth_noise(speech: Path, out: Path) -> Path:
     return out
 
 
+# 목소리 다듬기: 저역 웅웅거림만 걷고 가볍게 압축한다. OpenMontage clean_speech 프리셋(게이트 + 13kHz 위 차단 +
+# 압축 + 음량 보정)은 최종 음량 보정과 겹쳐 소리가 출렁이고 먹먹해서 쓰지 않는다
+VOICE_AF = "highpass=f=70,acompressor=threshold=-22dB:ratio=2:attack=15:release=250:makeup=1.5"
+
+
+def normalize_speech(speech: Path, out: Path, target: float = -14.0) -> Path:
+    """음량을 두 번에 나눠 맞춘다 (측정 후 일정한 배율로). 한 번에 맞추면 구간마다 음량이 오르내린다."""
+    import json as _json
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(speech), "-af",
+                        f"loudnorm=I={target}:TP=-1.5:LRA=11:print_format=json", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    m = _json.loads(r.stderr[r.stderr.rfind("{"):r.stderr.rfind("}") + 1])
+    run(["ffmpeg", "-v", "error", "-y", "-i", str(speech), "-af",
+         f"loudnorm=I={target}:TP=-1.5:LRA=11:linear=true:measured_I={m['input_i']}:measured_TP={m['input_tp']}:"
+         f"measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}",
+         "-ar", str(SR), "-ac", "2", "-c:a", "pcm_s16le", str(out)])
+    return out
+
+
 def enhance_voice(speech: Path, out: Path) -> Path:
-    """OpenMontage의 audio_enhance(clean_speech 프리셋: 저역/고역 정리, 잡음 게이트, 압축)로 목소리를 다듬는다.
+    """OpenMontage의 audio_enhance(VOICE_AF: 저역 정리, 가벼운 압축)로 목소리를 다듬는다.
     OpenMontage가 없으면 원본을 그대로 쓴다."""
     om = next((Path(d) for d in OPENMONTAGE_DIRS if d and (Path(d) / "tools" / "audio" / "audio_enhance.py").exists()), None)
     if om is None:
         return speech
     code = ("import sys,json;sys.path.insert(0,sys.argv[1]);from tools.audio.audio_enhance import AudioEnhance;"
-            "r=AudioEnhance().execute({'input_path':sys.argv[2],'output_path':sys.argv[3],'preset':'clean_speech',"
+            "r=AudioEnhance().execute({'input_path':sys.argv[2],'output_path':sys.argv[3],'custom_af':sys.argv[4],"
             "'audio_codec':'pcm_s16le'});print(json.dumps({'ok':r.success,'error':getattr(r,'error',None)}))")
     tmp = out.with_name(out.stem + "_om.wav")
-    r = subprocess.run([sys.executable, "-c", code, str(om), str(speech), str(tmp)], capture_output=True, text=True, cwd=om)
+    r = subprocess.run([sys.executable, "-c", code, str(om), str(speech), str(tmp), VOICE_AF],
+                       capture_output=True, text=True, cwd=om)
     if r.returncode != 0 or not tmp.exists():
         print(f"  OpenMontage 음성 정리 실패, 원본 음성을 씁니다: {(r.stderr or r.stdout)[-300:]}")
         return speech
-    # loudnorm이 192kHz로 올려 놓으므로 편집기 기준(48kHz 스테레오)으로 되돌린다
+    # 편집기 기준(48kHz 스테레오)으로 맞춘다
     run(["ffmpeg", "-v", "error", "-y", "-i", str(tmp), "-ar", str(SR), "-ac", "2", "-c:a", "pcm_s16le", str(out)])
     tmp.unlink(missing_ok=True)
-    print("  OpenMontage로 목소리 정리 (clean_speech)")
+    print("  OpenMontage로 목소리 정리 (저역 정리, 가벼운 압축)")
     return out
 
 
@@ -190,6 +211,7 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
 
     speech = clean_mouth_noise(speech, work / "speech_declick.wav")
     speech = enhance_voice(speech, work / "speech_clean.wav")
+    speech = normalize_speech(speech, work / "speech_norm.wav")
     sfx = work / "sfx.wav"
     build_sfx_track(sfx_events, tl.duration, sfx)
     ass_path = work / "subs.ass"
@@ -206,7 +228,8 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
     else:
         audio = "[1:a][2:a]amix=inputs=2:normalize=0:duration=first[mix];"
     # 원본이 말끝에서 바로 끝나는 경우가 있어 영상 끝 0.3초는 소리를 부드럽게 줄인다
-    audio += f"[mix]loudnorm=I=-14:TP=-1.5:LRA=11,afade=t=out:st={max(0.0, tl.duration - 0.3):.3f}:d=0.3[aout]"
+    # 대사는 이미 음량을 맞춰 두었다. 여기서 다시 loudnorm을 걸면 구간마다 음량이 출렁인다 (봉우리만 살짝 누른다)
+    audio += f"[mix]alimiter=limit=0.84:attack=5:release=50,afade=t=out:st={max(0.0, tl.duration - 0.3):.3f}:d=0.3[aout]"
 
     # 자료 화면을 먼저 얹고 그 위에 자막을 입힌다 (자료 화면 위에서도 자막이 보이게)
     base = "0:v"
