@@ -1,296 +1,320 @@
 [
  {
   "at": 2,
-  "offset": 0,
-  "asset": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
+  "offset": 2.0,
+  "asset": "영상_약국_앞_처방전_보며_걱정하는_홍조_여성.mp4",
   "mode": "full"
  },
  {
   "at": 3,
-  "offset": 1,
-  "asset": "사진_지루성_피부염_코_눈썹_귀_각질.jpeg",
-  "mode": "full"
- },
- {
-  "at": 4,
-  "offset": 0,
-  "asset": "영상_홍조_여성_놀란_표정_의사_상담.mp4",
-  "mode": "full"
- },
- {
-  "at": 8,
-  "offset": 0,
-  "asset": "사진_대학병원_건물_모음.jpg",
-  "mode": "full"
- },
- {
-  "at": 11,
-  "offset": 0,
-  "asset": "영상_피부과_진료_상담_의사와_여성_환자.mp4",
-  "mode": "full"
- },
- {
-  "at": 13,
-  "offset": 0,
-  "asset": "영상_병원_앞_걸어가는_여성_백팩.mp4",
-  "mode": "full"
- },
- {
-  "at": 14,
-  "offset": 0,
-  "asset": "영상_병원_상담실_상담_실장_서류_작성.mp4",
-  "mode": "full"
- },
- {
-  "at": 17,
-  "offset": 0,
-  "asset": "영상_피부과_의사_상담_돋보기_여성_환자.mp4",
-  "mode": "full"
- },
- {
-  "at": 21,
-  "offset": 0,
-  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 23,
-  "offset": 0,
-  "asset": "영상_화장대_화장품_고르는_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 25,
-  "offset": 4,
-  "asset": "영상_병원_앞_서류_든_우울한_홍조_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 27,
-  "offset": 0,
-  "asset": "영상_대학병원_앞_처방전_연고_든_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 28,
-  "offset": 0,
-  "asset": "영상_세면대_클렌저_덜어_세안_홍조_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 28,
-  "offset": 5,
-  "asset": "영상_피부과_레이저_시술_받는_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 30,
-  "offset": 4,
-  "asset": "영상_얼굴_홍조_화장품_당황한_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 31,
-  "offset": 0,
+  "offset": 0.0,
   "asset": "영상_코_각질_지루성피부염_클로즈업.mp4",
   "mode": "full"
  },
  {
-  "at": 36,
-  "offset": 0,
-  "asset": "영상_드럭스토어_화장품_클렌저_고르는_여성.mp4",
+  "at": 4,
+  "offset": 0.0,
+  "asset": "영상_피부과_건물_앞_홍조_여성_답답함.mp4",
   "mode": "full"
  },
  {
-  "at": 42,
-  "offset": 0,
-  "asset": "영상_피부과_레이저_시술_홍조_볼_의사.mp4",
+  "at": 5,
+  "offset": 1.0,
+  "asset": "영상_손거울_보며_홍조_걱정하는_여성.mp4",
   "mode": "full"
  },
  {
-  "at": 54,
-  "offset": 0,
-  "asset": "영상_얼굴_감싸는_여성_세안_후.mp4",
+  "at": 7,
+  "offset": 6.0,
+  "asset": "영상_짧은_진료_의사_모니터로_돌아앉음_말_못하는_여성.mp4",
   "mode": "full"
  },
  {
-  "at": 60,
-  "offset": 0,
-  "asset": "영상_병원_상담실_상담_실장과_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 76,
-  "offset": 0,
-  "asset": "영상_피부과_레이저_시술_보안경_홍조.mp4",
-  "mode": "full"
- },
- {
-  "at": 79,
-  "offset": 0,
-  "asset": "영상_세안_후_미소_홍조_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 3,
-  "offset": 4,
-  "asset": "사진_지루성_피부염_부위별_임상_사진.jpg",
-  "mode": "side"
- },
- {
-  "at": 3,
-  "offset": 8,
-  "asset": "도표_접촉_피부염_원인_니켈_화장품.jpg",
-  "mode": "side"
- },
- {
-  "at": 10,
-  "offset": 0,
-  "asset": "사진_병원_상담실_상담_실장과_여성.png",
-  "mode": "side"
- },
- {
-  "at": 18,
-  "offset": 3,
-  "asset": "캡처_MSD_매뉴얼_지루성_피부염.jpg",
-  "mode": "side"
- },
- {
-  "at": 25,
-  "offset": 8,
-  "asset": "캡처_논문_스테로이드_중독_용어_리바운드.jpg",
-  "mode": "side"
- },
- {
-  "at": 28,
-  "offset": 2,
-  "asset": "사진_헤드앤숄더_샴푸_제품.jpg",
-  "mode": "side"
- },
- {
-  "at": 31,
-  "offset": 6,
-  "asset": "도표_지루성_피부염_vs_습진_차이.jpg",
-  "mode": "side"
- },
- {
-  "at": 32,
-  "offset": 0,
-  "asset": "도표_접촉_피부염_자극성_vs_알레르기성_원인.jpg",
-  "mode": "side"
- },
- {
-  "at": 42,
-  "offset": 6,
-  "asset": "사진_피부과_레이저_시술_홍조_볼_의사.png",
-  "mode": "side"
- },
- {
-  "at": 44,
-  "offset": 0,
-  "asset": "사진_리도멕스_크림_스테로이드_제품.jpg",
-  "mode": "side"
- },
- {
-  "at": 55,
-  "offset": 0,
-  "asset": "캡처_논문_스테로이드_중독_용어_리바운드.jpg",
-  "mode": "side"
- },
- {
-  "at": 62,
-  "offset": 2,
-  "asset": "사진_리도멕스_크림_스테로이드_제품_2.jpg",
-  "mode": "side"
- },
- {
-  "at": 64,
-  "offset": 0,
-  "asset": "도표_지루성_피부염_vs_습진_차이.jpg",
-  "mode": "side"
- },
- {
-  "at": 75,
-  "offset": 0,
-  "asset": "사진_얼굴_접촉_피부염_홍조_각질.jpg",
-  "mode": "side"
- },
- {
-  "at": 82,
-  "offset": 0,
-  "asset": "사진_대학병원_처방전_든_홍조_여성.jpeg",
-  "mode": "side"
- },
- {
-  "at": 34,
-  "offset": 0,
-  "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 29,
-  "offset": 0,
-  "asset": "사진_소론도_프레드니솔론_스테로이드_알약.jpg",
-  "mode": "side"
- },
- {
-  "at": 39,
-  "offset": 0,
-  "asset": "영상_피부과_레이저_시술_받는_여성_2.mp4",
-  "mode": "full"
- },
- {
-  "at": 58,
-  "offset": 0,
-  "asset": "사진_덱사메타손_주사_약_상자.jpg",
-  "mode": "side"
- },
- {
-  "at": 66,
-  "offset": 0,
-  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
+  "at": 8,
+  "offset": 1.0,
+  "asset": "영상_대학병원_앞_처방전_연고_든_여성.mp4",
   "mode": "full"
  },
  {
   "at": 9,
-  "offset": 3,
-  "asset": "영상_병원_상담실_상담_실장과_여성.mp4",
+  "offset": 0.0,
+  "asset": "영상_피부과_의사_상담_돋보기_여성_환자.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 11,
+  "offset": 0.0,
+  "asset": "영상_진료실_손가락_꼽으며_기억_더듬는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 13,
+  "offset": 0.0,
+  "asset": "영상_병원_앞_서류_든_우울한_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 14,
+  "offset": 0.0,
+  "asset": "영상_병원_상담실_상담_실장_서류_작성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 15,
+  "offset": 2.0,
+  "asset": "영상_병원_앞_걸어가는_여성_백팩.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 17,
+  "offset": 0.0,
+  "asset": "영상_피부과_진료_상담_의사와_여성_환자.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 19,
+  "offset": 4.0,
+  "asset": "영상_병원_수납_카드_내고_영수증_받는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 22,
+  "offset": 0.0,
+  "asset": "영상_피부과_대기실_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 24,
+  "offset": 0.0,
+  "asset": "영상_욕실_거울_앞_크림_바르는_여성_미소.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 25,
+  "offset": 6.0,
+  "asset": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 25,
+  "offset": 12.0,
+  "asset": "영상_연고_튜브_쌓인_선반_볼에_연고_바르는_여성_구진.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 28,
+  "offset": 6.0,
+  "asset": "영상_세면대_클렌저_덜어_세안_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 29,
+  "offset": 0.0,
+  "asset": "영상_식탁_휴대폰_메모앱_입력하는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 30,
+  "offset": 0.0,
+  "asset": "영상_볼에_크림_바르는_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 31,
+  "offset": 0.0,
+  "asset": "영상_볼_만지며_찡그린_여성_따가움.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 31,
+  "offset": 5.0,
+  "asset": "영상_연고_튜브_볼에_바르기_클로즈업_홍조.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 31,
+  "offset": 9.0,
+  "asset": "영상_코_각질_홍조_얼굴_클로즈업_지루성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 36,
+  "offset": 0.0,
+  "asset": "영상_드럭스토어_화장품_클렌저_고르는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 37,
+  "offset": 1.0,
+  "asset": "영상_연고_들고_볼_만지는_걱정_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 40,
+  "offset": 0.0,
+  "asset": "영상_티슈로_얼굴_닦는_여성.mp4",
   "mode": "full"
  },
  {
   "at": 41,
-  "offset": 0,
-  "asset": "사진_보송크림_스테로이드_연고_제품.jpg",
-  "mode": "side"
- },
- {
-  "at": 53,
-  "offset": 3,
-  "asset": "사진_스테로이드_연고_튜브_쌓인_선반_볼에_연고_바르는_여성.jpg",
-  "mode": "full"
- },
- {
-  "at": 35,
-  "offset": 0,
-  "asset": "스톡_pexels/영상_스마트폰으로_메모_타이핑하는_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 66,
-  "offset": 2,
-  "asset": "스톡_pexels/영상_스마트폰과_노트에_메모하는_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 41,
-  "offset": 8,
+  "offset": 2.0,
   "asset": "스톡_pexels/영상_달력에_날짜_표시하기.mp4",
   "mode": "full"
  },
  {
-  "at": 43,
-  "offset": 3,
+  "at": 41,
+  "offset": 9.0,
   "asset": "스톡_pexels/영상_모래시계_뒤집기_기간.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 42,
+  "offset": 7.0,
+  "asset": "영상_피부과_레이저_시술_볼_홍조_클로즈업.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 43,
+  "offset": 6.0,
+  "asset": "영상_돋보기로_보는_여드름_구진_피부_클로즈업.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 48,
+  "offset": 0.0,
+  "asset": "영상_창가_볼_만지는_걱정_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 53,
+  "offset": 11.0,
+  "asset": "영상_연고_튜브_든_여성_홍조.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 54,
+  "offset": 1.0,
+  "asset": "영상_얼굴_심한_피부염_각질_홍조_우는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 55,
+  "offset": 5.0,
+  "asset": "영상_돋보기로_보는_피부_결_클로즈업.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 56,
+  "offset": 0.0,
+  "asset": "영상_홍조_여성_놀란_표정_의사_상담.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 57,
+  "offset": 0.0,
+  "asset": "영상_어두운_방_서랍_뒤지는_우울한_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 58,
+  "offset": 3.0,
+  "asset": "영상_입_가리고_하품_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 59,
+  "offset": 0.0,
+  "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 60,
+  "offset": 3.0,
+  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 62,
+  "offset": 7.0,
+  "asset": "영상_얼굴_심한_홍조_화끈거림_괴로운_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 63,
+  "offset": 0.0,
+  "asset": "영상_피부과_짧은_진료_의사_컴퓨터_여성_환자.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 64,
+  "offset": 0.0,
+  "asset": "영상_피부과_진료실_의사_컴퓨터_여성_환자.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 65,
+  "offset": 3.0,
+  "asset": "영상_피부과_앞_홍조_여성_설명하는_손짓.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 66,
+  "offset": 0.0,
+  "asset": "스톡_pexels/영상_스마트폰으로_메모_타이핑하는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 71,
+  "offset": 0.0,
+  "asset": "영상_병원_상담실_상담_실장과_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 73,
+  "offset": 6.0,
+  "asset": "영상_얼굴_감싸는_홍조_여성_클로즈업.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 74,
+  "offset": 0.0,
+  "asset": "영상_피부과_접수_결제_홍조_여성_직원.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 75,
+  "offset": 7.0,
+  "asset": "영상_현미경_피부_단면_물방울_장벽.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 76,
+  "offset": 0.0,
+  "asset": "영상_세안_후_미소_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 79,
+  "offset": 0.0,
+  "asset": "영상_피부과_레이저_시술_홍조_여성_의자.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 81,
+  "offset": 1.0,
+  "asset": "영상_지친_홍조_여성_소파.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 82,
+  "offset": 1.0,
+  "asset": "영상_피부과_대기실_처방전_보는_홍조_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 83,
+  "offset": 3.0,
+  "asset": "영상_피부과_접수_결제_홍조_여성_직원_2.mp4",
   "mode": "full"
  }
 ]

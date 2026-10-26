@@ -27,6 +27,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from . import motion_templates as tpl
 from .motion import Card, Run, read_cards
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -290,8 +291,34 @@ def _paper_card(c: Card, cid: str, tl: _TL) -> tuple[str, str]:
     return "card paper-card", body
 
 
-def build_project(cards: list[Card], folder: Path) -> list[tuple[int, float, float]]:
-    """카드들을 이어 붙인 HyperFrames 프로젝트를 쓴다. [(슬라이드 번호, 시작 초, 길이)]를 돌려준다."""
+def auto_spec(c: Card) -> dict | None:
+    """설정 파일이 없어도 알아볼 수 있는 카드: 파트 표지('PART 1/3'), 경고('오해 금지', '한계', '주의')."""
+    texts = ["".join(r.text for r in p).strip() for p in c.paras]
+    head = f"{c.header} {texts[0] if texts else ''}"
+    m = re.search(r"PART\s*(\d+)\s*/\s*(\d+)", head, re.I)
+    if m:
+        rest = [t for t in texts if not re.search(r"PART\s*\d", t, re.I)]
+        return {"kind": "part", "num": int(m.group(1)), "total": int(m.group(2)),
+                "title": rest[0] if rest else "", "sub": " · ".join(rest[1:])}
+    if c.header.strip() in ("오해 금지", "한계", "주의", "경고"):
+        return {"kind": "warning", "tag": c.header.strip(), "text": texts}
+    return None
+
+
+def card_kinds(pptx: Path, specs: dict | None = None) -> dict[int, str]:
+    """슬라이드 번호 → 카드 종류 (템플릿 이름 또는 text/stat/compare/part/paper)."""
+    specs = {int(k): v for k, v in (specs or {}).items()}
+    out = {}
+    for c in read_cards(pptx):
+        sp = specs.get(c.no) or auto_spec(c)
+        out[c.no] = sp["kind"] if sp and sp.get("kind") in tpl.KINDS else c.kind
+    return out
+
+
+def build_project(cards: list[Card], folder: Path, specs: dict | None = None) -> list[tuple[int, float, float]]:
+    """카드들을 이어 붙인 HyperFrames 프로젝트를 쓴다. [(슬라이드 번호, 시작 초, 길이)]를 돌려준다.
+    specs: {슬라이드 번호: 템플릿 설정} (motion_templates 참고). 없는 카드는 글자 카드로 만든다."""
+    specs = {int(k): v for k, v in (specs or {}).items()}
     (folder / "assets" / "fonts").mkdir(parents=True, exist_ok=True)
     for f in FONTS_DIR.glob("Pretendard-*.otf"):
         shutil.copy(f, folder / "assets" / "fonts" / f.name)
@@ -305,7 +332,14 @@ def build_project(cards: list[Card], folder: Path) -> list[tuple[int, float, flo
     for c in cards:
         cid = f"c{c.no:02d}"
         tl = _TL(t)
-        if c.kind in ("stat", "compare"):
+        spec = specs.get(c.no) or auto_spec(c)
+        if spec and spec.get("kind") in tpl.KINDS:
+            texts = ["".join(r.text for r in p).strip() for p in c.paras]
+            cls, body = tpl.build(spec, texts, cid, tl)
+            style = spec["kind"]
+            if style == "warning":  # 경고 머리표가 머리말을 대신한다
+                c = Card(c.no, "", c.paras, c.kind)
+        elif c.kind in ("stat", "compare"):
             cls, body = _stat_card(c, cid, c.no, tl, c.kind == "compare")
             style = c.kind
         elif c.kind == "part":
@@ -328,7 +362,7 @@ def build_project(cards: list[Card], folder: Path) -> list[tuple[int, float, flo
         dur = round(max(1.0, tl.end) + HOLD, 3)
         dur = round(round(dur * FPS) / FPS, 4)
         header = f'<div class="hdr" id="{cid}h">{_esc(c.header)}</div>' if c.header else ""
-        if c.kind == "part":  # 초록 패널이 화면 전체를 쓸고 지나간다
+        if c.kind == "part" or style == "part":  # 초록 패널이 화면 전체를 쓸고 지나간다
             header += f'<div class="sweep" id="{cid}sw"></div>'
         # 머리말(섹션 이름)은 첫 프레임부터 떠 있게 둔다 (카드가 바뀌어도 화면이 비지 않게)
         sections.append(f'<section id="{cid}" class="clip {cls}" data-start="{t:.4f}" data-duration="{dur}" '
@@ -337,7 +371,7 @@ def build_project(cards: list[Card], folder: Path) -> list[tuple[int, float, flo
         spans.append((c.no, t, dur))
         t = round(t + dur, 4)
 
-    page = PAGE.replace("{SECTIONS}", "\n".join(sections)).replace("{SCRIPT}", "\n".join(scripts)) \
+    page = PAGE.replace("{TPL_CSS}", tpl.CSS).replace("{SECTIONS}", "\n".join(sections)).replace("{SCRIPT}", "\n".join(scripts)) \
         .replace("{DURATION}", f"{t:.4f}")
     (folder / "index.html").write_text(page, encoding="utf-8")
     (folder / "hyperframes.json").write_text(json.dumps({"name": "dermahub-cards"}), encoding="utf-8")
@@ -384,6 +418,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0A0A}
 .pbar{position:absolute;left:36px;top:44px;bottom:44px;width:6px;background:#52B788;border-radius:3px;transform-origin:top}
 .paper .title{margin-bottom:14px}
 .quote{margin:12px 0}
+{TPL_CSS}
 </style></head>
 <body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="{DURATION}" data-width="1920" data-height="1080" data-fps="30">
@@ -402,13 +437,13 @@ tl.seek(0);
 </body></html>"""
 
 
-def render(pptx: Path, work: Path) -> dict[int, tuple[Path, float]] | None:
+def render(pptx: Path, work: Path, specs: dict | None = None) -> dict[int, tuple[Path, float]] | None:
     """슬라이드 번호 → (카드 mp4, 길이). HyperFrames를 쓸 수 없으면 None."""
     folder = work / "hf_cards"
     folder.mkdir(parents=True, exist_ok=True)
     cards = read_cards(pptx)
     try:
-        spans = build_project(cards, folder)
+        spans = build_project(cards, folder, specs)
     except RuntimeError as e:
         print(f"  HyperFrames 카드 준비 실패 ({e})")
         return None

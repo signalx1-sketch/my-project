@@ -172,7 +172,9 @@ def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path)
 
 
 def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]], out: Path,
-           work: Path, bgm: Path | None = None, jobs: int = 4, placements: list | None = None):
+           work: Path, bgm: Path | None = None, jobs: int = 4, placements: list | None = None,
+           tabs: tuple | None = None):
+    """tabs: (탭 그림 목록, [(파트, 시작, 끝)]) — 위쪽 진행 표시 (progress 모듈)."""
     clips_dir = work / "clips"
     clips_dir.mkdir(parents=True, exist_ok=True)
 
@@ -211,8 +213,15 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
     if placements:
         first = 4 if bgm else 3  # 영상, 대사, 효과음, (배경음악) 다음 입력부터
         inputs += broll.ffmpeg_inputs(placements)
-        overlays, base = broll.overlay_filters(placements, first, "0:v")
+        masks = broll.transition_masks(work / "masks") if any(p.tin or p.tout for p in placements) else None
+        overlays, base = broll.overlay_filters(placements, first, "0:v", masks)
         audio = overlays + ";" + audio
+    if tabs and tabs[1]:
+        from . import progress
+        first = 3 + (1 if bgm else 0) + (len(placements) if placements else 0)
+        args, filt, base = progress.overlay_filters(tabs[0], tabs[1], first, base)
+        inputs += args
+        audio = filt + ";" + audio
     vf = f"[{base}]ass={ass_path}:fontsdir={FONTS_DIR}[vout]"
 
     print("  자막과 소리를 입혀서 최종 렌더링 중...")

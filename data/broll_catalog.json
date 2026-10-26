@@ -1,0 +1,2404 @@
+[
+ {
+  "file": "영상_달력에_날짜_표시하기.mp4",
+  "source": "stock",
+  "desc": "달력에 빨간 펜으로 날짜 동그라미",
+  "tags": [
+   "기간",
+   "계획"
+  ],
+  "mood": "중립",
+  "dur": 11.46,
+  "exclude": false
+ },
+ {
+  "file": "영상_모래시계_뒤집기_기간.mp4",
+  "source": "stock",
+  "desc": "모래시계를 손으로 뒤집음",
+  "tags": [
+   "기간",
+   "기다림"
+  ],
+  "mood": "중립",
+  "dur": 8.44,
+  "exclude": false
+ },
+ {
+  "file": "영상_스마트폰과_노트에_메모하는_여성.mp4",
+  "source": "stock",
+  "desc": "책상에서 노트에 적고 휴대폰 확인(얼굴 없음)",
+  "tags": [
+   "메모",
+   "계획"
+  ],
+  "mood": "중립",
+  "dur": 15.59,
+  "exclude": false
+ },
+ {
+  "file": "영상_스마트폰으로_메모_타이핑하는_여성.mp4",
+  "source": "stock",
+  "desc": "위에서 본 책상, 휴대폰 메모 화면과 노트",
+  "tags": [
+   "메모",
+   "계획"
+  ],
+  "mood": "중립",
+  "dur": 13.16,
+  "exclude": false
+ },
+ {
+  "file": "영상_가습기_옆_홍조_여성_미소.mp4",
+  "source": "drive",
+  "desc": "타월 차림 여성, 가습기 옆에서 미소",
+  "tags": [
+   "보습",
+   "회복"
+  ],
+  "mood": "긍정",
+  "dur": 5.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_거울_보며_홍조_볼_만지는_여성.mp4",
+  "source": "drive",
+  "desc": "거울 보며 붉은 볼 만짐, 근접",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_거울_속_홍조_구진_볼_여성.mp4",
+  "source": "drive",
+  "desc": "거울 속 붉은 볼 들여다봄",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_거울_앞_머리_만지는_여성.mp4",
+  "source": "drive",
+  "desc": "욕실 거울 앞 목에 크림 바름",
+  "tags": [
+   "크림바르기",
+   "관리"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_거울_앞_수건_여성_얼굴_홍조_만지기.mp4",
+  "source": "drive",
+  "desc": "타월 차림 팔 피부 살펴봄",
+  "tags": [
+   "피부살피기"
+  ],
+  "mood": "중립",
+  "dur": 5.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_거울_앞_튜브_크림_짜는_여성_미소.mp4",
+  "source": "drive",
+  "desc": "욕실 휴지통에 버린 뒤 튜브 크림 짜며 미소",
+  "tags": [
+   "크림바르기",
+   "제품정리"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_거울_앞_홍조_수건_여성.mp4",
+  "source": "drive",
+  "desc": "거울 앞 타월, 붉은 볼 가슴 짚음",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_거품_세안_헤어밴드_여성.mp4",
+  "source": "drive",
+  "desc": "헤어밴드 거품 세안(홍조 없음)",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_거품_세안_홍조_여성_미소.mp4",
+  "source": "drive",
+  "desc": "붉은 볼 거품 세안 미소",
+  "tags": [
+   "세안"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_관자놀이_만지는_여성_욕실.mp4",
+  "source": "drive",
+  "desc": "욕실 관자놀이 마사지",
+  "tags": [
+   "관리"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_구독_좋아요_피켓_든_여성_손_흔들기.mp4",
+  "source": "drive",
+  "desc": "거리에서 구독&좋아요 피켓 들고 손 흔듦",
+  "tags": [
+   "끝인사"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_굴_먹는_여성_음식.mp4",
+  "source": "drive",
+  "desc": "굴 먹는 여성",
+  "tags": [
+   "음식"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_남성_얼굴_피부_만지기_거울.mp4",
+  "source": "drive",
+  "desc": "남성 거울 보며 얼굴 피부 만짐",
+  "tags": [
+   "피부살피기",
+   "남성"
+  ],
+  "mood": "중립",
+  "dur": 5.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_다리_습진_랩_감는_여성.mp4",
+  "source": "drive",
+  "desc": "바닥에 앉아 다리에 랩 감기(습진 랩요법)",
+  "tags": [
+   "습진",
+   "랩"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_다리_습진_랩_감는_여성_2.mp4",
+  "source": "drive",
+  "desc": "다리에 랩 감기 2",
+  "tags": [
+   "습진",
+   "랩"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_다리_피부_긁는_수건_여성_가려움.mp4",
+  "source": "drive",
+  "desc": "타월 차림 다리 긁음",
+  "tags": [
+   "가려움",
+   "긁기"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_다리_피부_랩_붙이는_여성_습진.mp4",
+  "source": "drive",
+  "desc": "다리 랩 붙이기",
+  "tags": [
+   "습진",
+   "랩"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_대학병원_앞_처방전_연고_든_여성.mp4",
+  "source": "drive",
+  "desc": "대학병원 정문에서 처방전 들고 나와 걸어감",
+  "tags": [
+   "대학병원",
+   "처방전"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_돋보기로_두피_비듬_관찰.mp4",
+  "source": "drive",
+  "desc": "장갑 손 돋보기로 두피 비듬 관찰(빈티지)",
+  "tags": [
+   "두피",
+   "관찰"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_돋보기로_보는_여드름_구진_피부_클로즈업.mp4",
+  "source": "drive",
+  "desc": "돋보기로 여드름 구진 피부 확대",
+  "tags": [
+   "피부확대",
+   "구진"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_돋보기로_보는_피부_결_클로즈업.mp4",
+  "source": "drive",
+  "desc": "돋보기로 붉은 피부 결 확대",
+  "tags": [
+   "피부확대"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_두피_각질_비듬_긁는_여성.mp4",
+  "source": "drive",
+  "desc": "가르마 두피 긁자 비듬 떨어짐",
+  "tags": [
+   "두피",
+   "가려움",
+   "긁기"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_두피_모발_비듬_현미경_클로즈업.mp4",
+  "source": "drive",
+  "desc": "두피 확대경 비듬 각질",
+  "tags": [
+   "두피",
+   "현미경"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_드럭스토어_화장품_클렌저_고르는_여성.mp4",
+  "source": "drive",
+  "desc": "드럭스토어 클렌저 고르기",
+  "tags": [
+   "제품고르기",
+   "화장품"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_땀_홍조_운동_지친_여성.mp4",
+  "source": "drive",
+  "desc": "땀 흘린 붉은 얼굴 숨차함",
+  "tags": [
+   "열감",
+   "땀"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_말라세지아_곰팡이_현미경.mp4",
+  "source": "drive",
+  "desc": "말라세지아 현미경 400배",
+  "tags": [
+   "미생물",
+   "현미경"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_매운_음식_찌개_먹고_홍조_열감_여성.mp4",
+  "source": "drive",
+  "desc": "식당 매운 찌개 먹고 볼 빨개짐",
+  "tags": [
+   "음식",
+   "열감"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_목욕탕_수증기_홍조_우는_여성_열감.mp4",
+  "source": "drive",
+  "desc": "목욕탕 수증기 속 붉은 얼굴로 울음",
+  "tags": [
+   "열감",
+   "목욕"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_목욕탕_홍조_지친_여성.mp4",
+  "source": "drive",
+  "desc": "목욕탕 지친 붉은 얼굴",
+  "tags": [
+   "열감",
+   "목욕"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_물_마시는_여성_머리수건.mp4",
+  "source": "drive",
+  "desc": "머리수건, 약 먹고 물 마심",
+  "tags": [
+   "먹는약",
+   "복용"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_미생물_캐릭터_상자_핀셋_여성_장난.mp4",
+  "source": "drive",
+  "desc": "미생물 캐릭터 상자를 핀셋으로 장난",
+  "tags": [
+   "미생물",
+   "가벼움"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_밤_냉장고_물병_얼굴에_대는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "밤 냉장고 앞 물병 얼굴에 댐",
+  "tags": [
+   "열감",
+   "밤"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_밤_냉장고_앞_물병_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "밤 냉장고 물병 붉은 얼굴",
+  "tags": [
+   "열감",
+   "밤"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
+  "source": "drive",
+  "desc": "밤 소파 휴대폰 검색, 옆에 서류 더미",
+  "tags": [
+   "검색",
+   "밤",
+   "고민"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "밤 휴대폰 검색 턱 괴고 붉은 볼",
+  "tags": [
+   "검색",
+   "밤",
+   "고민"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
+  "source": "drive",
+  "desc": "병원 복도 진료실 앞 종이 보며 우울",
+  "tags": [
+   "병원",
+   "처방전"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_병원_상담실_상담_실장_서류_작성.mp4",
+  "source": "drive",
+  "desc": "상담실 실장이 적으며 상담",
+  "tags": [
+   "상담",
+   "병원"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_병원_상담실_상담_실장과_여성.mp4",
+  "source": "drive",
+  "desc": "상담실 실장과 웃으며 상담",
+  "tags": [
+   "상담",
+   "병원"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_병원_앞_걸어가는_여성_백팩.mp4",
+  "source": "drive",
+  "desc": "서울대병원 정문에서 백팩 메고 나옴",
+  "tags": [
+   "대학병원"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_병원_앞_서류_든_우울한_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "병원 유리문 앞 종이 들고 우울",
+  "tags": [
+   "병원",
+   "처방전"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_볼_만지며_찡그린_여성_따가움.mp4",
+  "source": "drive",
+  "desc": "흰 배경 볼 만지며 찡그림(따가움)",
+  "tags": [
+   "따가움",
+   "홍조걱정"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_볼에_세럼_바르는_여성_미소.mp4",
+  "source": "drive",
+  "desc": "욕실 세럼 볼에 바르고 미소",
+  "tags": [
+   "크림바르기"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_볼에_크림_바르는_여성_거울.mp4",
+  "source": "drive",
+  "desc": "거울 앞 크림 얼굴에 바름",
+  "tags": [
+   "크림바르기"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_볼에_크림_바르는_여성_거울_2.mp4",
+  "source": "drive",
+  "desc": "얼굴 크림 펴 바름 근접",
+  "tags": [
+   "크림바르기"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_볼에_크림_바르는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "붉은 볼에 크림 한 점 바름",
+  "tags": [
+   "크림바르기",
+   "홍조"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_부엌_채소_요리하는_여성_미소.mp4",
+  "source": "drive",
+  "desc": "부엌 채소 요리 미소",
+  "tags": [
+   "음식",
+   "생활습관"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_브러시_볼터치_화장하는_여성.mp4",
+  "source": "drive",
+  "desc": "브러시 볼터치·립스틱 화장",
+  "tags": [
+   "화장"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_빵_먹는_홍조_여성_밀가루.mp4",
+  "source": "drive",
+  "desc": "빵 먹는 붉은 볼",
+  "tags": [
+   "음식"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_사우나_땀_홍조_여성_열감.mp4",
+  "source": "drive",
+  "desc": "사우나 얼굴 감싸며 땀",
+  "tags": [
+   "열감",
+   "사우나"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_샐러드_채소_먹는_여성_식단.mp4",
+  "source": "drive",
+  "desc": "샐러드 먹기",
+  "tags": [
+   "음식",
+   "생활습관"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_샤워_머리_감는_여성.mp4",
+  "source": "drive",
+  "desc": "샤워 머리 감기",
+  "tags": [
+   "샤워",
+   "샴푸"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_샤워_홍조_고통_우는_여성.mp4",
+  "source": "drive",
+  "desc": "샤워 중 붉은 얼굴로 아파 울음",
+  "tags": [
+   "샤워",
+   "따가움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_머리_감는_여성.mp4",
+  "source": "drive",
+  "desc": "세면대 햇빛 머리 감기",
+  "tags": [
+   "샴푸"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_물_세안_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "세면대 붉은 볼 물 세안",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_세안_목_만지는_여성.mp4",
+  "source": "drive",
+  "desc": "남색 티 헤어밴드 세안 미소",
+  "tags": [
+   "세안"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_세안_물_여성_샴푸.mp4",
+  "source": "drive",
+  "desc": "세면대 머리 헹굼",
+  "tags": [
+   "샴푸"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_세안_손_씻는_여성_머리수건.mp4",
+  "source": "drive",
+  "desc": "헤어밴드 세안 손 씻기",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_세안_홍조_여성_수건.mp4",
+  "source": "drive",
+  "desc": "타월 물 세안 후 이마 짚음",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_클렌저_덜어_세안_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "클렌저 펌프 손에 덜어 세안",
+  "tags": [
+   "세안",
+   "세안제"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세면대_홍조_괴로운_여성_욕실.mp4",
+  "source": "drive",
+  "desc": "세면대 앞 붉은 얼굴로 괴로움",
+  "tags": [
+   "홍조걱정",
+   "따가움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세안_브러시_홍조_여성_수건_머리.mp4",
+  "source": "drive",
+  "desc": "머리수건 세안 브러시로 볼 문지름",
+  "tags": [
+   "세안",
+   "자극"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세안_후_미소_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "세안 후 웃는 얼굴 근접",
+  "tags": [
+   "세안",
+   "회복"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세정제_계면활성제_피부_지질_씻겨나감_도식.mp4",
+  "source": "drive",
+  "desc": "계면활성제가 피부 지질 씻어내는 도식(영문)",
+  "tags": [
+   "도식",
+   "세안제",
+   "장벽"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_세포_생물학_도표_액틴_장력.mp4",
+  "source": "drive",
+  "desc": "세포 생물학 도표(영문, 무관)",
+  "tags": [
+   "도식"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_손거울_보며_볼_만지는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "손거울 보며 볼 만짐 후 미소",
+  "tags": [
+   "홍조걱정",
+   "회복"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_손거울_보며_홍조_걱정하는_여성.mp4",
+  "source": "drive",
+  "desc": "손거울 보며 붉은 볼 걱정",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_수건으로_머리_말리는_여성.mp4",
+  "source": "drive",
+  "desc": "수건으로 머리 말림",
+  "tags": [
+   "샤워"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_수건으로_얼굴_닦는_여성_여드름.mp4",
+  "source": "drive",
+  "desc": "여드름 얼굴 수건으로 닦음",
+  "tags": [
+   "세안",
+   "구진"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_숟가락_꿀_먹는_여성_미소.mp4",
+  "source": "drive",
+  "desc": "숟가락으로 먹고 웃음",
+  "tags": [
+   "음식"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_숟가락으로_음식_먹는_여성.mp4",
+  "source": "drive",
+  "desc": "숟가락으로 먹음",
+  "tags": [
+   "음식"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_스펀지로_얼굴_닦는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "스펀지로 붉은 볼 문지름",
+  "tags": [
+   "세안",
+   "자극"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_약국_앞_처방전_보며_걱정하는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "피부과·약국 간판 앞 처방전 여러 장 보며 걱정",
+  "tags": [
+   "처방전",
+   "약국",
+   "피부과"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_약국_영양제_고르는_여성.mp4",
+  "source": "drive",
+  "desc": "약국 영양제 진열대 고르기",
+  "tags": [
+   "약국",
+   "영양제"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_양볼_심한_홍조_무표정_여성.mp4",
+  "source": "drive",
+  "desc": "세면대 앞 얼굴 감싸고 심한 홍조 무표정",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_어깨에_오일_바르는_여성.mp4",
+  "source": "drive",
+  "desc": "어깨에 오일 바름",
+  "tags": [
+   "바디케어"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_어두운_방_서랍_뒤지는_우울한_여성.mp4",
+  "source": "drive",
+  "desc": "어두운 방 서랍에서 연고 꺼냄",
+  "tags": [
+   "연고",
+   "집에있던약",
+   "밤"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_가리는_여성_세안_후_고민.mp4",
+  "source": "drive",
+  "desc": "세안 후 얼굴 감싸고 미소",
+  "tags": [
+   "세안",
+   "회복"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_감싸는_여성_세안_후.mp4",
+  "source": "drive",
+  "desc": "헤어밴드 입 가림, 손 내려봄",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_감싸는_홍조_여성_클로즈업.mp4",
+  "source": "drive",
+  "desc": "두 손으로 볼 감싸고 웃음",
+  "tags": [
+   "회복"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_구진_홍조_코_만지는_여성.mp4",
+  "source": "drive",
+  "desc": "여드름 구진 코 만짐",
+  "tags": [
+   "구진",
+   "피부살피기"
+  ],
+  "mood": "걱정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_롤러_마사지_눈_감은_여성_홍조.mp4",
+  "source": "drive",
+  "desc": "롤러 마사지 눈 감음",
+  "tags": [
+   "관리"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_롤러_마사지_볼_클로즈업.mp4",
+  "source": "drive",
+  "desc": "롤러 볼 근접",
+  "tags": [
+   "관리"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_롤러_마사지_턱선_여성.mp4",
+  "source": "drive",
+  "desc": "롤러 턱선",
+  "tags": [
+   "관리"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_롤러_마사지_홍조_볼.mp4",
+  "source": "drive",
+  "desc": "롤러 붉은 볼",
+  "tags": [
+   "관리"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_심한_피부염_각질_홍조_우는_여성.mp4",
+  "source": "drive",
+  "desc": "진료실 의사 앞 심한 피부염 얼굴로 울음",
+  "tags": [
+   "진료상담",
+   "피부염",
+   "괴로움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_심한_홍조_화끈거림_괴로운_여성.mp4",
+  "source": "drive",
+  "desc": "휴지통 위 튜브 들고 붉은 얼굴로 당황",
+  "tags": [
+   "연고",
+   "제품버리기"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_얼굴_홍조_화장품_당황한_여성.mp4",
+  "source": "drive",
+  "desc": "파운데이션 휴지통에 버림, 목 발진",
+  "tags": [
+   "화장품",
+   "제품버리기"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_여드름_홍조_얼굴_손가락_클로즈업.mp4",
+  "source": "drive",
+  "desc": "여드름 홍조 얼굴 손가락으로 만짐",
+  "tags": [
+   "구진",
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연고_들고_볼_만지는_걱정_여성.mp4",
+  "source": "drive",
+  "desc": "연고 손에 덜고 볼 만지며 걱정",
+  "tags": [
+   "연고",
+   "바르기"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연고_쓰레기통에_버리는_여성.mp4",
+  "source": "drive",
+  "desc": "연고 튜브 휴지통에 버림",
+  "tags": [
+   "연고",
+   "제품버리기",
+   "중단"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연고_튜브_든_여성_홍조.mp4",
+  "source": "drive",
+  "desc": "튜브 휴지통에 버리고 가슴 짚음",
+  "tags": [
+   "연고",
+   "제품버리기",
+   "중단"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연고_튜브_볼에_바르기_클로즈업_홍조.mp4",
+  "source": "drive",
+  "desc": "어두운 곳 연고 튜브 볼에 바름 근접",
+  "tags": [
+   "연고",
+   "바르기"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연고_튜브_쌓인_선반_볼에_연고_바르는_여성_구진.mp4",
+  "source": "drive",
+  "desc": "연고 튜브 쌓인 선반 앞 볼에 바르자 구진 올라옴",
+  "tags": [
+   "연고",
+   "남용",
+   "악화"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연구실_실험_기기_여성_연구원.mp4",
+  "source": "drive",
+  "desc": "연구실 실험 기기 여성 연구원",
+  "tags": [
+   "연구",
+   "논문"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_예수_남성_얼굴_만지는_치유.mp4",
+  "source": "drive",
+  "desc": "예수가 남성 얼굴 치유(사용 금지)",
+  "tags": [
+   "제외"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": true
+ },
+ {
+  "file": "영상_욕실_거울_앞_크림_바르는_여성_미소.mp4",
+  "source": "drive",
+  "desc": "욕실 크림 바르며 미소",
+  "tags": [
+   "크림바르기"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_거울_홍조_얼굴_걱정_여성.mp4",
+  "source": "drive",
+  "desc": "가운 차림 거울 앞 붉은 얼굴로 울음",
+  "tags": [
+   "홍조걱정",
+   "괴로움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_거울_홍조_얼굴_걱정_여성_2.mp4",
+  "source": "drive",
+  "desc": "(101과 거의 같음)",
+  "tags": [
+   "홍조걱정",
+   "괴로움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_거울_홍조_얼굴_걱정_여성_3.mp4",
+  "source": "drive",
+  "desc": "(101과 거의 같음)",
+  "tags": [
+   "홍조걱정",
+   "괴로움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_거울_홍조_얼굴_걱정_여성_4.mp4",
+  "source": "drive",
+  "desc": "(101과 거의 같음)",
+  "tags": [
+   "홍조걱정",
+   "괴로움"
+  ],
+  "mood": "괴로움",
+  "dur": 10.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_거울_홍조_얼굴_만지는_여성.mp4",
+  "source": "drive",
+  "desc": "거울 앞 붉은 얼굴 만짐",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_머리_만지는_여성_수건.mp4",
+  "source": "drive",
+  "desc": "욕실 헤어 오일",
+  "tags": [
+   "헤어"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_머리_묶는_여성_수건.mp4",
+  "source": "drive",
+  "desc": "욕실 머리 묶음",
+  "tags": [
+   "헤어"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_세면대_물_받는_여성_가운.mp4",
+  "source": "drive",
+  "desc": "가운 차림 휴지통에 버리고 세안",
+  "tags": [
+   "제품버리기",
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_세면대_세안_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "식물 있는 욕실 세안 후 수건",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_손에_크림_덜어_미소짓는_여성.mp4",
+  "source": "drive",
+  "desc": "로션 펌프 덜어 바르며 미소",
+  "tags": [
+   "크림바르기"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_수건_여성_미소.mp4",
+  "source": "drive",
+  "desc": "수건 머리 털고 미소",
+  "tags": [
+   "샤워"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_수건_여성_쓰레기통에_버리기.mp4",
+  "source": "drive",
+  "desc": "튜브 휴지통에 버리고 손 흔들며 웃음",
+  "tags": [
+   "제품버리기",
+   "회복"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_수건으로_얼굴_닦는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "잠옷 수건으로 얼굴 닦음",
+  "tags": [
+   "세안"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_쓰레기통_옆_지친_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "욕실 화장품 휴지통에 버리고 지친 얼굴",
+  "tags": [
+   "제품버리기"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_오일_손에_바르는_여성.mp4",
+  "source": "drive",
+  "desc": "욕실 오일 손에 바름",
+  "tags": [
+   "바디케어"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_화장품_쓰레기통에_버리는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "화장품 휴지통에 버리고 볼 짚음",
+  "tags": [
+   "제품버리기"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_화장품_쓰레기통에_버리는_홍조_여성_2.mp4",
+  "source": "drive",
+  "desc": "(116과 거의 같음)",
+  "tags": [
+   "제품버리기"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕조_거품_목욕_홍조_여성_미소.mp4",
+  "source": "drive",
+  "desc": "거품 목욕 미소",
+  "tags": [
+   "목욕"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕조_홍조_눈_감은_여성.mp4",
+  "source": "drive",
+  "desc": "욕조 붉은 볼 눈 감음",
+  "tags": [
+   "목욕",
+   "열감"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕조_홍조_얼굴_여성.mp4",
+  "source": "drive",
+  "desc": "욕조 붉은 얼굴",
+  "tags": [
+   "목욕",
+   "열감"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕조_홍조_지친_여성.mp4",
+  "source": "drive",
+  "desc": "욕조 지친 붉은 얼굴",
+  "tags": [
+   "목욕",
+   "열감"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_운동_땀_달리기_여성.mp4",
+  "source": "drive",
+  "desc": "야외 달리기 땀",
+  "tags": [
+   "운동"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_이마_짚는_여성_스트레스_두통.mp4",
+  "source": "drive",
+  "desc": "이마 짚음 두통",
+  "tags": [
+   "스트레스"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_이마_짚는_홍조_여성_두통.mp4",
+  "source": "drive",
+  "desc": "흰 배경 짜증·답답함",
+  "tags": [
+   "스트레스",
+   "답답함"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_입_가리고_하품_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "진료실 의사 앞 붉은 얼굴로 울다 웃음",
+  "tags": [
+   "진료상담"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_지친_홍조_여성_소파.mp4",
+  "source": "drive",
+  "desc": "대기실 소파 지친 붉은 얼굴",
+  "tags": [
+   "대기",
+   "지침"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_진료실_손으로_설명하는_남성.mp4",
+  "source": "drive",
+  "desc": "남성 손으로 설명하다 머리 감싸 쥠",
+  "tags": [
+   "답답함",
+   "남성"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_창가_기지개_스트레칭_여성.mp4",
+  "source": "drive",
+  "desc": "창가 스트레칭 운동",
+  "tags": [
+   "운동"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_창가_기지개_스트레칭_여성_2.mp4",
+  "source": "drive",
+  "desc": "창가 기지개 운동",
+  "tags": [
+   "운동"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_창가_볼_만지는_걱정_여성.mp4",
+  "source": "drive",
+  "desc": "창가 볼 만지다 미소",
+  "tags": [
+   "홍조걱정",
+   "회복"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_창가_볼_만지는_걱정_여성_2.mp4",
+  "source": "drive",
+  "desc": "(130과 거의 같음)",
+  "tags": [
+   "홍조걱정",
+   "회복"
+  ],
+  "mood": "중립",
+  "dur": 10.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_침대_누운_심한_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "침대에 누운 심한 홍조",
+  "tags": [
+   "지침",
+   "홍조"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_침대_다리_랩_감는_여성_습진.mp4",
+  "source": "drive",
+  "desc": "침대 다리 랩 감기",
+  "tags": [
+   "습진",
+   "랩"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_침실_수건_여성_양볼_홍조.mp4",
+  "source": "drive",
+  "desc": "침실 가습기 붉은 볼",
+  "tags": [
+   "보습"
+  ],
+  "mood": "중립",
+  "dur": 5.03,
+  "exclude": false
+ },
+ {
+  "file": "영상_코_각질_지루성피부염_클로즈업.mp4",
+  "source": "drive",
+  "desc": "코 각질 손가락으로 만짐 근접(지루성)",
+  "tags": [
+   "지루성",
+   "각질"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_코_각질_홍조_얼굴_클로즈업_지루성.mp4",
+  "source": "drive",
+  "desc": "코·볼 각질 홍조 정면 근접",
+  "tags": [
+   "지루성",
+   "각질",
+   "홍조"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_코_볼_홍조_클로즈업.mp4",
+  "source": "drive",
+  "desc": "코 볼 홍조 근접",
+  "tags": [
+   "홍조"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_코_피부_각질_만지는_여성_클로즈업.mp4",
+  "source": "drive",
+  "desc": "코 각질 만짐 근접",
+  "tags": [
+   "지루성",
+   "각질"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_크림_통_들고_볼에_바르는_여성.mp4",
+  "source": "drive",
+  "desc": "크림 통 들고 볼에 바름",
+  "tags": [
+   "크림바르기"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_티슈로_얼굴_닦는_여성.mp4",
+  "source": "drive",
+  "desc": "튜브 짜다 휴지로 얼굴 닦음",
+  "tags": [
+   "연고",
+   "닦아냄"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_팔_주사_맞고_아파하는_남성.mp4",
+  "source": "drive",
+  "desc": "남성 팔 주사 맞고 아파함",
+  "tags": [
+   "주사"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_팔에_로션_바르는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "팔에 로션 바름",
+  "tags": [
+   "바디케어"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_퍼프로_볼_두드리는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "퍼프로 붉은 볼 두드림",
+  "tags": [
+   "화장"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_각질층_구조_도표_압축_신장.mp4",
+  "source": "drive",
+  "desc": "각질층 압축 도표(영문)",
+  "tags": [
+   "도식"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_각질층_바늘_자극_3D_일러스트.mp4",
+  "source": "drive",
+  "desc": "각질층에 바늘 박히는 3D",
+  "tags": [
+   "자극",
+   "3D"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_관리_기기_얼굴_시술_받는_여성.mp4",
+  "source": "drive",
+  "desc": "관리실 기기 얼굴 관리",
+  "tags": [
+   "시술",
+   "관리"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_관리실_얼굴_마사지_받는_여성.mp4",
+  "source": "drive",
+  "desc": "관리실 얼굴 마사지",
+  "tags": [
+   "관리"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_마사지_기기_젤_바르는_여성.mp4",
+  "source": "drive",
+  "desc": "초음파 기기 얼굴",
+  "tags": [
+   "시술"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_위_곰팡이_진드기_3D_미생물_모낭충.mp4",
+  "source": "drive",
+  "desc": "피부 위 버섯형 곰팡이·진드기 3D",
+  "tags": [
+   "미생물",
+   "3D"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_위_세균_미생물_3D_클로즈업.mp4",
+  "source": "drive",
+  "desc": "피부 위 세균 3D",
+  "tags": [
+   "미생물",
+   "3D"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_위_젤_크림_방울_클로즈업.mp4",
+  "source": "drive",
+  "desc": "피부 위 젤 방울 퍼짐",
+  "tags": [
+   "제형",
+   "보습"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_위_피지_기름_방울_클로즈업.mp4",
+  "source": "drive",
+  "desc": "피부 위 기름 방울",
+  "tags": [
+   "피지",
+   "제형"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_장벽_수분_보습_vs_건조_도식.mp4",
+  "source": "drive",
+  "desc": "수분 vs 건조 피부 장벽 도식",
+  "tags": [
+   "도식",
+   "장벽",
+   "보습"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부_피지_모공_클로즈업.mp4",
+  "source": "drive",
+  "desc": "모공 피지 근접",
+  "tags": [
+   "피지",
+   "모공"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_건물_앞_홍조_여성_답답함.mp4",
+  "source": "drive",
+  "desc": "피부과 건물 앞 답답해하며 손짓",
+  "tags": [
+   "피부과",
+   "답답함"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_대기실_처방전_보는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "피부과 대기실 번호판 앞 종이 들고 대기",
+  "tags": [
+   "대기",
+   "피부과"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_대기실_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "피부과 대기실 대기",
+  "tags": [
+   "대기",
+   "피부과"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_눈가_홍조.mp4",
+  "source": "drive",
+  "desc": "레이저 시술 눈가",
+  "tags": [
+   "시술",
+   "레이저"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_받는_여성.mp4",
+  "source": "drive",
+  "desc": "기기 시술 받으며 대화",
+  "tags": [
+   "시술"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_받는_여성_2.mp4",
+  "source": "drive",
+  "desc": "기기 시술 받으며 웃음",
+  "tags": [
+   "시술"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_보안경_홍조.mp4",
+  "source": "drive",
+  "desc": "보안경 레이저 시술",
+  "tags": [
+   "시술",
+   "레이저"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_볼_홍조_클로즈업.mp4",
+  "source": "drive",
+  "desc": "볼 레이저 근접",
+  "tags": [
+   "시술",
+   "레이저"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_여드름_아파하는_여성.mp4",
+  "source": "drive",
+  "desc": "레이저에 아파함",
+  "tags": [
+   "시술",
+   "레이저"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_홍조_볼_의사.mp4",
+  "source": "drive",
+  "desc": "홍조 볼 레이저 의사",
+  "tags": [
+   "시술",
+   "레이저"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_레이저_시술_홍조_여성_의자.mp4",
+  "source": "drive",
+  "desc": "의자에서 기기 시술 웃음",
+  "tags": [
+   "시술"
+  ],
+  "mood": "긍정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_앞_홍조_여성_설명하는_손짓.mp4",
+  "source": "drive",
+  "desc": "피부과 앞 손가락 들고 설명하는 여성",
+  "tags": [
+   "피부과",
+   "설명"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "source": "drive",
+  "desc": "피부과의원·약국 앞 처방전 봉투 여러 개",
+  "tags": [
+   "처방전",
+   "약국",
+   "피부과"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_의사_상담_돋보기_여성_환자.mp4",
+  "source": "drive",
+  "desc": "의사가 볼 살피고 설명",
+  "tags": [
+   "진료상담"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_이마_시술_디자인_마킹.mp4",
+  "source": "drive",
+  "desc": "이마 시술 디자인 마킹",
+  "tags": [
+   "시술"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_접수_결제_홍조_여성_직원.mp4",
+  "source": "drive",
+  "desc": "피부과 접수 결제",
+  "tags": [
+   "접수",
+   "결제"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_접수_결제_홍조_여성_직원_2.mp4",
+  "source": "drive",
+  "desc": "피부과 접수 카드 결제",
+  "tags": [
+   "접수",
+   "결제"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_진료_상담_의사와_여성_환자.mp4",
+  "source": "drive",
+  "desc": "진료실 의사와 상담(필름 날짜 표기)",
+  "tags": [
+   "진료상담"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_진료실_의사_컴퓨터_여성_환자.mp4",
+  "source": "drive",
+  "desc": "진료실 의사는 컴퓨터만 보고 환자 말함",
+  "tags": [
+   "진료상담",
+   "짧은진료"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_짧은_진료_의사_컴퓨터_여성_환자.mp4",
+  "source": "drive",
+  "desc": "짧은 진료, 의사 등만 보이는 환자",
+  "tags": [
+   "진료상담",
+   "짧은진료"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_초음파_기기_시술_받는_여성.mp4",
+  "source": "drive",
+  "desc": "초음파 기기 시술",
+  "tags": [
+   "시술"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과_초음파_기기_시술_받는_여성_2.mp4",
+  "source": "drive",
+  "desc": "초음파 기기 시술 2",
+  "tags": [
+   "시술"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피지선_모낭_3D_일러스트.mp4",
+  "source": "drive",
+  "desc": "피지선 모낭 3D 일러스트",
+  "tags": [
+   "도식",
+   "피지"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_햇빛_자외선_일광화상_얼굴_가리는_여성.mp4",
+  "source": "drive",
+  "desc": "햇빛 아래 얼굴 가림",
+  "tags": [
+   "자외선"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_헤어_오일_바르는_여성_욕실.mp4",
+  "source": "drive",
+  "desc": "원형 거울 앞 헤어 오일",
+  "tags": [
+   "헤어"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_두피_손상된_피부장벽_각질.mp4",
+  "source": "drive",
+  "desc": "두피 손상 장벽 각질 현미경",
+  "tags": [
+   "현미경",
+   "장벽"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_두피_피부장벽_회복_14일.mp4",
+  "source": "drive",
+  "desc": "두피 장벽 회복 14일 조직 그림",
+  "tags": [
+   "현미경",
+   "회복",
+   "기간"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_모낭_세안_후_스케치.mp4",
+  "source": "drive",
+  "desc": "모낭 세안 후 스케치",
+  "tags": [
+   "현미경",
+   "도식"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_모낭_손상.mp4",
+  "source": "drive",
+  "desc": "모낭 손상 조직",
+  "tags": [
+   "현미경"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_피부_단면_물방울_장벽.mp4",
+  "source": "drive",
+  "desc": "피부 단면 물방울 장벽 현미경",
+  "tags": [
+   "현미경",
+   "장벽",
+   "보습"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_피부_조직_단면_모낭.mp4",
+  "source": "drive",
+  "desc": "피부 조직 단면 모낭",
+  "tags": [
+   "현미경"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_피부_조직_단면_흑백_400배.mp4",
+  "source": "drive",
+  "desc": "흑백 조직 400배",
+  "tags": [
+   "현미경"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_현미경_피부_조직_모낭_단면.mp4",
+  "source": "drive",
+  "desc": "피부 조직 모낭 단면",
+  "tags": [
+   "현미경"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_홍조_구진_볼_만지는_여성.mp4",
+  "source": "drive",
+  "desc": "붉은 볼 만지는 여성 근접",
+  "tags": [
+   "홍조걱정"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_홍조_눈_감은_지친_여성_창가.mp4",
+  "source": "drive",
+  "desc": "창가 지친 붉은 얼굴",
+  "tags": [
+   "지침",
+   "홍조"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_홍조_볼_만지는_여성_클로즈업.mp4",
+  "source": "drive",
+  "desc": "붉은 볼 만지다 미소 근접",
+  "tags": [
+   "홍조걱정",
+   "회복"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_홍조_볼_여성_얼굴_클로즈업.mp4",
+  "source": "drive",
+  "desc": "붉은 볼 얼굴 근접 무표정",
+  "tags": [
+   "홍조"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_홍조_여성_놀란_표정_의사_상담.mp4",
+  "source": "drive",
+  "desc": "진료실 의사 앞 놀람·울음",
+  "tags": [
+   "진료상담",
+   "놀람"
+  ],
+  "mood": "괴로움",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_홍조_여성_얼굴_클로즈업_무표정.mp4",
+  "source": "drive",
+  "desc": "붉은 볼 얼굴 근접 무표정",
+  "tags": [
+   "홍조"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장대_화장품_고르는_여성.mp4",
+  "source": "drive",
+  "desc": "화장대 화장품 고르고 화장",
+  "tags": [
+   "화장품",
+   "화장"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜_깜짝_놀란_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "화장솜 대다 깜짝 놀람(따가움)",
+  "tags": [
+   "화장솜",
+   "따가움"
+  ],
+  "mood": "괴로움",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜_볼_닦는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "화장솜으로 볼·이마 닦음",
+  "tags": [
+   "화장솜",
+   "닦기"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜_볼_홍조_걱정_여성.mp4",
+  "source": "drive",
+  "desc": "화장솜 볼 대고 걱정→놀람",
+  "tags": [
+   "화장솜",
+   "따가움"
+  ],
+  "mood": "걱정",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜_이마_닦는_홍조_여성_거울.mp4",
+  "source": "drive",
+  "desc": "거울 앞 화장솜 이마 닦음",
+  "tags": [
+   "화장솜",
+   "닦기"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜_토너_볼_닦는_홍조_여성.mp4",
+  "source": "drive",
+  "desc": "토너 화장솜 볼 닦기",
+  "tags": [
+   "화장솜",
+   "토너"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜_토너_볼_닦는_홍조_여성_2.mp4",
+  "source": "drive",
+  "desc": "(199와 거의 같음)",
+  "tags": [
+   "화장솜",
+   "토너"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장솜으로_얼굴_닦는_여성.mp4",
+  "source": "drive",
+  "desc": "화장솜으로 얼굴 닦음",
+  "tags": [
+   "화장솜",
+   "닦기"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_짧은_진료_의사_모니터로_돌아앉음_말_못하는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1Yk6GKN3ZUcP2EFGSlOJkDQpwIfxPeHa7",
+  "desc": "진료실, 의사가 모니터만 보며 타자, 환자는 말을 꺼내려다 입을 다묾",
+  "tags": [
+   "진료상담",
+   "짧은진료"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_진료실_손가락_꼽으며_기억_더듬는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1kCtbT0UMg1yvgwxoXs57SJFXf4oAC1NN",
+  "desc": "진료실에서 손가락을 꼽아 세다 멈추고 천장 보며 기억을 더듬음",
+  "tags": [
+   "기억",
+   "진료상담",
+   "순서"
+  ],
+  "mood": "고민",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_식탁_휴대폰_메모앱_입력하는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1sOLxAmc50Hcr-Fs9VVPO7inI-FAwx1sm",
+  "desc": "창가 식탁에서 휴대폰 메모 앱에 한 줄씩 입력",
+  "tags": [
+   "메모",
+   "계획",
+   "휴대폰"
+  ],
+  "mood": "집중",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_병원_수납_카드_내고_영수증_받는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1v50haaM9Z7EgqxrOTYbflU-05sBh8xtx",
+  "desc": "병원 수납 창구에서 카드 내고 영수증 받아 접음",
+  "tags": [
+   "접수",
+   "결제",
+   "진료비"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ }
+]

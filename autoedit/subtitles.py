@@ -246,6 +246,8 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
 
     # 챕터: 시작할 때 화면 중앙에 크게, 그 뒤로는 좌상단에 계속
     chapters = plan.get("chapters", [])
+    # 위쪽 진행 탭이 있는 파트는 좌상단 라벨을 띄우지 않는다 (같은 내용이 두 번 보인다)
+    tab_chs = set((plan.get("progress") or {}).get("chapters") or [])
     starts = sorted((c.out_start, c.chapter) for c in tl.clips if c.chapter is not None)
     for n, (t0, ch) in enumerate(starts):
         t1 = starts[n + 1][0] if n + 1 < len(starts) else total
@@ -256,7 +258,7 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
                 "{\\fad(80,160)\\pos(960,230)\\fscx80\\fscy80\\t(0,140,\\fscx100\\fscy100)}"
                 f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")
             sfx.append((t0, "whoosh"))
-        for a, b in _visible(t0 + (1.6 if t0 > 1.0 and not covered else 0), t1, hide):
+        for a, b in ([] if ch in tab_chs else _visible(t0 + (1.6 if t0 > 1.0 and not covered else 0), t1, hide)):
             add(2, a, b, "Label", f"{{\\c{YELLOW}}}Q.{{\\c&H00FFFFFF&}} {label}")
 
     # 마지막 구독 안내

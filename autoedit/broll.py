@@ -52,6 +52,10 @@ class Placement:
     mode: str        # "full" | "side" | "slide"
     start: float     # 출력 타임라인 기준
     dur: float
+    tin: str = ""    # 들어올 때 전환: cut | fade | dissolve | iris | wipe | push (빈 값이면 예전 방식)
+    tout: str = ""   # 나갈 때(얼굴로 돌아갈 때) 전환: cut | fade | wipe | pushout
+    extend: float = 0.0  # 다음 자료가 전환하며 덮는 동안 이만큼 더 보여 준다
+    card: str = ""   # 슬라이드 카드 종류 (part 등)
 
 
 def _probe_duration(p: Path) -> float:
@@ -478,10 +482,11 @@ def ffmpeg_inputs(placements: list[Placement]) -> list[str]:
         elif a.kind == "slide" and a.path.suffix == ".mp4":
             args += ["-i", str(a.path)]  # 모션 그래픽 카드: 앞부분만 움직이고 나머지는 마지막 장면을 늘린다
         elif a.kind in ("image", "slide"):
-            args += ["-loop", "1", "-framerate", "30", "-t", f"{p.dur}", "-i", str(a.path)]
+            args += ["-loop", "1", "-framerate", "30", "-t", f"{p.dur + p.extend}", "-i", str(a.path)]
         else:
-            ss = max(0.0, min(a.duration - p.dur - 0.3, a.duration * 0.25))
-            args += ["-ss", f"{ss:.2f}", "-t", f"{p.dur + 0.3:.3f}", "-i", str(a.path)]
+            d = p.dur + p.extend
+            ss = max(0.0, min(a.duration - d - 0.3, a.duration * 0.25))
+            args += ["-ss", f"{ss:.2f}", "-t", f"{d + 0.3:.3f}", "-i", str(a.path)]
     return args
 
 
@@ -501,21 +506,144 @@ def _full_image(path: Path, d: float) -> str:
             f"[fbg][ffg]overlay=(W-w)/2:(H-h)/2,{zoom}")
 
 
-def overlay_filters(placements: list[Placement], first_input: int, base: str) -> tuple[str, str]:
+TRANS = 0.4  # 전환 길이 (초)
+IN_FROM_FACE = {"slide": ["wipe", "fade", "iris"], "full": ["iris", "push", "wipe", "fade"]}
+OUT_TO_FACE = {"slide": ["fade", "wipe"], "full": ["fade", "pushout", "wipe"]}
+BETWEEN = {"slide-slide": ["dissolve"], "full-full": ["cut", "dissolve", "push"], "mixed": ["dissolve", "wipe", "cut"]}
+CUT_MAX = 1 / 3  # 그냥 컷으로 넘기는 전환은 전체의 1/3까지
+
+
+def assign_transitions(placements: list[Placement]):
+    """화면 전환 종류를 정한다. 같은 전환이 연달아 나오지 않게 돌려 쓰고, 컷은 1/3을 넘지 않게 한다.
+    파트 표지 카드는 초록 패널이 쓸고 지나가는 것 자체가 전환이라 컷으로 들어간다."""
+    full = sorted((p for p in placements if p.mode != "side"), key=lambda p: p.start)
+    last, rot = "", {}
+
+    def pick(key: str, opts: list[str]) -> str:
+        nonlocal last
+        k = rot.get(key, 0)
+        for j in range(len(opts)):
+            o = opts[(k + j) % len(opts)]
+            if o != last or len(opts) == 1:
+                rot[key] = k + j + 1
+                last = o
+                return o
+        return opts[0]
+
+    for i, p in enumerate(full):
+        prev = full[i - 1] if i and abs(full[i - 1].start + full[i - 1].dur - p.start) < 0.05 else None
+        nxt = full[i + 1] if i + 1 < len(full) and abs(p.start + p.dur - full[i + 1].start) < 0.05 else None
+        kind = "slide" if p.mode == "slide" else "full"
+        if p.card == "part":
+            p.tin = "cut"
+        elif prev is None:
+            p.tin = pick("in-" + kind, IN_FROM_FACE[kind])
+        else:
+            pk = "slide" if prev.mode == "slide" else "full"
+            key = f"{pk}-{kind}" if pk == kind else "mixed"
+            p.tin = pick(key, BETWEEN[key])
+        if prev is not None and p.tin != "cut":
+            prev.extend = TRANS
+        p.tout = pick("out-" + kind, OUT_TO_FACE[kind]) if nxt is None else ""
+    # 컷이 너무 많으면 디졸브로 바꾼다
+    ts = [p for p in full if p.tin] + [p for p in full if p.tout]
+    cuts = [p for p in full if p.tin == "cut" and p.card != "part"]
+    over = len(cuts) - int(len(ts) * CUT_MAX)
+    for p in cuts[:max(0, over)]:
+        p.tin = "dissolve"
+        prv = next((q for q in full if abs(q.start + q.dur - p.start) < 0.05), None)
+        if prv:
+            prv.extend = TRANS
+
+
+def _ease_out(x):
+    return 1 - (1 - x) ** 3
+
+
+def transition_masks(folder: Path) -> dict[str, Path]:
+    """원형으로 열리는(iris) 마스크와 비스듬히 닦아내는(wipe) 마스크를 한 번 만들어 둔다 (흑백 12프레임)."""
+    import numpy as np
+    from PIL import Image
+    folder.mkdir(parents=True, exist_ok=True)
+    n, W, H, fe = round(TRANS * 30), 1920, 1080, 60.0
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    dist = np.hypot(xx - W / 2, yy - H / 2)
+    diag = float(dist.max())
+    slant = xx + 0.35 * yy
+    out = {}
+    for name in ("iris_in", "iris_out", "wipe_in", "wipe_out"):
+        mp = folder / f"{name}.mkv"
+        out[name] = mp
+        if mp.exists():
+            continue
+        frames = []
+        for k in range(n):
+            e = _ease_out((k + 1) / n)
+            if name.startswith("iris"):
+                r = e * (diag + fe)
+                a = np.clip((r - dist) / fe, 0, 1)
+            else:
+                x0 = e * (W + 0.35 * H + 2 * fe) - fe
+                a = np.clip((x0 - slant) / fe, 0, 1)
+            frames.append(a)
+        if name == "iris_out":
+            frames = frames[::-1]
+        elif name == "wipe_out":
+            frames = [1 - f for f in frames]
+        tmp = folder / f"_{name}"
+        tmp.mkdir(exist_ok=True)
+        for k, a in enumerate(frames):
+            Image.fromarray((a * 255).astype(np.uint8), "L").save(tmp / f"{k:03d}.png")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", "30", "-i", str(tmp / "%03d.png"),
+                        "-c:v", "ffv1", "-pix_fmt", "gray", str(mp)], check=True)
+    return out
+
+
+def _mask_chain(n: int, p: Placement, d: float, masks: dict[str, Path]) -> str | None:
+    """마스크 전환이 있으면 이 자료의 길이에 맞는 흑백 마스크 스트림 필터를 만든다."""
+    mi = p.tin if p.tin in ("iris", "wipe") else None
+    mo = p.tout if p.tout == "wipe" else None
+    if not (mi or mo):
+        return None
+    segs, lab = [], []
+    if mi:
+        segs.append(f"movie={masks[mi + '_in']},format=gray,setpts=PTS-STARTPTS[m{n}a]")
+        lab.append(f"[m{n}a]")
+    mid = d - (TRANS if mi else 0) - (TRANS if mo else 0)
+    segs.append(f"color=c=white:s=1920x1080:r=30:d={max(mid, 1 / 30):.4f},format=gray[m{n}b]")
+    lab.append(f"[m{n}b]")
+    if mo:
+        segs.append(f"movie={masks[mo + '_out']},format=gray,setpts=PTS-STARTPTS[m{n}c]")
+        lab.append(f"[m{n}c]")
+    if len(lab) > 1:
+        segs.append(f"{''.join(lab)}concat=n={len(lab)}:v=1:a=0,settb=1/30[m{n}]")
+    else:
+        segs[-1] = segs[-1].replace(f"[m{n}b]", f"[m{n}]")
+    return ";".join(segs)
+
+
+def overlay_filters(placements: list[Placement], first_input: int, base: str,
+                    masks: dict[str, Path] | None = None) -> tuple[str, str]:
     """기존 영상 [base] 위에 자료 화면을 얹는 filter_complex 조각과 결과 라벨을 돌려준다."""
     parts, cur = [], base
     covers = [(p.start, p.start + p.dur) for p in placements if p.mode != "side"]
     for n, p in enumerate(placements):
         i = first_input + n
-        d = p.dur
-        # 전체 화면끼리 바로 이어지면 컷으로 넘기고, 얼굴에서 넘어올 때만 짧게 페이드한다
-        fin = p.mode == "side" or not any(abs(e - p.start) < 0.05 for s, e in covers)
-        fout = p.mode == "side" or not any(abs(s - (p.start + d)) < 0.05 for s, e in covers)
+        d = round(p.dur + p.extend, 4)
         fades = "format=yuva420p"
-        if fin:
-            fades += f",fade=t=in:st=0:d={FADE}:alpha=1"
-        if fout:
-            fades += f",fade=t=out:st={max(0, d - FADE)}:d={FADE}:alpha=1"
+        if p.tin or p.tout:
+            if p.tin in ("fade", "dissolve"):
+                fades += f",fade=t=in:st=0:d={0.25 if p.tin == 'fade' else 0.3}:alpha=1"
+            if p.tout == "fade":
+                fades += f",fade=t=out:st={max(0, d - 0.3):.3f}:d=0.3:alpha=1"
+        else:
+            # 전체 화면끼리 바로 이어지면 컷으로 넘기고, 얼굴에서 넘어올 때만 짧게 페이드한다
+            fin = p.mode == "side" or not any(abs(e - p.start) < 0.05 for s, e in covers)
+            fout = p.mode == "side" or not any(abs(s - (p.start + p.dur)) < 0.05 for s, e in covers)
+            if fin:
+                fades += f",fade=t=in:st=0:d={FADE}:alpha=1"
+            if fout:
+                fades += f",fade=t=out:st={max(0, d - FADE)}:d={FADE}:alpha=1"
         if p.mode == "slide":
             prep = "fps=30,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2"
             if p.asset.path.suffix == ".mp4":
@@ -528,7 +656,7 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
             else:
                 # 원본 프레임 수가 모자라 끝에서 한 프레임 얼굴이 비치지 않게 마지막 장면을 조금 늘려 둔다
                 prep = ("fps=30,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,"
-                        "tpad=stop_mode=clone:stop_duration=0.5")
+                        f"tpad=stop_mode=clone:stop_duration={0.5 + p.extend:.2f}")
             pos = "0:0"
         else:
             bw, bh = SIDE_BOX
@@ -538,8 +666,19 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str) ->
         # 시작 시각은 프레임 번호(정수)로 준다. 초를 그대로 쓰면 34.1333×30=1023.999가 1023으로 내려가서
         # 자료가 한 프레임 일찍 끝나고 그 틈에 얼굴이 한 프레임 비친다
         frame0 = round(p.start * 30)
-        parts.append(f"[{i}:v]{prep},setsar=1,trim=duration={d},{fades},settb=1/30,"
-                     f"setpts=PTS-STARTPTS+{frame0}[br{n}]")
+        mk = _mask_chain(n, p, d, masks) if masks and p.mode != "side" else None
+        if mk:
+            parts.append(mk)
+            parts.append(f"[{i}:v]{prep},setsar=1,trim=duration={d},setpts=PTS-STARTPTS,format=yuva420p[it{n}]")
+            parts.append(f"[it{n}][m{n}]alphamerge,{fades},settb=1/30,setpts=PTS-STARTPTS+{frame0}[br{n}]")
+        else:
+            parts.append(f"[{i}:v]{prep},setsar=1,trim=duration={d},{fades},settb=1/30,"
+                         f"setpts=PTS-STARTPTS+{frame0}[br{n}]")
+        if p.tin == "push" or p.tout == "pushout":
+            t0, t1 = frame0 / 30, frame0 / 30 + d - TRANS
+            xin = f"W*pow(1-(t-{t0:.4f})/{TRANS},3)" if p.tin == "push" else "0"
+            xout = f"-W*pow((t-{t1:.4f})/{TRANS},3)" if p.tout == "pushout" else "0"
+            pos = f"x='if(lt(t,{t0 + TRANS:.4f}),{xin},if(gt(t,{t1:.4f}),{xout},0))':y=0:eval=frame"
         nxt = f"vb{n}"
         parts.append(f"[{cur}][br{n}]overlay={pos}:eof_action=pass[{nxt}]")
         cur = nxt

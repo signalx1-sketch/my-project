@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from . import broll, cuts, fonts, motion, motion_hf, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
+from . import broll, cuts, progress, fonts, motion, motion_hf, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
 
 
 def load_dotenv(path: Path):
@@ -34,6 +34,10 @@ def main():
     p.add_argument("--slides", type=Path, help="발표 슬라이드(pptx). 말하는 순간에 맞춰 화면 전체에 띄운다")
     p.add_argument("--slide-font", choices=["readable", "original"], default="readable",
                    help="슬라이드 글꼴: readable(Pretendard, 작은 글씨 키움) 또는 original(파일에 지정된 글꼴)")
+    p.add_argument("--cards", type=Path,
+                   help="슬라이드별 카드 템플릿 설정 JSON (아이콘 줄, 휴대폰 메모, 비교, 타임라인 등. motion_templates 참고)")
+    p.add_argument("--no-transitions", action="store_true",
+                   help="화면 전환 효과(원형, 와이프, 밀기, 디졸브)를 쓰지 않고 예전처럼 컷/짧은 페이드만")
     p.add_argument("--no-motion", action="store_true",
                    help="슬라이드를 모션 그래픽 카드로 만들지 않고 정지 이미지로 쓴다")
     p.add_argument("--popups", action="store_true",
@@ -85,8 +89,10 @@ def main():
         # 슬라이드를 움직이는 카드로 (숫자 카운트업, 줄마다 등장, 막대 비교). 못 만들면 정지 이미지
         # HyperFrames로 만들고, 쓸 수 없으면 자체 렌더러(Playwright)로 대신한다
         cards = None
+        specs = json.loads(args.cards.read_text(encoding="utf-8")) if args.cards else {}
+        card_kind = motion_hf.card_kinds(args.slides.resolve(), specs)
         if not args.no_motion:
-            cards = motion_hf.render(args.slides.resolve(), work) or motion.render(args.slides.resolve(), work)
+            cards = motion_hf.render(args.slides.resolve(), work, specs) or motion.render(args.slides.resolve(), work)
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}",
                                              cards[m["slide"].no][0] if cards and m["slide"].no in cards else m["slide"].path,
                                              "slide", 0.0, m["slide"].text), "t": m["t"]} for m in matched]
@@ -116,12 +122,22 @@ def main():
             items = plan_mod.plan_broll(sentences, assets, work / "broll.json", use_ai=not args.no_ai)
         # 파일명 규칙 후보도 보탠다: 얼굴 옆 팝업(제품/논문/도표가 문장과 정확히 맞을 때)과
         # 얼굴 비율을 맞출 때 쓸 채움용 자료. 계획에 적힌 자료가 항상 먼저 쓰인다.
-        items += [dict(x, auto=True) for x in broll.suggest_with_rules(sentences, assets)
-                  if x.get("filler") or (x["mode"] == "side" and args.popups)]
+        # 배치 계획을 직접 준 경우(문장마다 내용을 보고 고른 것)에는 파일명 규칙 후보를 섞지 않는다:
+        # 규칙 후보는 내용이 느슨하게 맞아서 엉뚱한 장면이 끼어든다. 맞는 자료가 없으면 얼굴로 둔다
+        if not args.broll:
+            items += [dict(x, auto=True) for x in broll.suggest_with_rules(sentences, assets)
+                      if x.get("filler") or (x["mode"] == "side" and args.popups)]
         if not args.popups:
             items = [x for x in items if x.get("mode", "full") != "side"]
     if slide_items or items:
         placements = broll.place(items, sentences, assets, tl, slide_items, args.face)
+        for pl in placements:
+            if pl.mode == "slide":
+                pl.card = card_kind.get(int(pl.asset.id.split("/")[-1]), "")
+        if not args.no_transitions:
+            broll.assign_transitions(placements)
+            tr = [x for pl in placements for x in (pl.tin, pl.tout) if x]
+            print("  화면 전환: " + ", ".join(f"{k} {tr.count(k)}" for k in sorted(set(tr))))
         cnt = {m: [p for p in placements if p.mode == m] for m in ("slide", "full", "side")}
         body = [c for c in tl.clips if c.kind == "body"]
         body_len = (tl.duration - 6.5) - body[0].out_start if body else 1
@@ -130,20 +146,28 @@ def main():
               f"전체 화면 자료 {len(cnt['full'])}개 {sum(p.dur for p in cnt['full']):.0f}초, 팝업 {len(cnt['side'])}개 "
               f"/ 본편 중 얼굴 {100 * (1 - cover / body_len):.0f}%")
     (work / "placements.json").write_text(json.dumps(
-        [{"start": p.start, "dur": p.dur, "mode": p.mode, "asset": p.asset.id} for p in placements],
+        [{"start": p.start, "dur": p.dur, "mode": p.mode, "asset": p.asset.id, "tin": p.tin, "tout": p.tout,
+          "extend": p.extend, "card": p.card} for p in placements],
         ensure_ascii=False, indent=0), encoding="utf-8")
     hide = [(p.start, p.start + p.dur) for p in placements if p.mode == "slide"]
     ass, sfx = subtitles.build_ass(words, tl, plan, args.channel, fonts.caption_fonts(), hide,
                                    args.caption_style)
     # 전체 화면 자료는 화면 전환 자체가 효과라서 소리를 넣지 않고, 얼굴 옆 팝업에만 작게 넣는다
-    sfx = render.thin_sfx(sfx + [(p.start, "pop") for p in placements if p.mode == "side"], tl.duration)
+    # 파트 표지(초록 패널이 쓸고 지나감)에만 작은 휙 소리
+    sfx = render.thin_sfx(sfx + [(p.start, "pop") for p in placements if p.mode == "side"]
+                          + [(p.start + 0.25, "whoosh") for p in placements if p.card == "part"], tl.duration)
+    tabs = None
+    if (plan.get("progress") or {}).get("labels"):
+        wins = progress.windows(tl, plan, tl.duration)
+        tabs = (progress.make_tabs(plan["progress"]["labels"], work / "tabs"), wins)
+        print(f"  위쪽 진행 표시: {len(wins)}개 파트")
     src_len = sentences[-1].end if sentences else 0
     print(f"  {src_len / 60:.1f}분 → {tl.duration / 60:.1f}분 (클립 {len(tl.clips)}개, 효과음 {len(sfx)}개)")
     (work / "timeline.json").write_text(
         json.dumps([c.__dict__ for c in tl.clips], ensure_ascii=False, indent=0), encoding="utf-8")
 
     print("4/4 렌더링")
-    render.render(src, tl, ass, sfx, out, work, bgm=args.bgm, jobs=args.jobs, placements=placements)
+    render.render(src, tl, ass, sfx, out, work, bgm=args.bgm, jobs=args.jobs, placements=placements, tabs=tabs)
     print(f"완료: {out}  ({(time.time() - t0) / 60:.1f}분 걸림)")
 
 
