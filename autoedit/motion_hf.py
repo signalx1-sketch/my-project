@@ -36,6 +36,7 @@ VENDOR = ROOT / "assets" / "vendor"
 HF_VERSION = "0.8.191"
 FPS = 30
 LEAD = 0.1           # 모든 등장을 이만큼 앞당긴다: 카드 첫 프레임이 빈 배경이면 화면이 깜빡이는 것처럼 보인다
+PREROLL = 3          # 카드 영상을 이만큼(프레임) 진행된 시점부터 쓴다 (카드끼리 컷으로 넘어갈 때 빈 화면 깜빡임 방지)
 HOLD = 0.35          # 애니메이션이 끝난 뒤 카드별로 남겨 두는 시간 (나머지는 편집기가 마지막 장면을 늘린다)
 TEXT_STYLES = ["maskrise", "blurword", "wipe", "greyink", "center"]
 
@@ -463,11 +464,12 @@ def render(pptx: Path, work: Path, specs: dict | None = None) -> dict[int, tuple
     out_dir.mkdir(exist_ok=True)
     result = {}
     for no, start, dur in spans:
-        mp4 = out_dir / f"card{no:02d}_f.mp4"
+        mp4 = out_dir / f"card{no:02d}_p{PREROLL}.mp4"
         if not mp4.exists():
             # 프레임 번호로 정확히 자른다. 초로 자르면 다음 카드의 첫 프레임(글자가 아직 안 나온 상태)이 한 장 딸려 와서,
             # 편집기가 마지막 프레임을 늘릴 때 그 빈 화면이 슬라이드 내내 보인다
-            f0, f1 = round(start * FPS), round((start + dur) * FPS) - 1
+            # 첫 몇 프레임은 글자가 아직 투명해서 빈 화면처럼 보인다: 애니메이션이 조금 진행된 시점부터 쓴다
+            f0, f1 = round(start * FPS) + PREROLL, round((start + dur) * FPS) - 1
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(allmp4),
                             "-vf", f"trim=start_frame={f0}:end_frame={f1},setpts=PTS-STARTPTS",
                             "-c:v", "libx264", "-preset", "veryfast", "-crf", "14", "-pix_fmt", "yuv420p", "-an",

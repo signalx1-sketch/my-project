@@ -649,7 +649,8 @@ def _mask_chain(n: int, p: Placement, d: float, masks: dict[str, Path]) -> str |
         segs.append(f"movie={masks[mi + '_in']},format=gray,setpts=PTS-STARTPTS[m{n}a]")
         lab.append(f"[m{n}a]")
     mid = d - (TRANS if mi else 0) - (TRANS if mo else 0)
-    segs.append(f"color=c=white:s=1920x1080:r=30:d={max(mid, 1 / 30):.4f},format=gray[m{n}b]")
+    # color=white를 흑백으로 바꾸면 235(방송 규격 흰색)가 되어 자료가 92%만 불투명해진다 → 255로 채운다
+    segs.append(f"color=c=white:s=1920x1080:r=30:d={max(mid, 1 / 30):.4f},format=gray,lut=c0=255[m{n}b]")
     lab.append(f"[m{n}b]")
     if mo:
         segs.append(f"movie={masks[mo + '_out']},format=gray,setpts=PTS-STARTPTS[m{n}c]")

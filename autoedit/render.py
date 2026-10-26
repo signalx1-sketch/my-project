@@ -229,7 +229,7 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
         audio = "[1:a][2:a]amix=inputs=2:normalize=0:duration=first[mix];"
     # 원본이 말끝에서 바로 끝나는 경우가 있어 영상 끝 0.3초는 소리를 부드럽게 줄인다
     # 대사는 이미 음량을 맞춰 두었다. 여기서 다시 loudnorm을 걸면 구간마다 음량이 출렁인다 (봉우리만 살짝 누른다)
-    audio += f"[mix]alimiter=limit=0.84:attack=5:release=50,afade=t=out:st={max(0.0, tl.duration - 0.3):.3f}:d=0.3[aout]"
+    audio += f"[mix]alimiter=limit=0.84:attack=5:release=50:level=false,afade=t=out:st={max(0.0, tl.duration - 0.3):.3f}:d=0.3[aout]"
 
     # 자료 화면을 먼저 얹고 그 위에 자막을 입힌다 (자료 화면 위에서도 자막이 보이게)
     base = "0:v"
