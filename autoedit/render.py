@@ -203,7 +203,8 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
                  "[sp][2:a][duck]amix=inputs=3:normalize=0:duration=first[mix];")
     else:
         audio = "[1:a][2:a]amix=inputs=2:normalize=0:duration=first[mix];"
-    audio += "[mix]loudnorm=I=-14:TP=-1.5:LRA=11[aout]"
+    # 원본이 말끝에서 바로 끝나는 경우가 있어 영상 끝 0.3초는 소리를 부드럽게 줄인다
+    audio += f"[mix]loudnorm=I=-14:TP=-1.5:LRA=11,afade=t=out:st={max(0.0, tl.duration - 0.3):.3f}:d=0.3[aout]"
 
     # 자료 화면을 먼저 얹고 그 위에 자막을 입힌다 (자료 화면 위에서도 자막이 보이게)
     base = "0:v"

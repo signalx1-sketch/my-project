@@ -12,9 +12,10 @@ W, H, FPS = 192, 108, 4  # 작게 줄여 1초에 4장씩 본다
 
 
 def main(path: str):
-    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-vf", f"fps={FPS},scale={W}:{H},format=gray",
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", path, "-vf", f"fps={FPS},scale={W}:{H},format=rgb24",
                           "-f", "rawvideo", "-"], check=True, capture_output=True).stdout
-    frames = np.frombuffer(raw, np.uint8).reshape(-1, H, W)
+    # 빨간 글씨도 글자로 보도록 색 채널 중 가장 밝은 값을 쓴다
+    frames = np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3).max(axis=3)
     mid = frames[:, int(H * 0.14):int(H * 0.80), :]
     bright = (mid > 140).mean(axis=(1, 2))   # 글자(밝은 픽셀) 비율
     dark = mid.mean(axis=(1, 2)) < 40         # 어두운 카드 배경
