@@ -26,6 +26,7 @@ SMALL_PT = 20      # 이보다 작은 글씨(논문 인용, 출처)는 영상에
 SMALL_SCALE = 1.6  # 기본 배율. 공간이 남으면 2배까지 키운다
 CONTENT_BOTTOM = 0.80  # 슬라이드 내용은 여기까지만 (아래는 자막 자리)
 SCORE_MIN = 0.12  # 이보다 덜 겹치면 맞는 문장이 없다고 본다
+SLIDE_SPACING = 2.2  # 슬라이드 사이 최소 간격 (원본 초)
 SKIP_SLIDE = -0.05  # 슬라이드를 건너뛰는 비용 (조금이라도 맞으면 쓰는 쪽을 택한다)
 
 
@@ -344,6 +345,11 @@ def match(slides: list[Slide], sentences: list[Sentence], words: list[dict],
         for q in range(cnt):
             times[k + q] = (t0 + (t1 - t0) * (q + 1) / (cnt + 1), "between")
         k = run_end
+    # 같은 순간에 여러 장이 몰리면(한 문장을 여러 장으로 나눈 경우) 차례로 보이도록 간격을 벌린다
+    order = sorted(times)
+    for a, b in zip(order, order[1:]):
+        if times[b][0] < times[a][0] + SLIDE_SPACING:
+            times[b] = (min(times[a][0] + SLIDE_SPACING, end), times[b][1])
     return [{"slide": slides[k], "t": round(times[k][0], 2), "matched": times[k][1]} for k in sorted(times)]
 
 
