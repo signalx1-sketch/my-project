@@ -76,15 +76,15 @@ VOICE_AF = "highpass=f=70,acompressor=threshold=-22dB:ratio=2:attack=15:release=
 
 
 def normalize_speech(speech: Path, out: Path, target: float = -14.0) -> Path:
-    """음량을 두 번에 나눠 맞춘다 (측정 후 일정한 배율로). 한 번에 맞추면 구간마다 음량이 오르내린다."""
-    import json as _json
-    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(speech), "-af",
-                        f"loudnorm=I={target}:TP=-1.5:LRA=11:print_format=json", "-f", "null", "-"],
+    """음량을 재서 일정한 배율로 한 번에 올린 뒤 봉우리만 리미터로 누른다.
+    loudnorm으로 바로 맞추면(한 번에, 또는 여유가 모자라 자동으로 바뀌면) 구간마다 음량이 오르내린다."""
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(speech), "-af", "ebur128", "-f", "null", "-"],
                        capture_output=True, text=True)
-    m = _json.loads(r.stderr[r.stderr.rfind("{"):r.stderr.rfind("}") + 1])
+    import re as _re
+    m = _re.findall(r"I:\s+(-?[\d.]+) LUFS", r.stderr)
+    gain = target - float(m[-1]) if m else 0.0
     run(["ffmpeg", "-v", "error", "-y", "-i", str(speech), "-af",
-         f"loudnorm=I={target}:TP=-1.5:LRA=11:linear=true:measured_I={m['input_i']}:measured_TP={m['input_tp']}:"
-         f"measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}",
+         f"volume={gain:.2f}dB,alimiter=limit=0.84:attack=5:release=80:level=false",
          "-ar", str(SR), "-ac", "2", "-c:a", "pcm_s16le", str(out)])
     return out
 

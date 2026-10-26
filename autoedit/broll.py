@@ -32,7 +32,8 @@ SIDE_GAP = 12.0      # 팝업 사이 최소 간격
 FACE_KEEP = 1.5      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
 FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
 FACE_SHORT = 2.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
-MAX_NO_FACE = 16.0   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
+MAX_NO_FACE = 16.0
+FACE_BREAK = 2.5     # 그때 끼우는 얼굴 길이   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 얼굴로 둔다
@@ -456,10 +457,16 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 continue
             mid = (r0 + r1) / 2
             cands = [p for p in r if p.mode == "full" and p.start - r0 >= 4 and r1 - (p.start + p.dur) >= 4]
-            if not cands:
+            if cands:
+                bd.placed.remove(min(cands, key=lambda p: abs(p.start + p.dur / 2 - mid)))
+                fixed = True
                 continue
-            bd.placed.remove(min(cands, key=lambda p: abs(p.start + p.dur / 2 - mid)))
-            fixed = True
+            # 카드만 이어지면 가운데쯤 카드 하나를 FACE_BREAK초 줄여 그 뒤에 얼굴이 나오게 한다
+            cards = [p for p in r[:-1] if p.dur >= SLIDE_MIN + FACE_BREAK and p.start - r0 >= 3]
+            if cards:
+                c = min(cards, key=lambda p: abs(p.start + p.dur - mid))
+                c.dur = round(c.dur - FACE_BREAK, 4)
+                fixed = True
         if not fixed:
             break
     return sorted(bd.placed, key=lambda p: p.start)
