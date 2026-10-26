@@ -214,7 +214,7 @@ def _out_time(src_t: float, tl: Timeline) -> float | None:
     """원본 시간을 출력 시간으로. 잘려 나간 무음 구간이면 바로 다음 클립 시작으로 당긴다."""
     for c in tl.clips:
         if c.kind == "body" and c.src_start - 0.05 <= src_t < c.src_end:
-            return c.out_start + max(0.0, src_t - c.src_start)
+            return c.to_out(max(src_t, c.src_start))
     nxt = [c for c in tl.clips if c.kind == "body" and src_t < c.src_start < src_t + 1.5]
     return min(nxt, key=lambda c: c.src_start).out_start if nxt else None
 

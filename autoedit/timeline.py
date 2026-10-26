@@ -32,10 +32,20 @@ class Clip:
     out_start: float = 0.0
     joined: bool = False  # 원본에서 앞 클립과 바로 이어지면 True (오디오 페이드를 넣지 않는다)
     chapter: int | None = None  # 이 클립에서 챕터가 시작되면 챕터 번호
+    speed: float = 1.0   # 배속 (대본에 [1.25배속]처럼 적힌 구간)
+
+    @property
+    def src_dur(self) -> float:
+        return round(self.src_end - self.src_start, 4)
 
     @property
     def dur(self) -> float:
-        return round(self.src_end - self.src_start, 4)
+        """출력 영상에서의 길이 (배속이면 짧아진다). 프레임에 맞춘다."""
+        return snap(self.src_dur / self.speed) if self.speed != 1.0 else self.src_dur
+
+    def to_out(self, src_t: float) -> float:
+        """이 클립 안의 원본 시각을 출력 시각으로."""
+        return self.out_start + (src_t - self.src_start) / self.speed
 
 
 @dataclass
@@ -90,26 +100,33 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict,
         skipped.update(range(sk["from"], sk["to"] + 1))
     chapter_at = {c["from"]: n for n, c in enumerate(plan["chapters"])}
 
-    body: list[list] = []  # [시작, 끝, 챕터번호]
+    speed_at: dict[int, float] = {}
+    for sp in plan.get("speed", []):
+        for i in range(sp["from"], sp["to"] + 1):
+            speed_at[i] = float(sp["rate"])
+
+    body: list[list] = []  # [시작, 끝, 챕터번호, 배속]
     for s in sentences:
         if s.idx in skipped:
             continue
+        rate = speed_at.get(s.idx, 1.0)
         for i, (a, b) in enumerate(keep_ranges(words, s.start, s.end, silences)):
             chapter = chapter_at.get(s.idx) if i == 0 else None
             if body and a <= body[-1][1] + 0.05:
-                # 원본에서 바로 이어지는 구간: 챕터 경계가 아니면 합치고, 경계면 겹침만 없앤다
-                if chapter is None:
+                # 원본에서 바로 이어지는 구간: 챕터/배속 경계가 아니면 합치고, 경계면 겹침만 없앤다
+                if chapter is None and rate == body[-1][3]:
                     body[-1][1] = max(body[-1][1], b)
                     continue
                 body[-1][1] = min(body[-1][1], a)
-            body.append([a, b, chapter])
+            body.append([a, b, chapter, rate])
 
     punch = [(sentences[i].start, sentences[i].end) for i in plan.get("punch", []) if 0 <= i < len(sentences)]
-    for a, b, chapter in body:
+    for a, b, chapter, rate in body:
         for j, (sa, sb) in enumerate(_shots(a, b, sentence_starts, word_starts)):
             mid = (sa + sb) / 2
             zoom = ZOOM_TIGHT if any(ps <= mid < pe for ps, pe in punch) else ZOOM_WIDE
-            tl.clips.append(Clip("body", sa, sb, zoom=zoom, chapter=chapter if j == 0 else None, joined=j > 0))
+            tl.clips.append(Clip("body", sa, sb, zoom=zoom, chapter=chapter if j == 0 else None, joined=j > 0,
+                                 speed=rate))
 
     # 문장 단위로 따로 잘라서 생긴 겹침을 정리하고 프레임에 맞춘다
     t = 0.0

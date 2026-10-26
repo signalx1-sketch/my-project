@@ -8,13 +8,15 @@ from pathlib import Path
 # 단독으로 나오면 지우는 군말
 FILLERS = {"어", "음", "으", "흠", "어어", "음음", "어음", "그니까"}
 
-GAP_SPLIT = 0.40   # 단어 사이 공백이 이보다 길면 잘라낸다 (초)
+GAP_SPLIT = 0.25   # 단어 사이 공백이 이보다 길면 잘라낸다 (초). 컷은 바짝
 PAD_START = 0.06   # 잘린 구간 앞쪽 여유
 PAD_END = 0.14     # 잘린 구간 뒤쪽 여유 (말끝 잘림 방지)
 MIN_CLIP = 0.35    # 이보다 짧은 조각은 버린다
 SILENCE_DB = -42   # 이보다 작은 소리는 무음으로 본다
-SILENCE_MIN = 0.4  # 이보다 긴 무음만 잘라낸다
-SILENCE_KEEP = 0.1  # 무음을 자를 때 앞뒤로 남기는 여유
+SILENCE_MIN = 0.25  # 이보다 긴 무음만 잘라낸다
+SILENCE_KEEP = 0.07  # 무음을 자를 때 앞뒤로 남기는 여유
+NONSPEECH_MIN = 0.16  # 음성 검출(VAD)로 말소리가 아니라고 나온 구간(숨소리, 쩝 소리, 잡음)이 이보다 길면 잘라낸다
+NONSPEECH_KEEP = 0.05
 
 
 @dataclass
@@ -66,6 +68,73 @@ def split_sentences(words: list[dict], max_gap: float = 0.7) -> list[Sentence]:
 
 def _norm(w: str) -> str:
     return re.sub(r"[^가-힣A-Za-z0-9]", "", w)
+
+
+def mark_restarts(words: list[dict], max_n: int = 3) -> int:
+    """말을 하다 끊고 다시 시작한 곳("스테로 스테로이드를", "그래서 이 그래서 이게")에서 앞의 조각을 지운다.
+
+    앞 n어절이 뒤 n어절과 같은데 마지막 어절만 뒤 것의 앞부분일 때 (말이 끊긴 조각) 앞 n어절에 drop=True.
+    """
+    n_drop, i = 0, 0
+    while i < len(words):
+        for n in range(max_n, 0, -1):
+            a = [_norm(w["w"]) for w in words[i:i + n]]
+            b = [_norm(w["w"]) for w in words[i + n:i + 2 * n]]
+            if len(b) < n or not all(a) or any(w.get("drop") for w in words[i:i + n]):
+                continue
+            if a[:-1] != b[:-1] or a[-1] == b[-1] or not b[-1].startswith(a[-1]):
+                continue
+            if words[i + n]["s"] - words[i + n - 1]["e"] > 1.5:
+                continue
+            for w in words[i:i + n]:
+                w["drop"] = True
+            n_drop += n
+            i += n - 1
+            break
+        i += 1
+    return n_drop
+
+
+def find_retakes(sentences: list["Sentence"], words: list[dict]) -> list[int]:
+    """같은 문장을 다시 찍은 곳: 바로 뒤(두 문장 안) 문장이 이 문장 내용을 거의 다 담고 있으면 앞 문장을 뺀다."""
+    def grams(s):
+        t = re.sub(r"[^가-힣A-Za-z0-9]", "", " ".join(words[i]["w"] for i in s.word_ids if not words[i].get("drop")))
+        return {t[k:k + 2] for k in range(len(t) - 1)}
+
+    out = []
+    for i, s in enumerate(sentences):
+        g = grams(s)
+        if len(g) < 6:
+            continue
+        for j in (i + 1, i + 2):
+            if j < len(sentences):
+                h = grams(sentences[j])
+                if len(g & h) / len(g) >= 0.7 and len(h) >= len(g) * 0.8:
+                    out.append(s.idx)
+                    break
+    return out
+
+
+def detect_nonspeech(video: Path, out_json: Path) -> list[tuple[float, float]]:
+    """음성 검출(Silero VAD)로 말소리가 아닌 구간(숨소리, 입맛 다시는 소리, 잡음)을 찾는다.
+    음량 기준 무음 검출은 쩝 소리나 숨소리를 소리로 보고 남기기 때문에 같이 쓴다."""
+    if out_json.exists():
+        return [tuple(x) for x in json.loads(out_json.read_text())]
+    import numpy as np
+    from faster_whisper.vad import VadOptions, get_speech_timestamps
+
+    pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", str(video), "-vn", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
+                         check=True, capture_output=True).stdout
+    audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
+    segs = get_speech_timestamps(audio, VadOptions(threshold=0.5, min_speech_duration_ms=80,
+                                                   min_silence_duration_ms=100, speech_pad_ms=60))
+    sp = [(x["start"] / 16000, x["end"] / 16000) for x in segs]
+    holes = []
+    for (a0, a1), (b0, b1) in zip(sp, sp[1:]):
+        if b0 - a1 >= NONSPEECH_MIN:
+            holes.append((round(a1 + NONSPEECH_KEEP, 3), round(b0 - NONSPEECH_KEEP, 3)))
+    out_json.write_text(json.dumps(holes))
+    return holes
 
 
 def mark_repeats(words: list[dict], max_n: int = 5) -> int:

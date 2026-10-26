@@ -57,6 +57,7 @@ def main():
     print("1/4 음성 인식")
     words = transcribe.transcribe(src, work / "words.json", args.model)
     n_rep = cuts.mark_repeats(words)  # 같은 말을 바로 다시 한 곳은 마지막 것만 남긴다
+    n_rep += cuts.mark_restarts(words)  # 말을 하다 끊고 다시 시작한 조각도 지운다
     sentences = cuts.split_sentences(words)
     (work / "sentences.txt").write_text(
         "\n".join(f"[{s.idx}] ({s.start:.1f}s) {s.text}" for s in sentences), encoding="utf-8")
@@ -67,6 +68,13 @@ def main():
 
     print("3/4 타임라인과 자막")
     silences = cuts.detect_silences(src, work / "silences.json")
+    # 숨소리, 쩝 소리, 잡음처럼 소리는 있지만 말이 아닌 구간도 잘라낸다
+    nonspeech = cuts.detect_nonspeech(src, work / "nonspeech.json")
+    silences = sorted(set(silences) | set(nonspeech))
+    retakes = cuts.find_retakes(sentences, words)
+    if retakes:
+        plan["skip"] = plan.get("skip", []) + [{"from": i, "to": i} for i in retakes]
+        print(f"  다시 찍은 문장 {len(retakes)}개는 앞의 것을 뺍니다: {retakes}")
     tl = timeline.build(words, sentences, plan, silences)
     placements, slide_items, items, assets = [], [], [], []
     if args.slides:

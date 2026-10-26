@@ -97,8 +97,8 @@ def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[Ou
             if best is None:
                 continue
             c = best
-            s = c.out_start + max(0.0, w["s"] - c.src_start)
-            e = min(c.out_start + c.dur, c.out_start + (w["e"] - c.src_start))
+            s = c.to_out(max(w["s"], c.src_start))
+            e = min(c.out_start + c.dur, c.to_out(w["e"]))
             out.append(OutWord(fix_text(w["w"], fixes), s, max(e, s + 0.05), c.kind))
     out.sort(key=lambda w: w.s)
     return out

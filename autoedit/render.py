@@ -58,6 +58,17 @@ OPENMONTAGE_DIRS = [os.environ.get("OPENMONTAGE_DIR", ""), str(Path.home() / "to
                     "/home/user/tools/OpenMontage"]
 
 
+# 입 클릭(쩝, 짭 하는 짧은 충격음) 제거 + 배경 잡음 약하게 걷어내기. 말소리는 건드리지 않도록 약하게 건다
+MOUTH_NOISE_AF = "adeclick=w=55:o=75:t=2,afftdn=nr=10:nf=-42:tn=1"
+
+
+def clean_mouth_noise(speech: Path, out: Path) -> Path:
+    run(["ffmpeg", "-v", "error", "-y", "-i", str(speech), "-af", MOUTH_NOISE_AF, "-ar", str(SR), "-ac", "2",
+         "-c:a", "pcm_s16le", str(out)])
+    print("  입 클릭, 잡음 정리")
+    return out
+
+
 def enhance_voice(speech: Path, out: Path) -> Path:
     """OpenMontage의 audio_enhance(clean_speech 프리셋: 저역/고역 정리, 잡음 게이트, 압축)로 목소리를 다듬는다.
     OpenMontage가 없으면 원본을 그대로 쓴다."""
@@ -96,7 +107,7 @@ def _zoom_filter(z: float) -> str:
 def render_clip(src: Path, c: Clip, i: int, work: Path, next_joined: bool) -> tuple[Path, Path]:
     # 파일명에 구간과 줌을 넣어서, 계획을 바꿔 다시 돌리면 바뀐 클립만 새로 만든다
     key = (f"{i:04d}_{c.kind}_{round(c.src_start * 1000)}_{round(c.src_end * 1000)}_{round(c.zoom * 100)}"
-           f"_{int(c.joined)}{int(next_joined)}")
+           f"_{int(c.joined)}{int(next_joined)}_{round(c.speed * 100)}")
     v, a = work / f"v{key}.mp4", work / f"a{key}.wav"
     if v.exists() and a.exists():
         return v, a
@@ -111,15 +122,18 @@ def render_clip(src: Path, c: Clip, i: int, work: Path, next_joined: bool) -> tu
         run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SR}:cl=stereo",
              "-t", f"{c.dur}", "-c:a", "pcm_s16le", str(a)])
         return v, a
-    run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.dur + 0.1}",
-         "-vf", _zoom_filter(c.zoom), *venc, str(v)])
+    vf = _zoom_filter(c.zoom)
+    if c.speed != 1.0:
+        vf = f"setpts=(PTS-STARTPTS)/{c.speed},fps={FPS}," + vf
+    run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.src_dur + 0.1}",
+         "-vf", vf, *venc, str(v)])
     # 실제로 잘린 경계에만 짧은 페이드를 넣어 '틱' 소리를 막는다 (줌만 바뀌는 경계는 소리가 이어져야 한다)
-    af = [f"apad", f"atrim=0:{c.dur}"]
+    af = ([f"atempo={c.speed}"] if c.speed != 1.0 else []) + [f"apad", f"atrim=0:{c.dur}"]
     if not c.joined:
         af.append("afade=t=in:d=0.012")
     if not next_joined:
         af.append(f"afade=t=out:st={max(0.0, c.dur - 0.03)}:d=0.03")
-    run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.dur}",
+    run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.src_dur}",
          "-vn", "-ac", "2", "-ar", str(SR), "-af", ",".join(af), "-c:a", "pcm_s16le", str(a)])
     return v, a
 
@@ -171,6 +185,7 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
     _concat([p[0] for p in parts], video, ["-c", "copy"])
     _concat([p[1] for p in parts], speech, ["-c", "copy"])
 
+    speech = clean_mouth_noise(speech, work / "speech_declick.wav")
     speech = enhance_voice(speech, work / "speech_clean.wav")
     sfx = work / "sfx.wav"
     build_sfx_track(sfx_events, tl.duration, sfx)
