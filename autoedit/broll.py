@@ -21,10 +21,11 @@ VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 FULL_VIDEO_ONLY = True  # 전체 화면 배경은 영상만 (사진은 같은 장면 영상으로 바꾸고, 없으면 빼기)
 TWIN_MIN = 0.6          # 사진과 영상 파일명 단어가 이만큼 겹치면 같은 장면으로 본다
 FACE_TARGET = 0.2    # 본편에서 얼굴이 그대로 보이는 시간 비율 목표 (나머지는 슬라이드/자료 화면)
-FULL_SEC = 4.0       # 전체 화면 자료 길이 (자청 채널처럼 3.5~5.5초마다 화면이 바뀌게)
+FULL_SEC = 4.5       # 전체 화면 자료 길이 (자청 채널처럼 3.5~5.5초마다 화면이 바뀌게)
 FULL_MIN = 2.0
-FULL_MAX = 5.5
-SLIDE_MAX = 5.5      # 슬라이드는 다음 슬라이드가 나올 때까지, 최대 이만큼 (화면이 3.5~5.5초마다 바뀌게)
+LOOKAHEAD = 3.5     # 그 문장 자리가 이미 덮여 있으면 이만큼 뒤까지 빈 곳을 찾는다
+FULL_MAX = 6.0
+SLIDE_MAX = 6.0      # 슬라이드는 다음 슬라이드가 나올 때까지, 최대 이만큼 (화면이 3.5~5.5초마다 바뀌게)
 SLIDE_MIN = 1.5
 SIDE_SEC = 3.0       # 팝업 길이
 SIDE_MIN = 2.2
@@ -32,7 +33,7 @@ SIDE_GAP = 12.0      # 팝업 사이 최소 간격
 FACE_KEEP = 1.5      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
 FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
 FACE_SHORT = 2.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
-MAX_NO_FACE = 16.0
+MAX_NO_FACE = 30.0
 FACE_BREAK = 2.5     # 그때 끼우는 얼굴 길이   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
@@ -347,7 +348,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         spots = [x for s0, e0 in bd.face_windows() for x in _subtract(s0, e0, keep_face)]
         w = next((x for x in spots if x[0] - 1e-6 <= t < x[1]), None)
         if w is None:
-            w = next((x for x in spots if t < x[0] < t + 2.5), None)
+            w = next((x for x in spots if t < x[0] < t + LOOKAHEAD), None)
             if w is None:
                 return None
             t = w[0]
@@ -436,9 +437,12 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         elif nxt and nxt.asset.kind != "video":
             nxt.dur = round(nxt.start + nxt.dur - snap(s0), 4)
             nxt.start = snap(s0)
-        elif prev and nxt:  # 둘 다 길이가 정해진 영상이면 앞 영상을 끝까지 쓰고 뒤를 당긴다
+        elif prev and nxt:  # 둘 다 길이가 정해진 영상이면 앞 영상을 끝까지 쓰고, 그래도 모자라면 뒤 자료를 뺀다
             room = prev.asset.duration - 0.2 - prev.dur
-            prev.dur = round(prev.dur + max(0.0, room), 4)
+            if room >= e0 - s0:
+                prev.dur = round(snap(e0) - prev.start, 4)
+            elif nxt.mode == "full":
+                bd.placed.remove(nxt)
     # 6. 얼굴이 너무 오래 안 나오면 (카드와 자료가 MAX_NO_FACE초 넘게 이어지면) 가운데쯤의 자료 화면 하나를 뺀다
     for _ in range(100):
         full = sorted((p for p in bd.placed if p.mode != "side"), key=lambda p: p.start)
@@ -539,11 +543,12 @@ def _full_image(path: Path, d: float) -> str:
 
 
 TRANS = 0.4  # 전환 길이 (초)
-IN_FROM_FACE = {"slide": ["wipe", "fade", "iris"], "full": ["iris", "push", "wipe", "fade"]}
-OUT_TO_FACE = {"slide": ["fade", "wipe"], "full": ["fade", "pushout", "wipe"]}
+# 얼굴 위로 자료가 옆에서 밀려 들어오거나(push) 밀려 나가면(pushout) 어색하다 (2026-10-26 지적, 2:43)
+IN_FROM_FACE = {"slide": ["wipe", "fade"], "full": ["fade", "iris", "wipe"]}
+OUT_TO_FACE = {"slide": ["fade", "wipe"], "full": ["fade", "wipe"]}
 # 카드끼리 디졸브하면 앞 카드 글자가 뒤 카드 글자와 겹쳐 지저분하다 (2026-10-26 지적): 카드끼리는 컷(새 카드가
 # 스스로 움직이며 등장한다)과 밀어 넣기를 번갈아 쓰고, 카드와 영상 사이도 글자가 겹치지 않는 와이프/밀기/컷
-BETWEEN = {"slide-slide": ["cut", "push"], "full-full": ["cut", "dissolve", "push"], "mixed": ["wipe", "push", "cut"]}
+BETWEEN = {"slide-slide": ["cut", "push"], "full-full": ["cut", "dissolve"], "mixed": ["wipe", "push", "cut"]}
 CUT_MAX = 1 / 3  # 그냥 컷으로 넘기는 전환은 전체의 1/3까지
 
 

@@ -137,6 +137,85 @@ def detect_nonspeech(video: Path, out_json: Path) -> list[tuple[float, float]]:
     return holes
 
 
+DRAWL_RUN = 0.3      # 같은 모음이 이만큼 이상 이어지면(스펙트럼이 거의 안 바뀌는 유성음) "어~/음~" 군말이나 말끝 끌기로 본다
+DRAWL_WORDS = {"그", "저", "뭐"}
+SYL_SEC = 0.2        # 한 음절 보통 길이. 단어가 음절 수 × 이것 + 0.15초보다 0.25초 넘게 길 때만 자른다
+
+
+def detect_drawls(video: Path, words: list[dict], out_json: Path) -> list[tuple[float, float]]:
+    """음성 인식이 단어에 붙여 버린 군말("어~ 오늘", "진단과는~ 음")과 길게 끈 모음을 찾아 잘라낼 구간을 돌려준다.
+    인식기는 "어", "음"을 거의 받아 적지 않아서 소리로 찾는다: 단어 안에서 같은 모음이 DRAWL_RUN초 넘게 이어지고,
+    단어가 음절 수에 비해 눈에 띄게 길 때만. 잘라도 모음 가운데라 이음매가 매끄럽다 (앞뒤로 조금씩 남긴다)."""
+    if out_json.exists():
+        return [tuple(x) for x in json.loads(out_json.read_text())]
+    import numpy as np
+    pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", str(video), "-vn", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
+                         check=True, capture_output=True).stdout
+    x = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
+    sr, n, hop = 16000, 640, 320
+    holes = []
+    for w in words:
+        syl = max(1, len(re.sub(r"[^가-힣0-9]", "", w["w"])))
+        dur = w["e"] - w["s"]
+        # "그~", "저~", "뭐~"를 길게 끌면 군말이다 (짧게 말한 '저 병원'의 '저'는 남는다)
+        if _bare(w["w"]) in DRAWL_WORDS and dur > 0.5:
+            holes.append((round(w["s"] + 0.02, 3), round(w["e"] - 0.04, 3)))
+            continue
+        excess = dur - (syl * SYL_SEC + 0.15)
+        if excess < 0.25:
+            continue
+        seg = x[int(w["s"] * sr):int(w["e"] * sr)]
+        frames = [seg[i:i + n] for i in range(0, len(seg) - n, hop)]
+        if len(frames) < 4:
+            continue
+        sp = [np.abs(np.fft.rfft(f * np.hanning(n)))[:160] for f in frames]
+        sp = [v / (np.linalg.norm(v) + 1e-9) for v in sp]
+        steady = [np.linalg.norm(sp[i] - sp[i - 1]) < 0.25 and (frames[i] ** 2).mean() > 1e-4 for i in range(1, len(sp))]
+        c0 = None
+        for i, v in enumerate(steady + [False]):
+            if v and c0 is None:
+                c0 = i
+            if not v and c0 is not None:
+                a, b = w["s"] + (c0 + 1) * hop / sr, w["s"] + (i + 1) * hop / sr
+                c0 = None
+                if b - a < DRAWL_RUN:
+                    continue
+                # 단어 맨 앞이면 "어~" 같은 군말이 붙은 것: 거의 다 자른다. 가운데/끝이면 끈 모음: 앞쪽을 조금 남긴다
+                lead = 0.03 if a - w["s"] < 0.12 else 0.12
+                cut = min(b - 0.06 - (a + lead), excess)
+                if cut >= 0.15:
+                    holes.append((round(a + lead, 3), round(a + lead + cut, 3)))
+                    excess -= cut
+    out_json.write_text(json.dumps(holes))
+    return holes
+
+
+def detect_fillers_asr(video: Path, scan_json: Path, model_name: str = "large-v3-turbo") -> list[tuple[float, float]]:
+    """군말을 받아 적도록 유도한 두 번째 음성 인식("음, 어..."로 시작하는 프롬프트)에서 "어/음"이 나온 자리를 잘라낼 구간으로.
+    첫 인식은 군말을 옆 단어에 붙여 버리므로, 이 인식에서 군말 다음 단어가 시작하기 직전까지 자른다."""
+    if scan_json.exists():
+        ws = json.loads(scan_json.read_text(encoding="utf-8"))
+    else:
+        import numpy as np
+        from faster_whisper import WhisperModel
+        pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", str(video), "-vn", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
+                             check=True, capture_output=True).stdout
+        audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768.0
+        segs, _ = WhisperModel(model_name, device="cpu", compute_type="int8").transcribe(
+            audio, language="ko", word_timestamps=True, vad_filter=False, temperature=0.0,
+            initial_prompt="음, 어... 그러니까 어, 음 그 저, 어어 이제 음...", condition_on_previous_text=False)
+        ws = [{"w": w.word.strip(), "s": round(w.start, 3), "e": round(w.end, 3)} for sg in segs for w in (sg.words or [])]
+        scan_json.write_text(json.dumps(ws, ensure_ascii=False), encoding="utf-8")
+    holes = []
+    for i, w in enumerate(ws):
+        if not is_filler(w["w"]):
+            continue
+        end = ws[i + 1]["s"] - 0.06 if i + 1 < len(ws) else w["e"]
+        if end - (w["s"] + 0.02) >= 0.15:
+            holes.append((round(w["s"] + 0.02, 3), round(end, 3)))
+    return holes
+
+
 def mark_repeats(words: list[dict], max_n: int = 5) -> int:
     """같은 말을 바로 이어서 다시 한 경우("지금 당장은 지금 당장은") 앞의 것을 지우고 마지막 것만 남긴다.
 

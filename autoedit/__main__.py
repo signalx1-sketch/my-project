@@ -81,7 +81,14 @@ def main():
     nonspeech = [h for h in nonspeech if not any(w["s"] + 0.03 < h[1] and h[0] < w["e"] - 0.03 for w in words)]
     if n0 != len(nonspeech):
         print(f"  단어와 겹치는 숨소리 구간 {n0 - len(nonspeech)}개는 자르지 않음")
-    silences = sorted(set(silences) | set(nonspeech))
+    # "어~", "음~" 같은 군말과 길게 끈 모음 (인식기가 받아 적지 않고 옆 단어에 붙여 버린 것)
+    drawls = cuts.detect_drawls(src, words, work / "drawls.json") + cuts.detect_fillers_asr(src, work / "words_fillers.json")
+    if drawls:
+        print(f"  군말/끈 모음 {len(drawls)}곳 {sum(b - a for a, b in drawls):.1f}초 잘라냄")
+    for w in words:  # 통째로 잘린 군말 단어는 자막에도 안 나오게
+        if any(a <= w["s"] + 0.05 and w["e"] - 0.06 <= b for a, b in drawls):
+            w["drop"] = True
+    silences = sorted(set(silences) | set(nonspeech) | set(drawls))
     retakes = cuts.find_retakes(sentences, words)
     if retakes:
         plan["skip"] = plan.get("skip", []) + [{"from": i, "to": i} for i in retakes]
