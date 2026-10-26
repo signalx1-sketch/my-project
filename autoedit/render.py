@@ -122,7 +122,8 @@ def render_clip(src: Path, c: Clip, i: int, work: Path, next_joined: bool) -> tu
         run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", f"anullsrc=r={SR}:cl=stereo",
              "-t", f"{c.dur}", "-c:a", "pcm_s16le", str(a)])
         return v, a
-    vf = _zoom_filter(c.zoom)
+    # 원본 끝을 넘는 클립(마지막 말의 여운)도 프레임 수가 모자라지 않게 마지막 장면을 늘려 둔다
+    vf = _zoom_filter(c.zoom) + ",tpad=stop_mode=clone:stop_duration=2"
     if c.speed != 1.0:
         vf = f"setpts=(PTS-STARTPTS)/{c.speed},fps={FPS}," + vf
     run(["ffmpeg", "-v", "error", "-y", "-ss", f"{c.src_start}", "-i", str(src), "-t", f"{c.src_dur + 0.1}",

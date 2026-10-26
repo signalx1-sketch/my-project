@@ -5,9 +5,10 @@
 """
 from dataclasses import dataclass, field
 
-from .cuts import Sentence, keep_ranges
+from .cuts import PAD_END, Sentence, keep_ranges
 
 FPS = 30
+END_TAIL = 0.6  # 영상 마지막 말("고맙습니다") 뒤에 남기는 여운
 BUMPER_SEC = 1.4
 
 # 줌은 꼭 필요한 곳에만: 콜드 오픈은 문장마다 한 번 바꾸고, 본편은 계획의 punch 문장에서만 당긴다.
@@ -110,7 +111,12 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict,
         if s.idx in skipped:
             continue
         rate = speed_at.get(s.idx, 1.0)
-        for i, (a, b) in enumerate(keep_ranges(words, s.start, s.end, silences)):
+        # 문장 끝 단어의 여운이 잘리지 않게 끝에 여유를 둔다 (영상 마지막 문장은 조금 더)
+        tail = END_TAIL if s.idx == sentences[-1].idx else PAD_END
+        rngs = keep_ranges(words, s.start, s.end + tail, silences)
+        if rngs and s.idx == sentences[-1].idx:
+            rngs[-1] = (rngs[-1][0], max(rngs[-1][1], s.end + END_TAIL))
+        for i, (a, b) in enumerate(rngs):
             chapter = chapter_at.get(s.idx) if i == 0 else None
             if body and a <= body[-1][1] + 0.05:
                 # 원본에서 바로 이어지는 구간: 챕터/배속 경계가 아니면 합치고, 경계면 겹침만 없앤다

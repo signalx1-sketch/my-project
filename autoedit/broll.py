@@ -18,6 +18,8 @@ from .timeline import Timeline, snap
 IMAGE_EXT = {".jpg", ".jpeg", ".jfif", ".png", ".webp", ".bmp"}
 VIDEO_EXT = {".mp4", ".mov", ".m4v", ".webm", ".mkv"}
 
+FULL_VIDEO_ONLY = True  # 전체 화면 배경은 영상만 (사진은 같은 장면 영상으로 바꾸고, 없으면 빼기)
+TWIN_MIN = 0.6          # 사진과 영상 파일명 단어가 이만큼 겹치면 같은 장면으로 본다
 FACE_TARGET = 0.2    # 본편에서 얼굴이 그대로 보이는 시간 비율 목표 (나머지는 슬라이드/자료 화면)
 FULL_SEC = 4.0       # 전체 화면 자료 길이 (자청 채널처럼 3.5~5.5초마다 화면이 바뀌게)
 FULL_MIN = 2.0
@@ -267,6 +269,20 @@ class _Board:
         self.used.add(a.id)
 
 
+def video_twin(a: Asset, videos: list[Asset]) -> Asset | None:
+    """사진과 같은 장면으로 만든 영상("사진_세안_후_미소_홍조_여성" → "영상_세안_후_미소_홍조_여성")을 찾는다."""
+    toks = set(_content_tokens(a))
+    if not toks:
+        return None
+    best, score = None, 0.0
+    for v in videos:
+        vt = set(_content_tokens(v))
+        sc = len(toks & vt) / len(toks | vt) if vt else 0
+        if sc > score:
+            best, score = v, sc
+    return best if score >= TWIN_MIN else None
+
+
 def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset], tl: Timeline,
           slides: list[dict] = (), face_target: float = FACE_TARGET) -> list[Placement]:
     """자료 화면을 출력 시간에 배치한다.
@@ -277,7 +293,20 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
     4. 얼굴이 보이는 시간이 본편의 face_target을 넘으면, 긴 얼굴 구간부터 채움용 자료로 덮는다
     plan_broll 항목: {at, offset, asset, mode, filler?}. slides 항목: {asset: Asset, t: 원본 초}
     """
+    # 전체 화면은 사진을 확대하는 것보다 영상이 낫다: 같은 장면의 영상이 있으면 그걸로, 없으면 사진은 전체 화면에 쓰지 않는다
+    videos = [a for a in assets if a.kind == "video"]
     by_id = {a.id: a for a in assets}
+    if FULL_VIDEO_ONLY:
+        swapped = []
+        for x in plan_broll:
+            a = by_id.get(x.get("asset", ""))
+            if a and a.kind == "image" and x.get("mode", "full") == "full":
+                twin = video_twin(a, videos)
+                if twin is None:
+                    continue
+                x = dict(x, asset=twin.id)
+            swapped.append(x)
+        plan_broll = swapped
     bd = _Board(tl, assets)
     if bd.start >= bd.end:
         return []

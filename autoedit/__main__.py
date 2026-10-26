@@ -36,6 +36,8 @@ def main():
                    help="슬라이드 글꼴: readable(Pretendard, 작은 글씨 키움) 또는 original(파일에 지정된 글꼴)")
     p.add_argument("--no-motion", action="store_true",
                    help="슬라이드를 모션 그래픽 카드로 만들지 않고 정지 이미지로 쓴다")
+    p.add_argument("--popups", action="store_true",
+                   help="얼굴 옆 팝업 자료를 넣는다 (기본은 넣지 않음: 내용이 정확히 맞는 자료가 드물다)")
     p.add_argument("--face", type=float, default=broll.FACE_TARGET,
                    help="본편에서 얼굴이 그대로 보이는 시간 비율 목표 (기본 0.2)")
     p.add_argument("--caption-style", choices=list(subtitles.CAPTION_STYLES), default=subtitles.DEFAULT_CAPTION_STYLE,
@@ -115,7 +117,9 @@ def main():
         # 파일명 규칙 후보도 보탠다: 얼굴 옆 팝업(제품/논문/도표가 문장과 정확히 맞을 때)과
         # 얼굴 비율을 맞출 때 쓸 채움용 자료. 계획에 적힌 자료가 항상 먼저 쓰인다.
         items += [dict(x, auto=True) for x in broll.suggest_with_rules(sentences, assets)
-                  if x.get("filler") or x["mode"] == "side"]
+                  if x.get("filler") or (x["mode"] == "side" and args.popups)]
+        if not args.popups:
+            items = [x for x in items if x.get("mode", "full") != "side"]
     if slide_items or items:
         placements = broll.place(items, sentences, assets, tl, slide_items, args.face)
         cnt = {m: [p for p in placements if p.mode == m] for m in ("slide", "full", "side")}

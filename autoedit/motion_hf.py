@@ -428,9 +428,13 @@ def render(pptx: Path, work: Path) -> dict[int, tuple[Path, float]] | None:
     out_dir.mkdir(exist_ok=True)
     result = {}
     for no, start, dur in spans:
-        mp4 = out_dir / f"card{no:02d}.mp4"
+        mp4 = out_dir / f"card{no:02d}_f.mp4"
         if not mp4.exists():
-            subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{start:.4f}", "-i", str(allmp4), "-t", f"{dur:.4f}",
+            # 프레임 번호로 정확히 자른다. 초로 자르면 다음 카드의 첫 프레임(글자가 아직 안 나온 상태)이 한 장 딸려 와서,
+            # 편집기가 마지막 프레임을 늘릴 때 그 빈 화면이 슬라이드 내내 보인다
+            f0, f1 = round(start * FPS), round((start + dur) * FPS) - 1
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(allmp4),
+                            "-vf", f"trim=start_frame={f0}:end_frame={f1},setpts=PTS-STARTPTS",
                             "-c:v", "libx264", "-preset", "veryfast", "-crf", "14", "-pix_fmt", "yuv420p", "-an",
                             str(mp4)], check=True)
         result[no] = (mp4, dur)
