@@ -129,6 +129,9 @@ def main():
         print(f"  화면 배치: 슬라이드 {len(cnt['slide'])}장 {sum(p.dur for p in cnt['slide']):.0f}초, "
               f"전체 화면 자료 {len(cnt['full'])}개 {sum(p.dur for p in cnt['full']):.0f}초, 팝업 {len(cnt['side'])}개 "
               f"/ 본편 중 얼굴 {100 * (1 - cover / body_len):.0f}%")
+    (work / "placements.json").write_text(json.dumps(
+        [{"start": p.start, "dur": p.dur, "mode": p.mode, "asset": p.asset.id} for p in placements],
+        ensure_ascii=False, indent=0), encoding="utf-8")
     hide = [(p.start, p.start + p.dur) for p in placements if p.mode == "slide"]
     ass, sfx = subtitles.build_ass(words, tl, plan, args.channel, fonts.caption_fonts(), hide,
                                    args.caption_style)
