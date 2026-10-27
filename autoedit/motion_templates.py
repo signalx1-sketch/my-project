@@ -282,25 +282,54 @@ def _part(spec, paras, cid, tl):
     return "card tpl part", body
 
 
+ICONTEXT_VARIANTS = ["badge", "top", "mark"]
+
+
 def _icontext(spec, paras, cid, tl):
-    """큰 아이콘(또는 큰 숫자/글자) 원 + 문장. 아이콘 선이 그려지고 원이 한 번 퍼지며, 글자는 줄마다 올라온다."""
+    """아이콘(또는 큰 숫자) + 문장. 연달아 나와도 단조롭지 않게 모양이 세 가지다 (motion_hf가 돌려 쓴다).
+    - badge: 왼쪽(또는 오른쪽) 큰 원 안에 아이콘, 원이 한 번 퍼지고 글자는 줄마다 올라온다
+    - top: 위에 작은 원이 튀어 내려오고 아래에 가운데 정렬 문장이 흐림에서 또렷해진다
+    - mark: 화면 오른쪽에 아주 큰 반투명 아이콘이 그려지고, 왼쪽 큰 문장 아래로 초록 막대가 그어진다"""
     tone = spec.get("tone", "green")
+    var = spec.get("variant", "badge")
+    if spec.get("strike") and var == "mark":
+        var = "badge"
     inner = (f'<div class="ibig">{_e(spec["big"])}</div>' if spec.get("big") else svg(spec.get("icon", "sparkles")))
     strike = '<div class="istrike" id="%sx"></div>' % cid if spec.get("strike") else ""
     lines = spec.get("text") or paras
-    body = (f'<div class="itx {spec.get("side", "left")}"><div class="ibadge {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>'
-            f'{inner}{strike}</div><div class="itext">{_lines(lines, "big", cid, "t")}</div></div>')
+    n = len(lines)
+    if var == "mark":
+        mark = (f'<div class="imark {tone}" id="{cid}b"><div class="ibig">{_e(spec["big"])}</div></div>' if spec.get("big")
+                else f'<div class="imark {tone}" id="{cid}b">{svg(spec.get("icon", "sparkles"))}</div>')
+        body = f'<div class="itx mark">{mark}<div class="itext">{_lines(lines, "big", cid, "t")}<div class="ibar" id="{cid}u"></div></div></div>'
+        tl.add(f"#{cid}b", {"scale": 1.15, "opacity": 0}, {"scale": 1, "opacity": 0.85, "ease": "power2.out"}, 0.0, 1.0)
+        _draw(tl, f"#{cid}b .ic *", 0.0, 1.1, 0.06, 4)
+        _rise(tl, f"#{cid} .itext .li", 0.1, n, 0.12)
+        tl.add(f"#{cid}u", {"scaleX": 0}, {"scaleX": 1, "ease": "power3.inOut"}, 0.35 + 0.12 * n, 0.55)
+    elif var == "top":
+        body = (f'<div class="itx top"><div class="ibadge {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>{inner}{strike}</div>'
+                f'<div class="itext">{_lines(lines, "big", cid, "t")}</div></div>')
+        tl.add(f"#{cid}b", {"y": -70, "opacity": 0.3}, {"y": 0, "opacity": 1, "ease": "bounce.out"}, 0.0, 0.7)
+        _draw(tl, f"#{cid}b .ic *", 0.2, 0.5, 0.04, 4)
+        tl.add(f"#{cid} .ibig", {"scale": 1.6, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "expo.out"}, 0.1, 0.5)
+        tl.add(f"#{cid}p", {"scale": 1, "opacity": 0.7}, {"scale": 1.5, "opacity": 0, "ease": "power2.out"}, 0.55, 0.7)
+        if strike:
+            tl.add(f"#{cid}x", {"scaleX": 0, "rotation": -35}, {"scaleX": 1, "rotation": -35, "ease": "power3.out"}, 0.7, 0.35)
+        tl.add(f"#{cid} .itext .ln", {"opacity": 0, "filter": "blur(10px)", "scale": 1.05},
+               {"opacity": 1, "filter": "blur(0px)", "scale": 1, "ease": "expo.out", "stagger": 0.14, "_n": n}, 0.25, 0.6)
+    else:
+        body = (f'<div class="itx {spec.get("side", "left")}"><div class="ibadge {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>'
+                f'{inner}{strike}</div><div class="itext">{_lines(lines, "big", cid, "t")}</div></div>')
+        tl.add(f"#{cid}b", {"scale": 0.6, "opacity": 0.3}, {"scale": 1, "opacity": 1, "ease": "back.out(1.7)"}, 0.0, 0.55)
+        _draw(tl, f"#{cid}b .ic *", 0.15, 0.6, 0.04, 4)
+        tl.add(f"#{cid} .ibig", {"scale": 1.6, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "expo.out"}, 0.1, 0.5)
+        tl.add(f"#{cid}p", {"scale": 1, "opacity": 0.7}, {"scale": 1.45, "opacity": 0, "ease": "power2.out"}, 0.45, 0.7)
+        if strike:
+            tl.add(f"#{cid}x", {"scaleX": 0, "rotation": -35}, {"scaleX": 1, "rotation": -35, "ease": "power3.out"}, 0.75, 0.35)
+        _rise(tl, f"#{cid} .itext .li", 0.25, n, 0.13)
     if spec.get("caption"):
         body += _lines([spec["caption"]], "icap", cid, "c")
-    tl.add(f"#{cid}b", {"scale": 0.6, "opacity": 0.3}, {"scale": 1, "opacity": 1, "ease": "back.out(1.7)"}, 0.0, 0.55)
-    _draw(tl, f"#{cid}b .ic *", 0.15, 0.6, 0.04, 4)
-    tl.add(f"#{cid} .ibig", {"scale": 1.6, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "expo.out"}, 0.1, 0.5)
-    tl.add(f"#{cid}p", {"scale": 1, "opacity": 0.7}, {"scale": 1.45, "opacity": 0, "ease": "power2.out"}, 0.45, 0.7)
-    if strike:
-        tl.add(f"#{cid}x", {"scaleX": 0, "rotation": -35}, {"scaleX": 1, "rotation": -35, "ease": "power3.out"}, 0.75, 0.35)
-    _rise(tl, f"#{cid} .itext .li", 0.25, len(lines), 0.13)
-    if spec.get("caption"):
-        _rise(tl, f"#{cid} .icap .li", 0.4 + 0.13 * len(lines))
+        _rise(tl, f"#{cid} .icap .li", 0.4 + 0.13 * n)
     return "card tpl", body
 
 
@@ -582,4 +611,16 @@ CSS = """
 .ilc{width:120px;height:120px;border-radius:30px;background:#1b2a22;display:flex;align-items:center;justify-content:center;flex:none}
 .ilc .ic{width:68px;height:68px;color:#52B788}
 .ilr .ln{font-size:76px}
+.itx.top{flex-direction:column;align-items:center;gap:40px;text-align:center}
+.itx.top .ibadge{width:220px;height:220px}.itx.top .ibadge .ic{width:110px;height:110px}.itx.top .ibig{font-size:140px}
+.itx.top .ln{margin:0 auto}
+.tpl .fit:has(.itx.top){align-items:center}
+.itx.mark{position:relative;min-height:560px}
+.imark{position:absolute;right:-60px;top:50%;width:620px;height:620px;margin-top:-310px;color:#52B788;opacity:.85;
+ display:flex;align-items:center;justify-content:center}
+.imark.red{color:#E63946}
+.imark .ic{width:520px;height:520px;stroke-width:1.3;color:inherit}
+.imark .ibig{font-size:560px;color:inherit}
+.itx.mark .itext .ln{font-size:118px}
+.ibar{height:14px;width:420px;background:#52B788;border-radius:7px;margin-top:34px;transform-origin:left center}
 """

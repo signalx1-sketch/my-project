@@ -469,7 +469,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 fixed = True
                 continue
             # 카드만 이어지면 가운데쯤 카드 하나를 FACE_BREAK초 줄여 그 뒤에 얼굴이 나오게 한다
-            cards = [p for p in r[:-1] if p.dur >= SLIDE_MIN + FACE_BREAK and p.start - r0 >= 3]
+            cards = [p for p in r[:-1] if p.mode == "slide" and p.dur >= SLIDE_MIN + FACE_BREAK and p.start - r0 >= 3]
             if cards:
                 c = min(cards, key=lambda p: abs(p.start + p.dur - mid))
                 c.dur = round(c.dur - FACE_BREAK, 4)

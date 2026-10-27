@@ -330,10 +330,18 @@ def build_project(cards: list[Card], folder: Path, specs: dict | None = None) ->
 
     sections, scripts, spans = [], [], []
     t, prev_style, k = 0.0, None, 0
+    prev_variant, ic_k = None, 0
     for c in cards:
         cid = f"c{c.no:02d}"
         tl = _TL(t)
         spec = specs.get(c.no) or auto_spec(c)
+        if spec and spec.get("kind") == "icontext" and "variant" not in spec:
+            # 아이콘+문장 카드가 이어지면 단조롭다: 모양을 돌려 쓰고 바로 앞 카드와 같은 모양은 피한다
+            vs = tpl.ICONTEXT_VARIANTS
+            if vs[ic_k % len(vs)] == prev_variant:
+                ic_k += 1
+            spec = dict(spec, variant=vs[ic_k % len(vs)])
+            ic_k += 1
         if spec and spec.get("kind") in tpl.KINDS:
             texts = ["".join(r.text for r in p).strip() for p in c.paras]
             cls, body = tpl.build(spec, texts, cid, tl)
@@ -360,6 +368,7 @@ def build_project(cards: list[Card], folder: Path, specs: dict | None = None) ->
                 k += 1
             cls, body = _text_card(c, cid, style, tl)
         prev_style = style
+        prev_variant = spec.get("variant") if spec and spec.get("kind") == "icontext" else None
         dur = round(max(1.0, tl.end) + HOLD, 3)
         dur = round(round(dur * FPS) / FPS, 4)
         header = f'<div class="hdr" id="{cid}h">{_esc(c.header)}</div>' if c.header else ""
