@@ -46,6 +46,30 @@ def beautify(img: Image.Image, strength: float = 1.0) -> Image.Image:
     return ImageEnhance.Brightness(out).enhance(1.03)
 
 
+def even_tone(img: Image.Image, regions: list) -> Image.Image:
+    """색소침착 정리: 지정한 영역(원장님 사진 기준 [x0, y0, x1, y1])에서 주변보다 어두운 얼룩만 주변 피부색까지 밝힌다.
+    피부 결(잔무늬)은 그대로 두고 낮은 주파수의 톤만 맞추므로 자연스럽다."""
+    import numpy as np
+    a = np.asarray(img).astype(np.float32)
+    low = np.asarray(img.filter(ImageFilter.GaussianBlur(9))).astype(np.float32)
+    ycc = np.asarray(img.convert("YCbCr")).astype(np.float32)
+    skin = ((ycc[..., 2] > 135) & (ycc[..., 2] < 178) & (ycc[..., 1] > 85) & (ycc[..., 1] < 130) & (ycc[..., 0] > 90))
+    skin = Image.fromarray((skin * 255).astype(np.uint8)).filter(ImageFilter.MinFilter(9)).filter(ImageFilter.GaussianBlur(4))
+    skin = (np.asarray(skin).astype(np.float32) / 255)[..., None]  # 얼굴 가장자리 밖(의자, 배경)은 건드리지 않는다
+    for x0, y0, x1, y1 in regions:
+        cx, cy, rx, ry = (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2
+        yy, xx = np.mgrid[0:a.shape[0], 0:a.shape[1]]
+        r = ((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2
+        m = np.clip((1.0 - r) / 0.45, 0, 1)[..., None]  # 가장자리는 부드럽게
+        sk = skin[y0:y1, x0:x1, 0].reshape(-1) > 0.5
+        patch = low[y0:y1, x0:x1].reshape(-1, 3)[sk]
+        lum = patch.mean(axis=1)
+        target = patch[lum >= np.percentile(lum, 75)].mean(axis=0)
+        gain = np.clip(target - low, 0, None)  # 어두운 곳만 올린다
+        a = a + gain * m * skin
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+
 def main():
     doc_p, bg_p, out, cfg_p = sys.argv[1:5]
     cfg = json.loads(Path(cfg_p).read_text(encoding="utf-8"))
@@ -61,6 +85,8 @@ def main():
     # 원장님 (배경 쪽 가장자리를 흰 배경으로 부드럽게)
     doc = Image.open(doc_p).convert("RGB").crop(tuple(cfg.get("doc_crop", [660, 260, 1370, 1060]))).resize((640, 720))
     doc = ImageEnhance.Brightness(doc).enhance(1.08)
+    if cfg.get("spots"):
+        doc = even_tone(doc, cfg["spots"])
     if cfg.get("beauty"):
         doc = beautify(doc, cfg.get("beauty_strength", 1.0))
     mask = Image.new("L", doc.size, 255)
@@ -86,14 +112,16 @@ def main():
         for s in cfg["keyword"]:
             text((44, y), s, kf, "#F0384A", "white", 9)
             y += 72
-        big = cfg["big"]  # [(문구, 색)] 줄마다
-        y = max(y + 14, H - 24 - 118 * len(big))
+        big = cfg["big"]  # [(문구, 색, 테두리색)] 줄마다
+        size = cfg.get("big_size", 112)
+        lh = int(size * 1.05)
+        y = max(y + 14, H - 24 - lh * len(big))
         for row in big:
             s, color = row[0], row[1]
             stroke = row[2] if len(row) > 2 else "black"
-            f = fit(d, s, 112, col - 60)
-            text((40, y), s, f, color, stroke, 12)
-            y += 118
+            f = fit(d, s, size, col - 60)
+            text((40, y), s, f, color, stroke, 13)
+            y += lh
     else:
         kf = ImageFont.truetype(AGGRO, 66)
         for i, s in enumerate(cfg["keyword"]):
