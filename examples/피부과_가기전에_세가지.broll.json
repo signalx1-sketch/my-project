@@ -81,15 +81,8 @@
   "mode": "full"
  },
  {
-  "at": 28,
-  "offset": 6.0,
-  "asset": "영상_욕실_샴푸_세안제_크림_나란히_세우는_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 29,
-  "offset": 0.0,
+  "offset": 0.5,
   "asset": "영상_식탁_휴대폰_메모앱_입력하는_여성.mp4",
   "mode": "full",
   "keep": true

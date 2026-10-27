@@ -85,6 +85,11 @@ def main():
     drawls = cuts.detect_drawls(src, words, work / "drawls.json") + cuts.detect_fillers_asr(src, work / "words_fillers.json")
     if drawls:
         print(f"  군말/끈 모음 {len(drawls)}곳 {sum(b - a for a, b in drawls):.1f}초 잘라냄")
+    # 계획에 직접 적은 잘라낼 구간 (말이 씹혀서 다시 한 곳 등). 원본 기준 [시작, 끝] 초
+    manual = [tuple(x) for x in plan.get("cut", [])]
+    if manual:
+        print(f"  계획에 적은 컷 {len(manual)}곳")
+        drawls = drawls + manual
     for w in words:  # 통째로 잘린 군말 단어는 자막에도 안 나오게
         if any(a <= w["s"] + 0.05 and w["e"] - 0.06 <= b for a, b in drawls):
             w["drop"] = True
