@@ -27,6 +27,25 @@ def fit(d, s, size, maxw):
     return f
 
 
+def beautify(img: Image.Image, strength: float = 1.0) -> Image.Image:
+    """뽀샤시 보정: 피부 결만 부드럽게 (눈, 안경테, 입술처럼 경계가 뚜렷한 곳은 그대로), 피부톤만 살짝 밝고 화사하게."""
+    import numpy as np
+    a = np.asarray(img).astype(np.float32)
+    ycc = np.asarray(img.convert("YCbCr")).astype(np.float32)
+    cb, cr = ycc[..., 1], ycc[..., 2]
+    skin = ((cr > 135) & (cr < 178) & (cb > 85) & (cb < 130)).astype(np.float32)
+    skin = np.asarray(Image.fromarray((skin * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(5))).astype(np.float32) / 255
+    smooth = np.asarray(img.filter(ImageFilter.GaussianBlur(2.6))).astype(np.float32)
+    diff = np.abs(a - smooth).max(axis=2)
+    keep_edges = np.exp(-(diff / 10.0) ** 2)  # 차이가 큰 곳(경계)은 거의 안 바꾼다
+    w = (skin * keep_edges * 0.85 * strength)[..., None]
+    a = a * (1 - w) + smooth * w
+    lift = (skin * 0.10 * strength)[..., None]  # 피부만 살짝 밝게
+    a = a + (255 - a) * lift
+    out = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+    return ImageEnhance.Brightness(out).enhance(1.03)
+
+
 def main():
     doc_p, bg_p, out, cfg_p = sys.argv[1:5]
     cfg = json.loads(Path(cfg_p).read_text(encoding="utf-8"))
@@ -42,6 +61,8 @@ def main():
     # 원장님 (배경 쪽 가장자리를 흰 배경으로 부드럽게)
     doc = Image.open(doc_p).convert("RGB").crop(tuple(cfg.get("doc_crop", [660, 260, 1370, 1060]))).resize((640, 720))
     doc = ImageEnhance.Brightness(doc).enhance(1.08)
+    if cfg.get("beauty"):
+        doc = beautify(doc, cfg.get("beauty_strength", 1.0))
     mask = Image.new("L", doc.size, 255)
     md = ImageDraw.Draw(mask)
     for i in range(130):
@@ -67,9 +88,11 @@ def main():
             y += 72
         big = cfg["big"]  # [(문구, 색)] 줄마다
         y = max(y + 14, H - 24 - 118 * len(big))
-        for s, color in big:
+        for row in big:
+            s, color = row[0], row[1]
+            stroke = row[2] if len(row) > 2 else "black"
             f = fit(d, s, 112, col - 60)
-            text((40, y), s, f, color, "black", 12)
+            text((40, y), s, f, color, stroke, 12)
             y += 118
     else:
         kf = ImageFont.truetype(AGGRO, 66)
