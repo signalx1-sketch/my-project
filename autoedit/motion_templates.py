@@ -21,7 +21,8 @@ from pathlib import Path
 
 ICONS = Path(__file__).resolve().parent.parent / "assets" / "vendor" / "icons"
 GREEN, RED, GREY = "#52B788", "#E63946", "#8A8A8A"
-KINDS = {"icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part"}
+KINDS = {"icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
+         "icontext", "diverge", "tags", "prompt", "timer", "segments", "merge", "iconlist"}
 
 
 def _e(s) -> str:
@@ -115,11 +116,18 @@ def _checklist(spec, paras, cid, tl):
                    f'<div class="ln"><div class="li">{_e(it)}</div></div></div>' for j, it in enumerate(spec["items"]))
     body = _title(spec, cid, tl) + f'<div class="clist">{rows}</div>'
     t = 0.15
+    acc = spec.get("accent")
     for j in range(len(spec["items"])):
         tl.add(f"#{cid}r{j} .li", {"yPercent": 80}, {"yPercent": 0, "ease": "expo.out"}, t, 0.55)
         tl.add(f"#{cid}r{j} .cbox", {"borderColor": "#444"}, {"borderColor": GREEN, "ease": "none"}, t + 0.25, 0.15)
         _draw(tl, f"#{cid}r{j} .ck *", t + 0.25, 0.3)
         t += 0.38
+    if acc is not None:  # 강조할 줄: 빨갛게 바뀌며 커지고 옆에 꼬리표가 붙는다
+        body = body.replace(f'id="{cid}r{acc}">', f'id="{cid}r{acc}"><div class="ctag" id="{cid}tag">{_e(spec.get("accent_label", "제일 중요"))}</div>', 1)
+        tl.add(f"#{cid}r{acc}", {"scale": 1, "color": "#ffffff"}, {"scale": 1.12, "color": RED, "ease": "back.out(2)", "transformOrigin": "left center"}, t + 0.1, 0.45)
+        tl.add(f"#{cid}r{acc} .cbox", {"borderColor": GREEN}, {"borderColor": RED, "ease": "none"}, t + 0.1, 0.2)
+        tl.add(f"#{cid}tag", {"scale": 0, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "back.out(3)"}, t + 0.3, 0.35)
+        t += 0.6
     if spec.get("caption"):
         body += _lines([spec["caption"]], "icap", cid, "c")
         _rise(tl, f"#{cid} .icap .li", t + 0.1)
@@ -128,7 +136,7 @@ def _checklist(spec, paras, cid, tl):
 
 def _compare2(spec, paras, cid, tl):
     def panel(side, d):
-        return (f'<div class="cpanel {side}" id="{cid}{side}"><div class="cbig" style="color:{d.get("color", "#fff")}">'
+        return (f'<div class="cpanel {side}" id="{cid}{side}"><div class="cbig{" long" if len(d["title"]) > 3 else ""}" style="color:{d.get("color", "#fff")}">'
                 f'{_e(d["title"])}</div><div class="csub">{_e(d.get("sub", ""))}</div>'
                 f'<div class="ctrack"><div class="cfill" id="{cid}{side}f" style="width:{100 * d.get("bar", 0.5):.1f}%;'
                 f'background:{d.get("color", GREEN)}"></div></div></div>')
@@ -274,6 +282,159 @@ def _part(spec, paras, cid, tl):
     return "card tpl part", body
 
 
+def _icontext(spec, paras, cid, tl):
+    """큰 아이콘(또는 큰 숫자/글자) 원 + 문장. 아이콘 선이 그려지고 원이 한 번 퍼지며, 글자는 줄마다 올라온다."""
+    tone = spec.get("tone", "green")
+    inner = (f'<div class="ibig">{_e(spec["big"])}</div>' if spec.get("big") else svg(spec.get("icon", "sparkles")))
+    strike = '<div class="istrike" id="%sx"></div>' % cid if spec.get("strike") else ""
+    lines = spec.get("text") or paras
+    body = (f'<div class="itx {spec.get("side", "left")}"><div class="ibadge {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>'
+            f'{inner}{strike}</div><div class="itext">{_lines(lines, "big", cid, "t")}</div></div>')
+    if spec.get("caption"):
+        body += _lines([spec["caption"]], "icap", cid, "c")
+    tl.add(f"#{cid}b", {"scale": 0.6, "opacity": 0.3}, {"scale": 1, "opacity": 1, "ease": "back.out(1.7)"}, 0.0, 0.55)
+    _draw(tl, f"#{cid}b .ic *", 0.15, 0.6, 0.04, 4)
+    tl.add(f"#{cid} .ibig", {"scale": 1.6, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "expo.out"}, 0.1, 0.5)
+    tl.add(f"#{cid}p", {"scale": 1, "opacity": 0.7}, {"scale": 1.45, "opacity": 0, "ease": "power2.out"}, 0.45, 0.7)
+    if strike:
+        tl.add(f"#{cid}x", {"scaleX": 0, "rotation": -35}, {"scaleX": 1, "rotation": -35, "ease": "power3.out"}, 0.75, 0.35)
+    _rise(tl, f"#{cid} .itext .li", 0.25, len(lines), 0.13)
+    if spec.get("caption"):
+        _rise(tl, f"#{cid} .icap .li", 0.4 + 0.13 * len(lines))
+    return "card tpl", body
+
+
+def _diverge(spec, paras, cid, tl):
+    """한 점(같은 얼굴)에서 갈래가 여러 개로 갈라져 각각 다른 결과로 이어진다."""
+    fr, br = spec["from"], spec["branches"]
+    n = len(br)
+    H = 600
+    ys = [H * (k + 0.5) / n for k in range(n)]
+    paths = "".join(f'<path d="M330 {H / 2:.0f} C 640 {H / 2:.0f}, 700 {y:.0f}, 980 {y:.0f}" class="dvl" pathLength="1"/>' for y in ys)
+    nodes = "".join(
+        f'<div class="dvn" id="{cid}n{k}" style="top:{y - 70:.0f}px"><div class="dvc">{svg(b.get("icon", "hospital"))}</div>'
+        f'<div class="dvt"><div class="dvlab">{_e(b["label"])}</div>'
+        + (f'<div class="dvtag" style="background:{b.get("color", RED)}">{_e(b["tag"])}</div>' if b.get("tag") else "")
+        + "</div></div>" for k, (b, y) in enumerate(zip(br, ys)))
+    body = (_title(spec, cid, tl) + f'<div class="dv"><svg class="dvs" viewBox="0 0 1660 {H}">{paths}</svg>'
+            f'<div class="dvf" id="{cid}f" style="top:{H / 2 - 150:.0f}px"><div class="dvc big">{svg(fr.get("icon", "scan-face"))}</div>'
+            f'<div class="dvlab">{_e(fr["label"])}</div></div>{nodes}</div>')
+    tl.add(f"#{cid}f", {"scale": 0.6, "opacity": 0.3}, {"scale": 1, "opacity": 1, "ease": "back.out(1.7)"}, 0.0, 0.5)
+    _draw(tl, f"#{cid}f .ic *", 0.1, 0.5, 0.04, 4)
+    _draw(tl, f"#{cid} .dvl", 0.45, 0.6, 0.12, n)
+    for k in range(n):
+        at = 0.8 + 0.18 * k
+        tl.add(f"#{cid}n{k}", {"x": -40, "opacity": 0}, {"x": 0, "opacity": 1, "ease": "expo.out"}, at, 0.45)
+        _draw(tl, f"#{cid}n{k} .ic *", at, 0.45)
+        tl.add(f"#{cid}n{k} .dvtag", {"scale": 2, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "back.out(2)"}, at + 0.35 + 0.1 * n, 0.35)
+    return "card tpl", body
+
+
+def _tags(spec, paras, cid, tl):
+    """큰 카드 여러 장이 뒤집히듯 차례로 나타난다 (병원마다 다른 진단 등)."""
+    cards = "".join(f'<div class="tgc" id="{cid}c{k}" style="border-color:{c.get("color", "#333")}"><div class="tgh">{svg(c.get("icon", "hospital"))}'
+                    f'<span>{_e(c.get("head", ""))}</span></div><div class="tgb">{_e(c["text"])}</div></div>'
+                    for k, c in enumerate(spec["cards"]))
+    body = _title(spec, cid, tl) + f'<div class="tgs">{cards}</div>'
+    if spec.get("caption"):
+        body += _lines([spec["caption"]], "icap", cid, "c")
+    n = len(spec["cards"])
+    tl.add(f"#{cid} .tgc", {"rotationY": -80, "opacity": 0.2, "transformPerspective": 900},
+           {"rotationY": 0, "opacity": 1, "ease": "back.out(1.4)", "stagger": 0.2, "_n": n}, 0.05, 0.6)
+    _draw(tl, f"#{cid} .tgh .ic *", 0.3, 0.5, 0.05, n * 3)
+    if spec.get("caption"):
+        _rise(tl, f"#{cid} .icap .li", 0.4 + 0.2 * n)
+    return "card tpl", body
+
+
+def _prompt(spec, paras, cid, tl):
+    """채팅 입력창에 글자가 타이핑되고 보내기 버튼이 눌린다 ('의사에게 넣는 프롬프트')."""
+    txt = spec["text"]
+    body = (_title(spec, cid, tl) + f'<div class="pr"><div class="prl">{_e(spec.get("label", "프롬프트"))}</div>'
+            f'<div class="prb" id="{cid}box"><span class="prt" id="{cid}t">{_e(txt)}</span><span class="prc" id="{cid}cur"></span>'
+            f'<div class="prs" id="{cid}s">{svg("send", "ic")}</div></div></div>')
+    if spec.get("caption"):
+        body += _lines([spec["caption"]], "icap", cid, "c")
+    tl.add(f"#{cid}box", {"y": 60, "opacity": 0.3}, {"y": 0, "opacity": 1, "ease": "expo.out"}, 0.05, 0.5)
+    d = min(1.4, 0.06 * len(txt) + 0.2)
+    tl.add(f"#{cid}t", {"clipPath": "inset(0% 100% 0% 0%)"}, {"clipPath": "inset(0% 0% 0% 0%)", "ease": f"steps({len(txt)})"}, 0.45, d)
+    tl.add(f"#{cid}s", {"scale": 1, "backgroundColor": "#2a2a2a"}, {"scale": 1.18, "backgroundColor": GREEN, "ease": "back.out(3)"}, 0.5 + d, 0.3)
+    _draw(tl, f"#{cid}s .ic *", 0.5 + d, 0.3)
+    if spec.get("caption"):
+        _rise(tl, f"#{cid} .icap .li", 0.7 + d)
+    return "card tpl", body
+
+
+def _timer(spec, paras, cid, tl):
+    """원형 타이머가 줄어들며 시간(1~2분)이 짧다는 걸 보여준다."""
+    lines = spec.get("text") or paras
+    body = (f'<div class="itx"><div class="tmr"><svg viewBox="0 0 300 300"><circle cx="150" cy="150" r="130" class="tmb"/>'
+            f'<circle cx="150" cy="150" r="130" class="tmf" id="{cid}r"/></svg><div class="tmt">{_e(spec["big"])}</div></div>'
+            f'<div class="itext">{_lines(lines, "big", cid, "t")}</div></div>')
+    tl.add(f"#{cid}r", {"strokeDashoffset": 0}, {"strokeDashoffset": 570, "ease": "power1.inOut"}, 0.1, 1.4)
+    tl.add(f"#{cid} .tmt", {"scale": 1.5, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "expo.out"}, 0.05, 0.5)
+    _rise(tl, f"#{cid} .itext .li", 0.3, len(lines), 0.13)
+    return "card tpl", body
+
+
+def _segments(spec, paras, cid, tl):
+    """막대 하나를 구간으로 나눠 그린다 (썼다 → 쉬었다 → 다시 썼다, 질환 | 의인성)."""
+    segs = spec["segs"]
+    parts = "".join(f'<div class="sg" id="{cid}s{k}" style="flex:{s["w"]}"><div class="sgf{" gap" if s.get("gap") else ""}" '
+                    f'style="background:{"transparent" if s.get("gap") else s.get("color", GREEN)}"></div><span>{_e(s["label"])}</span></div>'
+                    for k, s in enumerate(segs))
+    pin = ""
+    if spec.get("pin"):
+        pin = (f'<div class="sgp" id="{cid}p" style="left:{100 * spec["pin"]["at"]:.1f}%"><div class="sgq">{_e(spec["pin"]["label"])}</div>'
+               f'<div class="sgl"></div></div>')
+    body = _title(spec, cid, tl) + f'<div class="sgw"><div class="sgr">{parts}</div>{pin}</div>'
+    if spec.get("caption"):
+        body += _lines([spec["caption"]], "icap", cid, "c")
+    t = 0.3
+    for k, s in enumerate(segs):
+        d = 0.25 + 0.6 * s["w"]
+        tl.add(f"#{cid}s{k} .sgf", {"scaleX": 0}, {"scaleX": 1, "ease": "none"}, t, d)
+        tl.add(f"#{cid}s{k} span", {"y": 30, "opacity": 0}, {"y": 0, "opacity": 1, "ease": "expo.out"}, t + d * 0.5, 0.4)
+        t += d
+    if pin:
+        tl.add(f"#{cid}p", {"y": -80, "opacity": 0}, {"y": 0, "opacity": 1, "ease": "bounce.out"}, t, 0.6)
+        t += 0.4
+    if spec.get("caption"):
+        _rise(tl, f"#{cid} .icap .li", t)
+    return "card tpl", body
+
+
+def _merge(spec, paras, cid, tl):
+    """조각 여러 개가 가운데로 모여 한 문장(한 줄)이 된다."""
+    chips = spec["chips"]
+    n = len(chips)
+    row = "".join(f'<div class="mgc" id="{cid}c{k}">{_e(c)}</div>' for k, c in enumerate(chips))
+    body = (_title(spec, cid, tl) + f'<div class="mg"><div class="mgr">{row}</div><div class="mga" id="{cid}a">{svg("arrow-right", "ic")}</div>'
+            f'<div class="mgres" id="{cid}res">{_e(spec["result"])}</div></div>')
+    tl.add(f"#{cid} .mgc", {"y": 50, "opacity": 0}, {"y": 0, "opacity": 1, "ease": "back.out(2)", "stagger": 0.15, "_n": n}, 0.05, 0.45)
+    tl.add(f"#{cid} .mgc", {"backgroundColor": "#1b2a22"}, {"backgroundColor": "#2f6f52", "ease": "none", "stagger": 0.12, "_n": n}, 0.75, 0.2)
+    tl.add(f"#{cid}a", {"scale": 0, "rotation": 90}, {"scale": 1, "rotation": 90, "ease": "back.out(2)"}, 1.15, 0.35)
+    tl.add(f"#{cid}res", {"scale": 0.7, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "back.out(1.8)"}, 1.35, 0.5)
+    return "card tpl", body
+
+
+def _iconlist(spec, paras, cid, tl):
+    """아이콘 + 한 줄씩 (채널 소개, 안내 사항)."""
+    rows = "".join(f'<div class="ilr" id="{cid}r{k}"><div class="ilc">{svg(ic)}</div><div class="ln"><div class="li">{_e(t)}</div></div></div>'
+                   for k, (ic, t) in enumerate(spec["rows"]))
+    body = _title(spec, cid, tl) + f'<div class="il">{rows}</div>'
+    if spec.get("foot"):
+        body += _lines([spec["foot"]], "icap", cid, "c")
+    for k in range(len(spec["rows"])):
+        at = 0.1 + 0.3 * k
+        tl.add(f"#{cid}r{k} .ilc", {"scale": 0.5, "opacity": 0}, {"scale": 1, "opacity": 1, "ease": "back.out(2)"}, at, 0.4)
+        _draw(tl, f"#{cid}r{k} .ic *", at + 0.05, 0.45)
+        tl.add(f"#{cid}r{k} .li", {"yPercent": 80}, {"yPercent": 0, "ease": "expo.out"}, at + 0.1, 0.5)
+    if spec.get("foot"):
+        _rise(tl, f"#{cid} .icap .li", 0.3 + 0.3 * len(spec["rows"]))
+    return "card tpl", body
+
+
 CSS = """
 .tpl .fit{display:flex;flex-direction:column;align-items:flex-start}
 .ttl{font-size:92px;line-height:1.2}
@@ -304,7 +465,8 @@ CSS = """
 .crow .ln{font-size:104px}
 .cmp{display:flex;align-items:center;gap:50px;width:1660px;margin-top:10px}
 .cpanel{flex:1;background:#141414;border:1px solid #262626;border-radius:36px;padding:44px 50px}
-.cbig{font-size:170px;line-height:1}
+.cbig{font-size:170px;line-height:1;white-space:nowrap}
+.cbig.long{font-size:112px}
 .csub{font-size:48px;color:#9a9a9a;margin:18px 0 34px;font-weight:700;min-height:1em}
 .ctrack{height:30px;border-radius:15px;background:#232323;overflow:hidden}
 .cfill{height:100%;border-radius:15px;transform-origin:left center}
@@ -362,4 +524,62 @@ CSS = """
 .psteps{display:flex;gap:18px;margin-top:56px}
 .pstep{width:200px;height:16px;border-radius:8px;background:#2a2a2a;transform-origin:left}
 .pstep.on{background:#52B788}.pstep.done{background:#2f6f52}
+.itx{display:flex;align-items:center;gap:90px;width:1660px}
+.itx.right{flex-direction:row-reverse;justify-content:flex-end}
+.ibadge{position:relative;width:330px;height:330px;border-radius:50%;background:#141414;border:8px solid #52B788;color:#52B788;
+ display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.ibadge.red{border-color:#E63946;color:#E63946}
+.ibadge .ic{width:160px;height:160px;stroke-width:1.6;color:#fff}
+.ibig{font-size:220px;line-height:1;color:#52B788}
+.ibadge.red .ibig{color:#E63946}
+.ipulse{position:absolute;inset:-10px;border-radius:50%;border:6px solid currentColor}
+.istrike{position:absolute;left:-10px;right:-10px;top:calc(50% - 9px);height:18px;background:#E63946;border-radius:9px}
+.itext .ln{font-size:104px}
+.ctag{position:absolute;right:-230px;top:50%;margin-top:-34px;background:#E63946;color:#fff;font-size:40px;padding:10px 26px;border-radius:34px}
+.crow{position:relative}
+.dv{position:relative;width:1660px;height:600px}
+.dvs{position:absolute;inset:0;width:1660px;height:600px;overflow:visible}
+.dvl{fill:none;stroke:#3a3a3a;stroke-width:6;stroke-dasharray:1}
+.dvf{position:absolute;left:30px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.dvc{width:140px;height:140px;border-radius:50%;background:#141414;border:5px solid #52B788;display:flex;align-items:center;justify-content:center;flex:none}
+.dvc.big{width:260px;height:260px}.dvc.big .ic{width:130px;height:130px}
+.dvn{position:absolute;left:980px;display:flex;align-items:center;gap:30px}
+.dvt{display:flex;align-items:center;gap:24px}
+.dvlab{font-size:56px}
+.dvtag{font-size:46px;padding:8px 28px;border-radius:30px;color:#fff}
+.tgs{display:flex;gap:44px;width:1660px;margin-top:30px}
+.tgc{flex:1;background:#141414;border:4px solid #333;border-radius:36px;padding:40px 44px;min-height:380px;display:flex;flex-direction:column;justify-content:space-between}
+.tgh{display:flex;align-items:center;gap:18px;font-size:40px;color:#9a9a9a}.tgh .ic{width:60px;height:60px}
+.tgb{font-size:104px;line-height:1.1}
+.pr{width:1500px;margin-top:40px}
+.prl{font-size:42px;color:#52B788;margin-bottom:22px}
+.prb{position:relative;display:flex;align-items:center;background:#161616;border:3px solid #333;border-radius:60px;padding:36px 150px 36px 56px;font-size:76px;min-height:160px}
+.prt{white-space:nowrap}
+.prc{display:inline-block;width:6px;height:80px;background:#52B788;margin-left:8px}
+.prs{position:absolute;right:26px;top:50%;margin-top:-54px;width:108px;height:108px;border-radius:50%;background:#2a2a2a;display:flex;align-items:center;justify-content:center}
+.prs .ic{width:56px;height:56px;color:#0A0A0A}
+.tmr{position:relative;width:360px;height:360px;flex:none}
+.tmr svg{width:360px;height:360px;transform:rotate(-90deg)}
+.tmb{fill:none;stroke:#222;stroke-width:22}
+.tmf{fill:none;stroke:#E63946;stroke-width:22;stroke-dasharray:817;stroke-linecap:round}
+.tmt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:96px;color:#fff}
+.sgw{position:relative;width:1660px;margin-top:150px}
+.sgr{display:flex;height:120px;gap:10px}
+.sg{position:relative}
+.sgf{position:absolute;inset:0;border-radius:22px;transform-origin:left center}
+.sgf.gap{border:4px dashed #555}
+.sg span{position:absolute;left:0;right:0;top:140px;text-align:center;font-size:52px;white-space:nowrap}
+.sgp{position:absolute;top:-130px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+.sgq{background:#E63946;color:#fff;font-size:56px;padding:6px 30px;border-radius:30px}
+.sgl{width:6px;height:150px;background:#E63946}
+.mg{display:flex;flex-direction:column;align-items:center;width:1660px;gap:30px;margin-top:20px}
+.mgr{display:flex;gap:30px}
+.mgc{background:#1b2a22;border:3px solid #52B788;color:#bff0d6;font-size:70px;padding:18px 48px;border-radius:60px}
+.mga .ic{width:90px;height:90px;color:#52B788}
+.mgres{background:#52B788;color:#0A0A0A;font-size:92px;padding:26px 70px;border-radius:70px}
+.il{display:flex;flex-direction:column;gap:34px;margin-top:20px}
+.ilr{display:flex;align-items:center;gap:36px}
+.ilc{width:120px;height:120px;border-radius:30px;background:#1b2a22;display:flex;align-items:center;justify-content:center;flex:none}
+.ilc .ic{width:68px;height:68px;color:#52B788}
+.ilr .ln{font-size:76px}
 """

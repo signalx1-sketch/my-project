@@ -962,13 +962,13 @@
  {
   "file": "영상_얼굴_감싸는_홍조_여성_클로즈업.mp4",
   "source": "drive",
-  "desc": "두 손으로 볼 감싸고 웃음",
+  "desc": "두 손으로 볼 감싸고 웃음 (2026-10-27 생성 오류로 드라이브에서 삭제)",
   "tags": [
    "회복"
   ],
   "mood": "긍정",
   "dur": 6.04,
-  "exclude": false
+  "exclude": true
  },
  {
   "file": "영상_얼굴_구진_홍조_코_만지는_여성.mp4",
@@ -1042,14 +1042,14 @@
  {
   "file": "영상_얼굴_심한_홍조_화끈거림_괴로운_여성.mp4",
   "source": "drive",
-  "desc": "휴지통 위 튜브 들고 붉은 얼굴로 당황",
+  "desc": "휴지통 위 튜브 들고 붉은 얼굴로 당황 (2026-10-27 생성 오류로 드라이브에서 삭제)",
   "tags": [
    "연고",
    "제품버리기"
   ],
   "mood": "괴로움",
   "dur": 10.04,
-  "exclude": false
+  "exclude": true
  },
  {
   "file": "영상_얼굴_홍조_화장품_당황한_여성.mp4",
@@ -2454,6 +2454,104 @@
   ],
   "mood": "걱정",
   "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_상담실_손짓하며_이야기하고_상대가_메모.mp4",
+  "source": "drive",
+  "drive_id": "1vq3ds3df3wOcf5nUlW56ckDyfqUu6q0P",
+  "desc": "상담실 테이블에서 여성이 손짓하며 길게 이야기, 맞은편 사람이 끄덕이며 메모",
+  "tags": [
+   "상담",
+   "병력",
+   "진료상담"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_진료실_의사에게_휴대폰_메모_보여주는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1-H0Q3pj401ysl4qGcjYyJ8mC4OFbWKTD",
+  "desc": "진료실에서 휴대폰 화면을 돌려 의사에게 보여주며 설명, 의사가 들여다봄",
+  "tags": [
+   "메모",
+   "진료상담",
+   "휴대폰"
+  ],
+  "mood": "긍정",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_처치실_고글_쓰고_누운_여성.mp4",
+  "source": "drive",
+  "drive_id": "1ZsBwjbCsuj93_CY8o4qrZxEdzNjBVCQd",
+  "desc": "처치실 베드에 보호 고글 쓰고 누운 여성, 옆에 장비 트레이 (시술 대기)",
+  "tags": [
+   "시술",
+   "레이저"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_밤_침대_휴대폰_사진첩_스크롤하는_여성.mp4",
+  "source": "drive",
+  "drive_id": "100AZVEl7M7eYosVUOip4XmoakMOTjoAE",
+  "desc": "어두운 방 침대에서 휴대폰 사진첩을 스크롤하다 멈추고 확대 (기억 되짚기)",
+  "tags": [
+   "기억",
+   "기간",
+   "휴대폰",
+   "밤"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_화장대_라벨없는_화장품_뒤집어보는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1wMNbzNimplmSZFVyd5_DlG4FxpRhw79l",
+  "desc": "화장대의 라벨 없는 화장품 용기를 하나씩 뒤집어 보는 여성 (제품명 모름)",
+  "tags": [
+   "화장품",
+   "제품",
+   "기억"
+  ],
+  "mood": "고민",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_샴푸_세안제_크림_나란히_세우는_여성.mp4",
+  "source": "drive",
+  "drive_id": "19DPx9u_ErFXDhEiNIFYo9HPHI9WtL6Bu",
+  "desc": "욕실 세면대에 샴푸병, 세안제 튜브, 크림통을 하나씩 꺼내 나란히 세움",
+  "tags": [
+   "샴푸",
+   "세안제",
+   "화장품",
+   "순서"
+  ],
+  "mood": "중립",
+  "dur": 6.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_식탁_휴대폰_메모앱_입력하는_여성_2.mp4",
+  "source": "drive",
+  "drive_id": "1Sn4C8BV-xmg0vxl-CgfgpviLa_ZEfCJK",
+  "desc": "식탁에서 휴대폰 메모 앱 입력 (메모앱 1과 같은 장면, 둘 중 하나만 쓴다)",
+  "tags": [
+   "메모",
+   "휴대폰"
+  ],
+  "mood": "집중",
+  "dur": 6.04,
   "exclude": false
  }
 ]
