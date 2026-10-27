@@ -2400,5 +2400,60 @@
   "mood": "중립",
   "dur": 10.04,
   "exclude": false
+ },
+ {
+  "file": "영상_피부클리닉_입구_들어가는_여성.mp4",
+  "source": "drive",
+  "drive_id": "18DDC8NcONsK2fCVi9dlbx9XPOdBWJo0y",
+  "desc": "'피부클리닉' 간판 건물 유리문 밀고 들어가는 베이지 코트 여성",
+  "tags": [
+   "병원",
+   "피부과",
+   "여러병원"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연합의원_입구_들어가는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1fDdebDE2_vpKElNZ4_iIDnkil2PZ9lgW",
+  "desc": "'연합의원' 간판 건물로 들어가 복도를 걸어가는 검은 코트 여성(뒷모습)",
+  "tags": [
+   "병원",
+   "여러병원"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_피부과의원_입구_들어가는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1FHyBbhf7X5vRNwACFGyDqHCWQ25K5AIL",
+  "desc": "'피부과의원' 간판 건물 유리문으로 들어가는 여성, 뒤따라가는 핸드헬드",
+  "tags": [
+   "병원",
+   "피부과",
+   "여러병원"
+  ],
+  "mood": "중립",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_욕실_거울_앞_볼_눌러보며_혼란스러운_여성.mp4",
+  "source": "drive",
+  "drive_id": "1EOA70zOdw_hCJa_4mJgeJqxFUB7DhKPT",
+  "desc": "따뜻한 조명 욕실 거울 앞, 붉은 볼을 눌러보다 얼굴 감싸며 혼란",
+  "tags": [
+   "홍조걱정",
+   "내얼굴이이상",
+   "혼란"
+  ],
+  "mood": "걱정",
+  "dur": 10.04,
+  "exclude": false
  }
 ]
