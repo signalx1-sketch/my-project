@@ -30,37 +30,57 @@ def fit(d, s, size, maxw):
 def main():
     doc_p, bg_p, out, cfg_p = sys.argv[1:5]
     cfg = json.loads(Path(cfg_p).read_text(encoding="utf-8"))
+    text_left = cfg.get("layout") == "text_left"  # 원장님 오른쪽, 글자는 전부 왼쪽 단에
     canvas = Image.new("RGB", (W, H), "white")
-    # 오른쪽: 흐리고 밝게 만든 관련 장면
+    # 흐리고 밝게 만든 관련 장면 (원장님 반대편)
     bg = Image.open(bg_p).convert("RGB")
     bg = bg.resize((int(bg.width * H / bg.height), H))
     x0 = cfg.get("bg_x", 0)
     bg = bg.crop((x0, 0, x0 + 760, H)).filter(ImageFilter.GaussianBlur(cfg.get("bg_blur", 5)))
     bg = Image.blend(ImageEnhance.Brightness(bg).enhance(1.45), Image.new("RGB", bg.size, "white"), 0.45)
-    canvas.paste(bg, (W - 760, 0))
-    # 왼쪽: 원장님 (오른쪽 가장자리를 흰 배경으로 부드럽게)
+    canvas.paste(bg, (0, 0) if text_left else (W - 760, 0))
+    # 원장님 (배경 쪽 가장자리를 흰 배경으로 부드럽게)
     doc = Image.open(doc_p).convert("RGB").crop(tuple(cfg.get("doc_crop", [660, 260, 1370, 1060]))).resize((640, 720))
     doc = ImageEnhance.Brightness(doc).enhance(1.08)
     mask = Image.new("L", doc.size, 255)
     md = ImageDraw.Draw(mask)
     for i in range(130):
-        md.line([(639 - i, 0), (639 - i, H)], fill=int(255 * i / 130))
-    canvas.paste(doc, (0, 0), mask)
+        x = i if text_left else 639 - i
+        md.line([(x, 0), (x, H)], fill=int(255 * i / 130))
+    canvas.paste(doc, (W - 640, 0) if text_left else (0, 0), mask)
     d = ImageDraw.Draw(canvas)
 
     def text(xy, s, font, fill, stroke, sw, anchor="la"):
         d.text(xy, s, font=font, fill=fill, stroke_width=sw, stroke_fill=stroke, anchor=anchor)
 
-    kf = ImageFont.truetype(AGGRO, 66)
-    for i, s in enumerate(cfg["keyword"]):
-        text((960, 150 + i * 84), s, kf, "#F0384A", "white", 10, "ma")
-    pen = ImageFont.truetype(PEN, 54)
-    for i, s in enumerate(cfg.get("hand", [])):
-        text((40, 30 + i * 52), s, pen, "#111111", "white", 3)
-    f1 = fit(d, cfg["line1"], 112, W - 80)
-    f2 = fit(d, cfg["line2"], 112, W - 80)
-    text((W // 2, 452), cfg["line1"], f1, "#FFF200", "black", 12, "ma")
-    text((W // 2, 584), cfg["line2"], f2, "white", "black", 12, "ma")
+    pen = ImageFont.truetype(PEN, 50)
+    if text_left:
+        col = cfg.get("col_w", 760)
+        y = 34
+        for s in cfg.get("hand", []):
+            text((44, y), s, pen, "#111111", "white", 3)
+            y += 50
+        y += 10
+        kf = ImageFont.truetype(AGGRO, 58)
+        for s in cfg["keyword"]:
+            text((44, y), s, kf, "#F0384A", "white", 9)
+            y += 72
+        big = cfg["big"]  # [(문구, 색)] 줄마다
+        y = max(y + 14, H - 24 - 118 * len(big))
+        for s, color in big:
+            f = fit(d, s, 112, col - 60)
+            text((40, y), s, f, color, "black", 12)
+            y += 118
+    else:
+        kf = ImageFont.truetype(AGGRO, 66)
+        for i, s in enumerate(cfg["keyword"]):
+            text((960, 150 + i * 84), s, kf, "#F0384A", "white", 10, "ma")
+        for i, s in enumerate(cfg.get("hand", [])):
+            text((40, 30 + i * 52), s, pen, "#111111", "white", 3)
+        f1 = fit(d, cfg["line1"], 112, W - 80)
+        f2 = fit(d, cfg["line2"], 112, W - 80)
+        text((W // 2, 452), cfg["line1"], f1, "#FFF200", "black", 12, "ma")
+        text((W // 2, 584), cfg["line2"], f2, "white", "black", 12, "ma")
     canvas.save(out, quality=95)
 
 
