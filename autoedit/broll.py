@@ -500,6 +500,7 @@ def _pick_filler(fillers: list[dict], by_id: dict, bd: _Board, sentences: list[S
 SIDE_BOX = (720, 520)  # 팝업 최대 크기
 SIDE_X = 70            # 얼굴 왼쪽
 FADE = 0.2
+UPSCALE_SHARPEN = "unsharp=5:5:0.6:5:5:0.0"  # 720p → 1080p로 늘린 자료의 흐릿함을 덜어 준다 (밝기 채널만)
 
 
 def _dims(path: Path) -> tuple[int, int]:
@@ -703,8 +704,10 @@ def overlay_filters(placements: list[Placement], first_input: int, base: str,
                 prep = _full_image(p.asset.path, d).replace("[f", f"[f{n}_")
             else:
                 # 원본 프레임 수가 모자라 끝에서 한 프레임 얼굴이 비치지 않게 마지막 장면을 조금 늘려 둔다
-                prep = ("fps=30,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,"
-                        f"tpad=stop_mode=clone:stop_duration={0.5 + p.extend:.2f}")
+                # 720p 자료는 lanczos로 늘리고 가볍게 선명도를 올린다 (1080p 이상이면 줄이기만 하므로 그대로 둔다)
+                prep = ("fps=30,scale=1920:1080:force_original_aspect_ratio=increase:flags=lanczos,crop=1920:1080,"
+                        + (UPSCALE_SHARPEN + "," if _dims(p.asset.path)[1] < 1000 else "")
+                        + f"tpad=stop_mode=clone:stop_duration={0.5 + p.extend:.2f}")
             pos = "0:0"
         else:
             bw, bh = SIDE_BOX
