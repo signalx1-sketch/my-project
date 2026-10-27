@@ -59,6 +59,7 @@ class Placement:
     tout: str = ""   # 나갈 때(얼굴로 돌아갈 때) 전환: cut | fade | wipe | pushout
     extend: float = 0.0  # 다음 자료가 전환하며 덮는 동안 이만큼 더 보여 준다
     card: str = ""   # 슬라이드 카드 종류 (part 등)
+    keep: bool = False  # 얼굴 비중을 맞추려고 자료를 뺄 때도 남길 자료 (계획의 keep)
 
 
 def _probe_duration(p: Path) -> float:
@@ -393,6 +394,8 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         fit = fit_full(a, t, FULL_SEC)
         if fit:
             bd.add(a, "full", *fit)
+            if item.get("keep"):  # 계획에서 꼭 넣으라고 한 자료는 얼굴을 보여 주려고 뺄 때도 남긴다
+                bd.placed[-1].keep = True
 
     # 4. 얼굴 비율 맞추기: 긴 얼굴 구간 가운데를 채움용 전체 화면으로 덮는다
     body_len = bd.end - bd.start
@@ -460,7 +463,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             if r1 - r0 <= MAX_NO_FACE:
                 continue
             mid = (r0 + r1) / 2
-            cands = [p for p in r if p.mode == "full" and p.start - r0 >= 4 and r1 - (p.start + p.dur) >= 4]
+            cands = [p for p in r if p.mode == "full" and not p.keep and p.start - r0 >= 4 and r1 - (p.start + p.dur) >= 4]
             if cands:
                 bd.placed.remove(min(cands, key=lambda p: abs(p.start + p.dur / 2 - mid)))
                 fixed = True

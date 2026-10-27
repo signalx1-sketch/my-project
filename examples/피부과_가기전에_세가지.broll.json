@@ -15,7 +15,8 @@
   "at": 5,
   "offset": 1.0,
   "asset": "영상_욕실_거울_앞_볼_눌러보며_혼란스러운_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 8,
@@ -33,7 +34,8 @@
   "at": 13,
   "offset": 0.0,
   "asset": "영상_연합의원_입구_들어가는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 15,
@@ -69,7 +71,8 @@
   "at": 25,
   "offset": 6.0,
   "asset": "영상_피부과의원_입구_들어가는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 25,
@@ -81,13 +84,15 @@
   "at": 28,
   "offset": 6.0,
   "asset": "영상_욕실_샴푸_세안제_크림_나란히_세우는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 29,
   "offset": 0.0,
   "asset": "영상_식탁_휴대폰_메모앱_입력하는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 31,
@@ -111,7 +116,8 @@
   "at": 36,
   "offset": 0.0,
   "asset": "영상_화장대_라벨없는_화장품_뒤집어보는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 37,
@@ -139,9 +145,10 @@
  },
  {
   "at": 42,
-  "offset": 7.0,
+  "offset": 8.5,
   "asset": "영상_처치실_고글_쓰고_누운_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 43,
@@ -153,7 +160,8 @@
   "at": 48,
   "offset": 0.0,
   "asset": "영상_밤_침대_휴대폰_사진첩_스크롤하는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 53,
@@ -219,13 +227,15 @@
   "at": 66,
   "offset": 0.0,
   "asset": "영상_진료실_의사에게_휴대폰_메모_보여주는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 71,
   "offset": 0.0,
   "asset": "영상_상담실_손짓하며_이야기하고_상대가_메모.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 73,
@@ -267,7 +277,8 @@
   "at": 82,
   "offset": 1.0,
   "asset": "영상_피부클리닉_입구_들어가는_여성.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 83,
