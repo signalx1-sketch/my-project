@@ -22,6 +22,7 @@ def _noop(stage: str, pct: float) -> None:
 
 
 def analyze(src: str, workdir: Path, opts: Options, progress: Progress = _noop) -> dict:
+    workdir.mkdir(parents=True, exist_ok=True)
     cache = workdir / "analysis.json"
     if cache.exists():
         analysis = json.loads(cache.read_text(encoding="utf-8"))

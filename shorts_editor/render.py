@@ -26,16 +26,19 @@ def _layout_chain(layout: str, zoom: float, src_w: int, src_h: int, tag: str) ->
 
 
 def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, total: float,
-                 ass_name: str, progress_bar: bool, audio_input: int, crop_bottom: int = 0,
+                 ass_name: str, progress_bar: bool, has_audio: bool, crop_bottom: int = 0,
                  overlays: list[tuple[int, float, float]] = ()) -> str:
-    """overlays: (입력 번호, 시작 초, 길이) — 비포앤애프터 카드 등 이미지."""
+    """입력 번호: 컷 i → [i] (원본을 그 구간만 따로 읽음).
+    overlays: (입력 번호, 시작 초, 길이) — 비포앤애프터 사진 등."""
     chains, concat_in = [], []
     for i, p in enumerate(parts):
-        chains.append(f"[0:v]trim=start={p.start:.3f}:end={p.end:.3f},setpts=PTS-STARTPTS,"
-                      f"fps={OUT_FPS}" + (f",crop=iw:ih-{crop_bottom}:0:0" if crop_bottom else "") + f"[v{i}in]")
+        chains.append(f"[{i}:v]setpts=PTS-STARTPTS,fps={OUT_FPS}"
+                      + (f",crop=iw:ih-{crop_bottom}:0:0" if crop_bottom else "") + f"[v{i}in]")
         chains.append(_layout_chain(layout, p.zoom, src_w, src_h, f"v{i}"))
         fade = min(0.03, p.dur / 4)
-        chains.append(f"[{audio_input}:a]atrim=start={p.start:.3f}:end={p.end:.3f},asetpts=PTS-STARTPTS,"
+        a_src = (f"[{i}:a]atrim=duration={p.dur:.3f}" if has_audio  # 소리 없는 원본이면 무음 생성
+                 else f"anullsrc=r=48000:cl=stereo,atrim=duration={p.dur:.3f}")
+        chains.append(f"{a_src},asetpts=PTS-STARTPTS,"
                       f"aformat=sample_rates=48000:channel_layouts=stereo,"
                       f"afade=t=in:d={fade:.3f},afade=t=out:st={max(0, p.dur - fade):.3f}:d={fade:.3f}[a{i}]")
         concat_in.append(f"[v{i}][a{i}]")
@@ -59,22 +62,27 @@ def build_filter(parts: list[Part], *, layout: str, src_w: int, src_h: int, tota
 def render(src: str, out_path: Path, parts: list[Part], ass_text: str, *, layout: str,
            src_w: int, src_h: int, has_audio: bool, progress_bar: bool, crop_bottom: int = 0,
            images: list[tuple[Path, float, float]] = ()) -> None:
-    """images: (이미지 파일, 결과 영상 기준 시작 초, 길이)."""
+    """images: (이미지 파일, 결과 영상 기준 시작 초, 길이).
+
+    컷마다 원본을 그 구간만 따로 읽는다(-ss/-t). 한 입력을 trim으로 여러 번 쓰면
+    뒤쪽 구간용 프레임이 메모리에 쌓여(긴 영상에서 14GB) ffmpeg가 죽는다."""
     workdir = out_path.parent
     stem = out_path.stem
     ass_name = f"{stem}.ass"
     (workdir / ass_name).write_text(ass_text, encoding="utf-8")
     total = sum(p.dur for p in parts)
+    first_img = len(parts)
     filt = build_filter(parts, layout=layout, src_w=src_w, src_h=src_h - crop_bottom, total=total,
-                        ass_name=ass_name, progress_bar=progress_bar,
-                        audio_input=0 if has_audio else 1, crop_bottom=crop_bottom,
-                        overlays=[(i + (1 if has_audio else 2), t, d) for i, (_, t, d) in enumerate(images)])
+                        ass_name=ass_name, progress_bar=progress_bar, has_audio=has_audio,
+                        crop_bottom=crop_bottom,
+                        overlays=[(first_img + i, t, d) for i, (_, t, d) in enumerate(images)])
     script = workdir / f"{stem}.filter.txt"
     script.write_text(filt, encoding="utf-8")
 
-    cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(Path(src).resolve())]
-    if not has_audio:
-        cmd += ["-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo"]
+    src_abs = str(Path(src).resolve())
+    cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
+    for p in parts:
+        cmd += ["-threads", "2", "-ss", f"{p.start:.3f}", "-t", f"{p.dur:.3f}", "-i", src_abs]
     for img, _, dur in images:
         cmd += ["-loop", "1", "-framerate", str(OUT_FPS), "-t", f"{dur:.3f}", "-i", str(Path(img).resolve())]
     cmd += ["-filter_complex_script", script.name, "-map", "[vout]", "-map", "[aout]",
@@ -83,7 +91,8 @@ def render(src: str, out_path: Path, parts: list[Part], ass_text: str, *, layout
             out_path.name]
     proc = subprocess.run(cmd, cwd=workdir, capture_output=True, text=True)
     if proc.returncode != 0:
-        raise RuntimeError(f"ffmpeg 렌더링 실패:\n{proc.stderr[-2000:]}")
+        why = "메모리 부족으로 강제 종료" if proc.returncode in (-9, 137) else proc.stderr[-2000:]
+        raise RuntimeError(f"ffmpeg 렌더링 실패 (코드 {proc.returncode}):\n{why}")
 
 
 def cover_image(video: Path, out: Path, at: float = 0.6) -> None:

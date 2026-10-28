@@ -6,7 +6,7 @@
 계획 파일 형식은 examples/1015_아토피자가진단.plan.json 참고.
 - segments: [[시작 초, "마지막 단어"], ...]  → 시작 시각부터 그 단어가 끝나는 곳까지
             [[시작 초, 끝 초], ...]          도 됨
-- fixes: 음성 인식 오타 교정 {"틀린 단어": "맞는 단어"} (자막에 반영)
+- fixes: 음성 인식 오타 교정 {"틀린 단어": "맞는 단어"} (자막에 반영, ""로 바꾸면 그 단어 삭제)
 - options: Options 필드 덮어쓰기 (기본값이 더마허브 톤앤매너)
 - title_options: 업로드 제목 후보 (title이 추천안). 렌더링 후 titles.md 로 정리됨
 """
@@ -44,9 +44,11 @@ def load_plans(plan: dict, analysis: dict) -> list[ShortPlan]:
 
 
 def apply_fixes(analysis: dict, fixes: dict) -> None:
+    """단어 교정. 빈 문자열로 바꾸면 그 단어는 자막에서 빠짐 (예: "반년"→"반년쯤", "뜸"→"")."""
     for seg in analysis["transcript"]:
         for w in seg["words"]:
             w["text"] = fixes.get(w["text"], w["text"])
+        seg["words"] = [w for w in seg["words"] if w["text"]]
 
 
 def run(plan_path: Path, only: set[int] | None = None) -> list[dict]:
@@ -65,7 +67,12 @@ def run(plan_path: Path, only: set[int] | None = None) -> list[dict]:
         r = render_short(src, work, analysis, p, opts, i)
         results.append(r)
         print(f"{r['file']}  {r['duration']}초  사진 {len(r['before_after'])}장  — {p.title}")
-    (work / "shorts.json").write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+    out = work / "shorts.json"
+    if only and out.exists():  # 일부만 다시 만들었으면 기존 목록에 덮어쓰기
+        old = {r["index"]: r for r in json.loads(out.read_text(encoding="utf-8"))}
+        old.update({r["index"]: r for r in results})
+        results = [old[k] for k in sorted(old)]
+    out.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
     write_titles(plan, work / "titles.md")
     return results
 
