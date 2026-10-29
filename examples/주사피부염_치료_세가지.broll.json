@@ -1,0 +1,153 @@
+[
+ {
+  "at": 2,
+  "offset": 4.5,
+  "asset": "영상_진료실_의사_고개젓자_표정굳는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 5,
+  "offset": 0.5,
+  "asset": "영상_피부과_대기실_처방전_보는_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 5,
+  "offset": 6.0,
+  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 20,
+  "offset": 0.0,
+  "asset": "영상_피부과_건물_앞_홍조_여성_답답함.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 22,
+  "offset": 0.0,
+  "asset": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 25,
+  "offset": 0.0,
+  "asset": "영상_피부과_짧은_진료_의사_컴퓨터_여성_환자.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 29,
+  "offset": 0.0,
+  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 32,
+  "offset": 2.5,
+  "asset": "영상_거울앞_붉은볼_눌러보며_가라앉는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 32,
+  "offset": 7.5,
+  "asset": "영상_코_볼_홍조_클로즈업.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 36,
+  "offset": 0.0,
+  "asset": "영상_진료실_의사에게_또박또박_질문하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 44,
+  "offset": 0.0,
+  "asset": "영상_시술후_얼굴_붉어져_손거울보며_굳는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 47,
+  "offset": 0.0,
+  "asset": "영상_세안후_볼코_붉어져_눈감는_여성.mp4",
+  "mode": "full"
+ },
+ {
+  "at": 48,
+  "offset": 0.0,
+  "asset": "영상_붉은볼에_스크럽_문지르는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 54,
+  "offset": 0.0,
+  "asset": "영상_미지근한물_문지르지않고_세안하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 56,
+  "offset": 0.0,
+  "asset": "영상_연고튜브들_상자에_담아_정리하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 59,
+  "offset": 0.0,
+  "asset": "영상_약국_앞_처방전_보며_걱정하는_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 67,
+  "offset": 0.0,
+  "asset": "영상_더붉어진얼굴_뾰루지_연고_다시꺼내는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 72,
+  "offset": 0.0,
+  "asset": "영상_벽달력_날짜에_동그라미_치는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 82,
+  "offset": 1.0,
+  "asset": "영상_깨끗한피부_현관문_나서며_웃는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 84,
+  "offset": 1.0,
+  "asset": "영상_깨끗한피부_연고_서랍에_넣고_웃는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 87,
+  "offset": 2.0,
+  "asset": "영상_병원_수납_카드_내고_영수증_받는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 87,
+  "offset": 7.5,
+  "asset": "영상_깨끗한피부_창가_머그컵_미소_여성.mp4",
+  "mode": "full",
+  "keep": true
+ }
+]

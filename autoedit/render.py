@@ -35,6 +35,9 @@ SFX_SOURCES = {
     ],
 }
 SFX_GAIN = {"whoosh": 0.6, "pop": 0.45, "ding": 0.5}
+# earshot 효과음 파일 (assets/sfx, 정점 -3 dBFS로 만듦). 목소리 아래에 작게 깔리도록 줄인다
+SFX_DIR = Path(__file__).resolve().parent.parent / "assets" / "sfx"
+SFX_FILE_GAIN = {"whoosh": 0.22, "pop": 0.25, "ding": 0.2}
 
 
 SFX_EVERY = 30.0      # 본편 효과음은 30초에 하나 꼴 (1분에 1~2개)
@@ -174,8 +177,12 @@ def _read_pcm(cmd_input: list[str]) -> np.ndarray:
 
 def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path):
     """효과음 이벤트를 한 트랙(wav)에 배치한다."""
-    sounds = {k: [_read_pcm(["-f", "lavfi", "-i", src]) * SFX_GAIN[k] for src in srcs]
-              for k, srcs in SFX_SOURCES.items()}
+    # assets/sfx/종류_번호.wav (earshot으로 만든 효과음)가 있으면 그걸 쓰고, 없으면 ffmpeg 합성음
+    sounds = {}
+    for k, srcs in SFX_SOURCES.items():
+        files = sorted(SFX_DIR.glob(f"{k}_*.wav"))
+        sounds[k] = ([_read_pcm(["-i", str(f)]) * SFX_FILE_GAIN[k] for f in files] if files
+                     else [_read_pcm(["-f", "lavfi", "-i", src]) * SFX_GAIN[k] for src in srcs])
     track = np.zeros((int(duration * SR) + SR, 2), np.float32)
     used = {k: 0 for k in sounds}
     for t, kind in events:

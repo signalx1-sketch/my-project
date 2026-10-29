@@ -103,6 +103,14 @@ def main():
     if args.slides:
         sl = slides_mod.load(args.slides.resolve(), work, readable=args.slide_font == "readable")
         matched = slides_mod.match(sl, sentences, words, plan.get("chapters", []))
+        # 계획의 slide_at으로 슬라이드 시각을 직접 고정한다: {"슬라이드 번호": 문장 번호 또는 [문장 번호, 몇 초 뒤]}
+        by_idx = {s.idx: s for s in sentences}
+        for no, at in (plan.get("slide_at") or {}).items():
+            si, off = (at, 0.0) if isinstance(at, int) else (at[0], at[1])
+            for m in matched:
+                if m["slide"].no == int(no) and si in by_idx:
+                    m["t"], m["matched"] = round(by_idx[si].start + off, 2), "plan"
+        matched.sort(key=lambda m: (m["t"], m["slide"].no))
         # 슬라이드를 움직이는 카드로 (숫자 카운트업, 줄마다 등장, 막대 비교). 못 만들면 정지 이미지
         # HyperFrames로 만들고, 쓸 수 없으면 자체 렌더러(Playwright)로 대신한다
         cards = None

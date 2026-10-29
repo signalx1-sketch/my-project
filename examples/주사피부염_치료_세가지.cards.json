@@ -1,0 +1,647 @@
+{
+ "1": {
+  "kind": "icontext",
+  "big": "3",
+  "text": [
+   "주사피부염 치료는",
+   "세 개가",
+   "전부입니다"
+  ]
+ },
+ "2": {
+  "kind": "icontext",
+  "icon": "notebook-pen",
+  "text": [
+   "제발",
+   "외우세요"
+  ]
+ },
+ "3": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": [
+   "치료 방법이 없다",
+   "차라리 치료받을 돈으로 여행이나 가라"
+  ],
+  "note": "환자들이 들은 말"
+ },
+ "4": {
+  "kind": "icons",
+  "items": [
+   [
+    "병원 4~5곳",
+    "hospital"
+   ],
+   [
+    "열 내리는 한약",
+    "leaf"
+   ],
+   [
+    "레이저",
+    "zap"
+   ]
+  ],
+  "caption": "다 해봤는데"
+ },
+ "5": {
+  "kind": "icontext",
+  "icon": "heart-crack",
+  "text": [
+   "그대로거나",
+   "심지어",
+   "악화"
+  ],
+  "tone": "red"
+ },
+ "6": {
+  "kind": "icontext",
+  "big": "18",
+  "text": [
+   "년째, 피부과·한의원·대학병원에서",
+   "포기한 주사피부염만",
+   "봤습니다"
+  ]
+ },
+ "7": {
+  "kind": "checklist",
+  "items": [
+   "① 이름 말고 현상",
+   "② 최대한 자극 줄이기",
+   "③ 스테로이드는 2주 이내"
+  ],
+  "caption": "딱 세 가지"
+ },
+ "8": {
+  "kind": "icontext",
+  "icon": "wallet",
+  "text": [
+   "엉뚱한 치료로",
+   "돈 날리는 일을",
+   "줄일 수 있습니다"
+  ]
+ },
+ "9": {
+  "kind": "icontext",
+  "icon": "car",
+  "text": [
+   "중고차 한 대 값",
+   "쓴 분도",
+   "정말 많습니다"
+  ],
+  "tone": "red"
+ },
+ "10": {
+  "kind": "icontext",
+  "icon": "hospital",
+  "text": [
+   "피부과를 한 번도",
+   "안 가봤다면",
+   "피부과부터"
+  ],
+  "caption": "먼저 배제합니다"
+ },
+ "11": {
+  "kind": "timer",
+  "big": "1~2주",
+  "text": [
+   "피부과 약으로",
+   "좋아졌다면",
+   "오실 이유 없습니다"
+  ]
+ },
+ "12": {
+  "kind": "timeline",
+  "title": "그걸로 된 겁니다",
+  "nodes": [
+   [
+    "증상 잡힘",
+    ""
+   ],
+   [
+    "약 끊음",
+    ""
+   ],
+   [
+    "3개월 뒤",
+    "재발 없음"
+   ]
+  ],
+  "accent": 2
+ },
+ "13": {
+  "kind": "icons",
+  "items": [
+   [
+    "스테로이드",
+    "pill"
+   ],
+   [
+    "엘리델",
+    "pill-bottle"
+   ],
+   [
+    "이소티논",
+    "tablets"
+   ]
+  ],
+  "caption": "더 못 쓸 만큼 심한 분"
+ },
+ "14": {
+  "kind": "segments",
+  "title": "그걸 반복하는 분",
+  "segs": [
+   {
+    "label": "쓰면 좋아짐",
+    "w": 0.32,
+    "color": "#52B788"
+   },
+   {
+    "label": "끊으면 악화",
+    "w": 0.3,
+    "color": "#E63946"
+   },
+   {
+    "label": "다시 씀",
+    "w": 0.38
+   }
+  ]
+ },
+ "15": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": "더 해볼 게 없습니다",
+  "note": "이 말을 들은 분"
+ },
+ "17": {
+  "kind": "icontext",
+  "icon": "split",
+  "text": [
+   "병원마다",
+   "진단명이",
+   "다 다릅니다"
+  ]
+ },
+ "18": {
+  "kind": "diverge",
+  "title": "같은 얼굴, 다른 이름",
+  "from": {
+   "icon": "scan-face",
+   "label": "붉은 얼굴"
+  },
+  "branches": [
+   {
+    "icon": "hospital",
+    "label": "병원 A",
+    "tag": "주사"
+   },
+   {
+    "icon": "hospital",
+    "label": "병원 B",
+    "tag": "지루성",
+    "color": "#d9822b"
+   },
+   {
+    "icon": "hospital",
+    "label": "병원 C",
+    "tag": "접촉성",
+    "color": "#8a5cd1"
+   }
+  ]
+ },
+ "19": {
+  "kind": "icontext",
+  "icon": "circle-help",
+  "text": [
+   "누가",
+   "틀린 걸까요?"
+  ]
+ },
+ "20": {
+  "kind": "timer",
+  "big": "1~2분",
+  "text": [
+   "의사마다",
+   "꽂힌 증상에 따라",
+   "이름이 달라집니다"
+  ]
+ },
+ "21": {
+  "kind": "merge",
+  "title": "진단은 달라도",
+  "chips": [
+   "주사",
+   "지루성",
+   "접촉성"
+  ],
+  "result": "처방은 거의 똑같습니다"
+ },
+ "22": {
+  "kind": "icons",
+  "items": [
+   [
+    "항생제",
+    "pill"
+   ],
+   [
+    "스테로이드",
+    "pill-bottle"
+   ],
+   [
+    "엘리델·프로토픽",
+    "tablets"
+   ]
+  ],
+  "caption": "여기서 크게 벗어나지 않습니다"
+ },
+ "23": {
+  "kind": "icontext",
+  "icon": "building-2",
+  "text": [
+   "대학병원도",
+   "마찬가지입니다"
+  ]
+ },
+ "24": {
+  "kind": "icontext",
+  "big": "2",
+  "text": [
+   "이름이 달라도",
+   "얼굴에서 일어나는 현상은",
+   "두 가지"
+  ]
+ },
+ "25": {
+  "kind": "compare2",
+  "title": "실제 현상",
+  "left": {
+   "title": "혈관 확장",
+   "sub": "늘 붉은 얼굴",
+   "bar": 0.85,
+   "color": "#E63946"
+  },
+  "right": {
+   "title": "염증",
+   "sub": "열감·뾰루지",
+   "bar": 0.85,
+   "color": "#d9822b"
+  },
+  "mid": "+"
+ },
+ "26": {
+  "kind": "iconlist",
+  "rows": [
+   [
+    "heart-pulse",
+    "혈관 확장 줄이기"
+   ],
+   [
+    "flame",
+    "염증 줄이기"
+   ]
+  ],
+  "foot": "치료할 것도 결국 이 두 가지"
+ },
+ "27": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": "어떤 병인가요?",
+  "note": "이 질문 대신"
+ },
+ "28": {
+  "kind": "bubble",
+  "tone": "good",
+  "text": [
+   "지금 혈관 확장과 염증을",
+   "어떻게 줄이시나요?"
+  ],
+  "note": "이렇게 물어보세요"
+ },
+ "29": {
+  "kind": "icontext",
+  "icon": "shield-check",
+  "text": [
+   "엉뚱하거나",
+   "무의미한 치료를",
+   "거를 수 있습니다"
+  ]
+ },
+ "30": {
+  "kind": "icontext",
+  "icon": "triangle-alert",
+  "text": [
+   "그런데",
+   "이 두 가지를 오히려 키우는",
+   "치료가 있습니다"
+  ],
+  "tone": "red"
+ },
+ "32": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": "레이저 받았더니 더 붉어졌어요",
+  "note": "정말 자주 듣는 말"
+ },
+ "33": {
+  "kind": "icontext",
+  "icon": "eraser",
+  "text": [
+   "세안·각질제거",
+   "열심히 했는데",
+   "안 낫는다"
+  ],
+  "tone": "red"
+ },
+ "34": {
+  "kind": "icontext",
+  "icon": "syringe",
+  "text": [
+   "미세침·재생침",
+   "맞았는데",
+   "더 심해졌다"
+  ],
+  "tone": "red"
+ },
+ "35": {
+  "kind": "icontext",
+  "icon": "piggy-bank",
+  "text": [
+   "아무것도 안 했으면",
+   "돈도 아끼고",
+   "더 나았을 겁니다"
+  ]
+ },
+ "36": {
+  "kind": "icons",
+  "items": [
+   [
+    "자극",
+    "zap"
+   ],
+   [
+    "혈관 확장",
+    "heart-pulse"
+   ],
+   [
+    "더 붉어짐",
+    "flame"
+   ]
+  ],
+  "caption": "문제는 방향"
+ },
+ "37": {
+  "kind": "icontext",
+  "icon": "thermometer-sun",
+  "text": [
+   "레이저는",
+   "조직 온도를",
+   "올리는 치료"
+  ],
+  "tone": "red"
+ },
+ "38": {
+  "kind": "iconlist",
+  "rows": [
+   [
+    "droplets",
+    "과한 세안"
+   ],
+   [
+    "eraser",
+    "각질제거"
+   ]
+  ],
+  "foot": "혈관 확장을 부릅니다"
+ },
+ "39": {
+  "kind": "icontext",
+  "icon": "trending-down",
+  "text": [
+   "열심히 할수록",
+   "더 나빠집니다"
+  ],
+  "tone": "red"
+ },
+ "41": {
+  "kind": "icontext",
+  "icon": "sparkles",
+  "text": [
+   "노화로 인한",
+   "염증 없는 피부엔",
+   "효과가 있을 수 있습니다"
+  ]
+ },
+ "42": {
+  "kind": "icontext",
+  "icon": "compass",
+  "text": [
+   "홍조가 심해졌는데",
+   "자극 치료를 반복?",
+   "방향을 의심하세요"
+  ],
+  "tone": "red"
+ },
+ "43": {
+  "kind": "checklist",
+  "items": [
+   "시술 쉬기",
+   "세안 과하지 않게",
+   "각질제거 멈추기"
+  ],
+  "caption": "실천"
+ },
+ "44": {
+  "kind": "icontext",
+  "icon": "shield-plus",
+  "text": [
+   "생활관리로",
+   "병이 낫진 않아도",
+   "악화는 막습니다"
+  ]
+ },
+ "45": {
+  "kind": "icontext",
+  "icon": "pill",
+  "text": [
+   "그래도 붉음이 남아",
+   "약을",
+   "써야 한다면"
+  ]
+ },
+ "47": {
+  "kind": "graph",
+  "title": "바르면 낫고, 끊으면 심해지고",
+  "stop": "끊음",
+  "lines": [
+   "원래대로",
+   "처음보다 더 심해짐"
+  ]
+ },
+ "48": {
+  "kind": "compare2",
+  "left": {
+   "title": "2주",
+   "sub": "권장",
+   "bar": 0.05,
+   "color": "#52B788"
+  },
+  "right": {
+   "title": "몇 년",
+   "sub": "아직도 많습니다",
+   "bar": 1.0,
+   "color": "#E63946"
+  },
+  "mid": "≠",
+  "caption": "몇 달, 몇 년씩 쓰는 분"
+ },
+ "49": {
+  "kind": "icontext",
+  "icon": "thumbs-up",
+  "text": [
+   "쓰는 순간엔",
+   "분명히",
+   "좋아집니다"
+  ]
+ },
+ "50": {
+  "kind": "icontext",
+  "icon": "hourglass",
+  "text": [
+   "오래 쓸수록",
+   "주사 같은 증상을",
+   "만들 수 있습니다"
+  ],
+  "tone": "red"
+ },
+ "51": {
+  "kind": "icontext",
+  "icon": "refresh-ccw",
+  "text": [
+   "바르다 보니 병이 만들어지고",
+   "그 병 때문에",
+   "또 바릅니다"
+  ],
+  "tone": "red"
+ },
+ "54": {
+  "kind": "timer",
+  "big": "2주",
+  "text": [
+   "꼭 써야 한다면",
+   "스테로이드는",
+   "가급적 2주 이내"
+  ]
+ },
+ "55": {
+  "kind": "icontext",
+  "icon": "hospital",
+  "text": [
+   "2주 이상 쓰고도",
+   "효과 없거나 심해지면",
+   "큰 병원에 가세요"
+  ]
+ },
+ "57": {
+  "kind": "checklist",
+  "items": [
+   "① 이름 말고 현상",
+   "② 자극은 거꾸로 간다",
+   "③ 스테로이드는 2주 이내"
+  ],
+  "caption": "다시 한 번"
+ },
+ "58": {
+  "kind": "merge",
+  "title": "결국 치료는",
+  "chips": [
+   "혈관 확장 줄이기",
+   "염증 줄이기"
+  ],
+  "result": "이것이 치료입니다"
+ },
+ "59": {
+  "kind": "icontext",
+  "icon": "ban",
+  "text": [
+   "자극의 원인부터",
+   "끊으세요"
+  ],
+  "tone": "red",
+  "strike": true
+ },
+ "60": {
+  "kind": "icontext",
+  "icon": "signpost",
+  "text": [
+   "이 세 줄이면",
+   "병원을 다시 고를 때",
+   "달라집니다"
+  ]
+ },
+ "61": {
+  "kind": "icontext",
+  "icon": "sprout",
+  "text": [
+   "가망 없는 증상이",
+   "아닙니다",
+   "다만 오래 걸립니다"
+  ],
+  "caption": "희망"
+ },
+ "62": {
+  "kind": "icons",
+  "items": [
+   [
+    "혈관",
+    "heart-pulse"
+   ],
+   [
+    "염증",
+    "flame"
+   ],
+   [
+    "피부장벽",
+    "shield-plus"
+   ]
+  ],
+  "caption": "회복이 핵심"
+ },
+ "63": {
+  "kind": "iconlist",
+  "rows": [
+   [
+    "award",
+    "피부 난치 18년"
+   ],
+   [
+    "receipt",
+    "충분히 치료하고도 효과 없으면 전액 환불"
+   ],
+   [
+    "message-circle",
+    "문의는 고정댓글"
+   ]
+  ],
+  "foot": "더마허브TV · 스킨룩스한의원"
+ },
+ "16": {
+  "kind": "part",
+  "num": 1,
+  "total": 3,
+  "title": "현상을 보세요",
+  "sub": "이름 말고"
+ },
+ "31": {
+  "kind": "part",
+  "num": 2,
+  "total": 3,
+  "title": "자극은 거꾸로",
+  "sub": "자극을 더하는 치료는 거꾸로 간다"
+ },
+ "46": {
+  "kind": "part",
+  "num": 3,
+  "total": 3,
+  "title": "2주 이내",
+  "sub": "스테로이드는 꼭 필요할 때만, 짧게"
+ }
+}
