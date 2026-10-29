@@ -52,4 +52,13 @@ if [ "${EARSHOT:-0}" = "1" ] && [ ! -x "$EARSHOT_DIR/.venv/bin/earshot" ]; then
     && "$EARSHOT_DIR/.venv/bin/pip" install -q -e "$EARSHOT_DIR[mcp]") >&2 || step "earshot 설치 실패"
 fi
 
+if [ ! -d "$HOME/.claude/skills/real-sfx" ]; then
+  step "real-sfx 스킬 (진짜 녹음 효과음 배치, Clipwing/skills)"
+  tmp=$(mktemp -d)
+  (GIT_LFS_SKIP_SMUDGE=1 git clone -q --depth 1 https://github.com/Clipwing/skills "$tmp/skills" \
+    && mkdir -p "$HOME/.claude/skills" && cp -r "$tmp/skills/skills/real-sfx" "$HOME/.claude/skills/real-sfx" \
+    && python3 "$HOME/.claude/skills/real-sfx/scripts/setup.py" init --uisfx --index) >&2 || step "real-sfx 설치 실패"
+  rm -rf "$tmp"
+fi
+
 step "끝"
