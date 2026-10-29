@@ -62,6 +62,7 @@
 - 얼굴 줌은 꼭 필요한 곳에만 (콜드 오픈 두 번째 문장, 계획의 `punch` 문장).
 
 ## 소리
+- 효과음 도구 earshot(`~/tools/earshot`, `EARSHOT=1 bash scripts/setup_tools.sh`로 설치): `~/tools/earshot/.venv/bin/earshot sfx render whoosh_fast/crisp -o 파일.wav`, 목록은 `sfx list`. real-sfx와 Openverse는 아직 막혀 있다 (2026-10-29).
 - 목소리는 가볍게만 다듬는다: 입 클릭 제거, 약한 잡음 제거(nr 6), 70Hz 아래 정리, 2:1 압축, 음량은 두 번에 나눠
   일정하게 맞춘다. 게이트, 고음 차단, 음량 보정 여러 번은 먹먹하고 출렁이는 소리가 된다 (2026-10-26 지적).
 - 숨소리 제거(음성 검출)는 인식된 단어와 겹치는 곳은 자르지 않는다 (단어 가운데가 잘려 말이 씹힌다).

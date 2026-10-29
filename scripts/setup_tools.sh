@@ -41,4 +41,15 @@ if [ ! -d "$TOOLS/OpenMontage/.git" ]; then
 fi
 pip install -q pyyaml pydantic jsonschema python-dotenv >&2 || step "OpenMontage 의존성 실패"
 
+# earshot: 코드로 만드는 효과음 252개(sfx render)와 소리 분석. 무거워서(torch 약 1GB, 5~10분) 따로 켠다:
+# EARSHOT=1 bash scripts/setup_tools.sh
+EARSHOT_DIR="$TOOLS/earshot"
+if [ "${EARSHOT:-0}" = "1" ] && [ ! -x "$EARSHOT_DIR/.venv/bin/earshot" ]; then
+  step "earshot (효과음)"
+  [ -d "$EARSHOT_DIR/.git" ] || GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/Leonxlnx/earshot "$EARSHOT_DIR" >&2
+  (python3 -m venv "$EARSHOT_DIR/.venv" \
+    && "$EARSHOT_DIR/.venv/bin/pip" install -q torch --index-url https://download.pytorch.org/whl/cpu \
+    && "$EARSHOT_DIR/.venv/bin/pip" install -q -e "$EARSHOT_DIR[mcp]") >&2 || step "earshot 설치 실패"
+fi
+
 step "끝"
