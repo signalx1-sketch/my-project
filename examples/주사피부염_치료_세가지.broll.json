@@ -1,12 +1,5 @@
 [
  {
-  "at": 2,
-  "offset": 4.5,
-  "asset": "영상_진료실_의사_고개젓자_표정굳는_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 5,
   "offset": 0.5,
   "asset": "영상_피부과_대기실_처방전_보는_홍조_여성.mp4",
@@ -21,22 +14,16 @@
   "keep": true
  },
  {
-  "at": 20,
+  "at": 16,
   "offset": 0.0,
   "asset": "영상_피부과_건물_앞_홍조_여성_답답함.mp4",
-  "mode": "full"
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 22,
   "offset": 0.0,
   "asset": "영상_병원_복도_처방전_서류_보는_우울한_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
-  "at": 25,
-  "offset": 0.0,
-  "asset": "영상_피부과_짧은_진료_의사_컴퓨터_여성_환자.mp4",
   "mode": "full",
   "keep": true
  },
@@ -55,10 +42,11 @@
   "keep": true
  },
  {
-  "at": 32,
-  "offset": 7.5,
-  "asset": "영상_코_볼_홍조_클로즈업.mp4",
-  "mode": "full"
+  "at": 33,
+  "offset": 0.0,
+  "asset": "영상_피부과_의사_상담_돋보기_여성_환자.mp4",
+  "mode": "full",
+  "keep": true
  },
  {
   "at": 36,
@@ -68,22 +56,16 @@
   "keep": true
  },
  {
-  "at": 44,
+  "at": 48,
   "offset": 0.0,
-  "asset": "영상_시술후_얼굴_붉어져_손거울보며_굳는_여성.mp4",
+  "asset": "영상_붉은볼에_스크럽_문지르는_여성.mp4",
   "mode": "full",
   "keep": true
  },
  {
-  "at": 47,
+  "at": 53,
   "offset": 0.0,
-  "asset": "영상_세안후_볼코_붉어져_눈감는_여성.mp4",
-  "mode": "full"
- },
- {
-  "at": 48,
-  "offset": 0.0,
-  "asset": "영상_붉은볼에_스크럽_문지르는_여성.mp4",
+  "asset": "영상_시술후_얼굴_붉어져_손거울보며_굳는_여성.mp4",
   "mode": "full",
   "keep": true
  },
@@ -137,6 +119,13 @@
   "keep": true
  },
  {
+  "at": 84,
+  "offset": 7.0,
+  "asset": "영상_깨끗한피부_창가_머그컵_미소_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 87,
   "offset": 2.0,
   "asset": "영상_병원_수납_카드_내고_영수증_받는_여성.mp4",
@@ -146,7 +135,7 @@
  {
   "at": 87,
   "offset": 7.5,
-  "asset": "영상_깨끗한피부_창가_머그컵_미소_여성.mp4",
+  "asset": "영상_지친_홍조_여성_소파.mp4",
   "mode": "full",
   "keep": true
  }

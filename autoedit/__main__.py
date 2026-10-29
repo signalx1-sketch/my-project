@@ -20,6 +20,9 @@ def load_dotenv(path: Path):
             os.environ.setdefault(k.strip(), v.strip().strip("'\""))
 
 
+SFX_CARDS = {"bubble", "checklist", "timer", "merge", "compare2", "graph", "warning"}
+
+
 def main():
     p = argparse.ArgumentParser(prog="autoedit", description="토크 영상 자동 편집기")
     p.add_argument("video", type=Path, help="원본 영상")
@@ -180,7 +183,9 @@ def main():
     # 전체 화면 자료는 화면 전환 자체가 효과라서 소리를 넣지 않고, 얼굴 옆 팝업에만 작게 넣는다
     # 파트 표지(초록 패널이 쓸고 지나감)에만 작은 휙 소리
     sfx = render.thin_sfx(sfx + [(p.start, "pop") for p in placements if p.mode == "side"]
-                          + [(p.start + 0.25, "whoosh") for p in placements if p.card == "part"], tl.duration)
+                          + [(p.start + 0.25, "whoosh") for p in placements if p.card == "part"]
+                          # 강조 카드(✕/✓ 말풍선, 체크리스트, 타이머, 합치기, 비교)에 작은 뽁 소리. 30초 간격으로 솎아진다
+                          + [(p.start + 0.45, "pop") for p in placements if p.card in SFX_CARDS], tl.duration)
     tabs = None
     if (plan.get("progress") or {}).get("labels"):
         wins = progress.windows(tl, plan, tl.duration)

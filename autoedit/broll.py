@@ -479,9 +479,12 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
     return sorted(bd.placed, key=lambda p: p.start)
 
 
+FILLER_NEAR = 25.0  # 채움용 자료는 계획한 문장에서 이 시간 안쪽에만 쓴다
+
+
 def _pick_filler(fillers: list[dict], by_id: dict, bd: _Board, sentences: list[Sentence], tl: Timeline,
                  t: float) -> Asset | None:
-    """출력 시각 t에 쓸 채움용 자료. 그 근처 문장에 붙은 후보를 먼저, 없으면 아무 후보나 (안 쓴 것, 최근과 다른 종류)."""
+    """출력 시각 t에 쓸 채움용 자료. 계획한 문장이 FILLER_NEAR초 안에 있는 후보만 (안 쓴 것, 최근과 다른 종류)."""
     def near(item) -> float:
         if not 0 <= item["at"] < len(sentences):
             return 1e9
@@ -490,6 +493,9 @@ def _pick_filler(fillers: list[dict], by_id: dict, bd: _Board, sentences: list[S
 
     for item in sorted(fillers, key=near):
         a = by_id.get(item.get("asset", ""))
+        # 계획한 문장에서 먼 곳에는 쓰지 않는다 (엉뚱한 말 위에 자료가 붙는다, 2026-10-29)
+        if near(item) > FILLER_NEAR:
+            break
         if a and a.id not in bd.used and not bd.recent_family(a) and (a.kind == "image" or a.duration >= FULL_MIN + 0.3):
             return a
     return None
