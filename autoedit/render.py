@@ -199,6 +199,27 @@ def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path)
         f.writeframes((np.clip(track, -1, 1) * 32767).astype(np.int16).tobytes())
 
 
+# 얼굴 뽀샤시 (2026-10-30): 피부색 영역에만 경계를 살리는 흐림(bilateral)과 약간의 밝기.
+# 피부 마스크는 1/4 크기로 계산해서 키운다 (geq가 느리다). BEAUTY_MIX는 보정 세기 (1이면 최대)
+BEAUTY_MIX = 0.8
+BEAUTY_VF = ("[0:v]format=yuv444p,split=3[o][s][m];"
+             "[s]bilateral=sigmaS=12:sigmaR=0.07:planes=7,eq=brightness=0.03:saturation=0.95[sm];"
+             "[m]scale=480:-2,geq=lum='{a}*between(cb(X\\,Y)\\,85\\,125)*between(cr(X\\,Y)\\,135\\,170)*gt(lum(X\\,Y)\\,70)'"
+             ":cb=128:cr=128,format=gray,scale=1920:1080,gblur=sigma=6[mk];"
+             "[sm][mk]alphamerge[sa];[o][sa]overlay=format=auto,format=yuv420p[v]")
+
+
+def beautify_source(src: Path, work: Path) -> Path:
+    """원본 얼굴 영상에 피부 보정을 입힌 사본 (작업 폴더에 한 번 만들어 두고 다시 쓴다)."""
+    out = work / f"beauty_{int(BEAUTY_MIX * 100)}.mp4"
+    if out.exists() and out.stat().st_mtime > src.stat().st_mtime:
+        return out
+    print("  얼굴 피부 보정 (뽀샤시) 중...")
+    run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-filter_complex", BEAUTY_VF.format(a=int(255 * BEAUTY_MIX)),
+         "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-c:a", "copy", str(out)])
+    return out
+
+
 def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]], out: Path,
            work: Path, bgm: Path | None = None, jobs: int = 4, placements: list | None = None,
            tabs: tuple | None = None):

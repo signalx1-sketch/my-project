@@ -1,5 +1,6 @@
 """타임라인과 단어 타임스탬프로 ASS 자막(자막, 챕터 라벨, 로고, 큰 글씨)을 만들고 효과음 위치를 정한다."""
 from dataclasses import dataclass
+import re
 
 from .cuts import _ends_sentence, is_filler
 from .timeline import Timeline
@@ -101,15 +102,47 @@ def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[Ou
             e = min(c.out_start + c.dur, c.to_out(w["e"]))
             out.append(OutWord(fix_text(w["w"], fixes), s, max(e, s + 0.05), c.kind))
     out.sort(key=lambda w: w.s)
+    return _fix_phrases(out, {k: v for k, v in fixes.items() if " " in k.strip()})
+
+
+def _fix_phrases(out: list[OutWord], fixes: dict[str, str]) -> list[OutWord]:
+    """여러 어절에 걸친 교정('간별 진단' → '감별 진단'). 단어 하나씩 고치면 띄어쓰기가 있는 표현은 안 맞는다."""
+    for wrong, right in fixes.items():
+        k = len(wrong.split())
+        i = 0
+        while i + k <= len(out):
+            win = out[i:i + k]
+            joined = " ".join(w.text for w in win)
+            if wrong in joined:
+                toks = joined.replace(wrong, right).split()
+                if len(toks) == k:
+                    for w, t in zip(win, toks):
+                        w.text = t
+                else:  # 어절 수가 달라지면 첫 단어에 몰아 넣고 나머지는 지운다 (시간은 끝 단어까지)
+                    win[0].text, win[0].e = " ".join(toks), win[-1].e
+                    del out[i + 1:i + k]
+            i += 1
     return out
 
 
 # 이 글자로 끝나는 어절 뒤에서 끊으면 의미 단위로 자연스럽다 (연결어미, 조사, 쉼표)
-GOOD_BREAK = (",", "고", "서", "면", "며", "데", "는", "은", "도", "를", "을", "에", "게", "지만", "니까", "요", "죠")
+# 뒤 말을 꾸미는 어절: 이 뒤에서 줄을 바꾸면 의미가 끊긴다 (2026-10-30)
+NO_BREAK_AFTER = {"이", "그", "저", "이런", "그런", "저런", "웬만한", "어떤", "모든", "몇", "한", "두", "세", "네", "더", "가장",
+                  "제일", "너무", "아주", "좀", "다른", "같은", "약", "총", "첫", "첫째", "둘째", "셋째", "다", "또", "안", "못", "잘",
+                  "딱", "이거", "그거", "저거", "짧은", "큰", "작은", "새", "엉뚱한", "강력한", "충분한"}
+# 앞말에 기대는 말: 이 말 앞에서 줄을 바꾸지 않는다 ('있는 / 거랑', '없다는 / 게', '바르다 / 보니')
+NO_BREAK_BEFORE = ("거", "것", "게", "데", "때", "수", "줄", "적", "분이", "분들", "순간", "같은", "같이", "때문", "싶", "보니", "입니다",
+                   "라는", "라고", "보다", "정도", "있는", "있다", "있어", "있죠", "있고", "있을", "있으면", "한다면", "하는")
+
+
+def _leans(word: str) -> bool:
+    """앞말에 기대는 말인가 (한 글자 의존명사는 짧은 어절일 때만: '수란트라'는 아님)."""
+    return any(word.startswith(x) and (len(x) > 1 or len(word) <= 3) for x in NO_BREAK_BEFORE)
+GOOD_BREAK = (",", "다", "라", "까", "고", "서", "면", "며", "데", "는", "은", "도", "를", "을", "에", "게", "지만", "니까", "요", "죠")
 
 
 def _chars(ws: list[OutWord]) -> int:
-    return sum(len(x.text) for x in ws)
+    return sum(len(x.text.replace(" ", "")) for x in ws)
 
 
 def _balanced(seg: list[OutWord], max_chars: int, max_words: int) -> list[list[OutWord]]:
@@ -132,10 +165,16 @@ def _balanced(seg: list[OutWord], max_chars: int, max_words: int) -> list[list[O
             if c > max_chars and j - i > 1 or j - i > max_words:
                 break
             cost = (c - target) ** 2
-            if c < 5 and n > 1:
+            if c < 4 and n > 1:
                 cost += 200  # 너무 짧은 줄
+            elif c < 6 and n > 1:
+                cost += 40
             if j < n and not seg[j - 1].text.rstrip().endswith(GOOD_BREAK):
-                cost += 25   # 의미 단위가 아닌 곳에서 끊음
+                cost += 60   # 의미 단위가 아닌 곳에서 끊음
+            if j < n and _leans(seg[j].text):
+                cost += 700
+            if j < n and (seg[j - 1].text.rstrip(",") in NO_BREAK_AFTER or re.fullmatch(r"\d+,", seg[j - 1].text)):
+                cost += 700  # 꾸미는 말 뒤('웬만한 / 중고차', '이 / 세 줄')에서 끊지 않는다
             cand = (best[i][0] + 1, best[i][1] + cost)
             if cand < best[j]:
                 best[j], back[j] = cand, i
@@ -152,7 +191,8 @@ def group_lines(ws: list[OutWord], max_chars: int = MAX_CHARS, max_words: int = 
     segs: list[list[OutWord]] = []
     cur: list[OutWord] = []
     for w in ws:
-        if cur and (w.s - cur[-1].e > LINE_GAP or w.section != cur[-1].section or _ends_sentence(cur[-1].text)):
+        glued = cur and (cur[-1].text.rstrip(",") in NO_BREAK_AFTER or _leans(w.text))
+        if cur and (w.section != cur[-1].section or not glued and (w.s - cur[-1].e > LINE_GAP or _ends_sentence(cur[-1].text))):
             segs.append(cur)
             cur = []
         cur.append(w)

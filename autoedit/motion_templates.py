@@ -53,7 +53,7 @@ def _draw(tl, sel: str, at: float, dur: float = 0.5, stagger: float = 0.0, n: in
 
 
 def _rise(tl, sel: str, at: float, n: int = 1, stagger: float = 0.12, dur: float = 0.6):
-    tl.add(sel, {"yPercent": 70}, {"yPercent": 0, "ease": "expo.out", "stagger": stagger, "_n": n}, at, dur)
+    tl.add(sel, {"opacity": 0, "y": 22, "filter": "blur(6px)"}, {"opacity": 1, "y": 0, "filter": "blur(0px)", "ease": "power3.out", "stagger": stagger, "_n": n}, at, dur)
 
 
 def build(spec: dict, paras: list[str], cid: str, tl) -> tuple[str, str]:

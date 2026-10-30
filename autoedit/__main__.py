@@ -50,6 +50,7 @@ def main():
     p.add_argument("--caption-style", choices=list(subtitles.CAPTION_STYLES), default=subtitles.DEFAULT_CAPTION_STYLE,
                    help="자막 모양: reference(더마허브 레퍼런스: Pretendard, 반투명 박스) 또는 aggro(어그로체 큰 글씨)")
     p.add_argument("--channel", default="더마허브", help="우상단 로고 글자")
+    p.add_argument("--no-beauty", action="store_true", help="얼굴 피부 보정(뽀샤시)을 하지 않는다")
     p.add_argument("--no-ai", action="store_true", help="Claude API를 쓰지 않는다")
     p.add_argument("--model", default="large-v3-turbo", help="음성 인식 모델")
     p.add_argument("--jobs", type=int, default=4, help="동시에 자를 클립 수")
@@ -197,6 +198,8 @@ def main():
         json.dumps([c.__dict__ for c in tl.clips], ensure_ascii=False, indent=0), encoding="utf-8")
 
     print("4/4 렌더링")
+    if not args.no_beauty:  # 얼굴 피부만 부드럽고 밝게 (눈·안경·머리카락 경계는 그대로)
+        src = render.beautify_source(src, work)
     render.render(src, tl, ass, sfx, out, work, bgm=args.bgm, jobs=args.jobs, placements=placements, tabs=tabs)
     print(f"완료: {out}  ({(time.time() - t0) / 60:.1f}분 걸림)")
 
