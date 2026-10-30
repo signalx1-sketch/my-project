@@ -20,7 +20,9 @@ def load_dotenv(path: Path):
             os.environ.setdefault(k.strip(), v.strip().strip("'\""))
 
 
-SFX_CARDS = {"bubble", "checklist", "timer", "merge", "compare2", "graph", "warning"}
+# 배경음악 대신 효과음을 조금 더 (2026-10-30): 그림 카드가 뜰 때 작은 뽁. 20초 간격으로 솎아진다
+SFX_CARDS = {"bubble", "timer", "compare2", "graph", "warning", "icons", "iconlist", "timeline", "segments",
+             "diverge", "tags", "icontext", "paper"}
 
 
 def main():
@@ -124,7 +126,10 @@ def main():
             cards = motion_hf.render(args.slides.resolve(), work, specs) or motion.render(args.slides.resolve(), work)
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}",
                                              cards[m["slide"].no][0] if cards and m["slide"].no in cards else m["slide"].path,
-                                             "slide", 0.0, m["slide"].text), "t": m["t"]} for m in matched]
+                                             "slide", 0.0, m["slide"].text), "t": m["t"],
+                        "card": card_kind.get(m["slide"].no, ""),
+                        # 계획에서 뺀 슬라이드(자료 영상으로 대신): 화면에 넣지 않고, 앞 카드가 그 자리까지 늘어나지 않게 경계로만 쓴다
+                        "stop": m["slide"].no in set(plan.get("slide_skip", []))} for m in matched]
         # 슬라이드에 적힌 용어로 자막 오타를 고친다 (직접 적은 fix가 우선)
         auto_fix = slides_mod.term_fixes(sl, words)
         plan["fix"] = {**auto_fix, **plan.get("fix", {})}
@@ -186,7 +191,9 @@ def main():
     sfx = render.thin_sfx(sfx + [(p.start, "pop") for p in placements if p.mode == "side"]
                           + [(p.start + 0.25, "whoosh") for p in placements if p.card == "part"]
                           # 강조 카드(✕/✓ 말풍선, 체크리스트, 타이머, 합치기, 비교)에 작은 뽁 소리. 30초 간격으로 솎아진다
-                          + [(p.start + 0.45, "pop") for p in placements if p.card in SFX_CARDS], tl.duration)
+                          + [(p.start + 0.45, "pop") for p in placements if p.card in SFX_CARDS]
+                          # 정리 카드(체크리스트, 합치기)는 결과가 뜰 때 작은 딩
+                          + [(p.start + 1.0, "ding") for p in placements if p.card in ("checklist", "merge")], tl.duration)
     tabs = None
     if (plan.get("progress") or {}).get("labels"):
         wins = progress.windows(tl, plan, tl.duration)

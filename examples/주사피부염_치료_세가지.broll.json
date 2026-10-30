@@ -28,6 +28,20 @@
   "keep": true
  },
  {
+  "at": 23,
+  "offset": 0.0,
+  "asset": "영상_이마_짚는_홍조_여성_두통.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 28,
+  "offset": 0.3,
+  "asset": "영상_대학병원_앞_처방전_연고_든_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 29,
   "offset": 0.0,
   "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
@@ -52,6 +66,27 @@
   "at": 36,
   "offset": 0.0,
   "asset": "영상_진료실_의사에게_또박또박_질문하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 37,
+  "offset": 0.0,
+  "asset": "영상_진료실_의사에게_또박또박_질문하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 42,
+  "offset": 0.0,
+  "asset": "영상_세안_브러시_홍조_여성_수건_머리.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 47,
+  "offset": 0.0,
+  "asset": "영상_피부과_레이저_시술_볼_홍조_클로즈업.mp4",
   "mode": "full",
   "keep": true
  },
@@ -87,6 +122,13 @@
   "at": 59,
   "offset": 0.0,
   "asset": "영상_약국_앞_처방전_보며_걱정하는_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 65,
+  "offset": 0.0,
+  "asset": "영상_연고_튜브_볼에_바르기_클로즈업_홍조.mp4",
   "mode": "full",
   "keep": true
  },

@@ -40,7 +40,7 @@ SFX_DIR = Path(__file__).resolve().parent.parent / "assets" / "sfx"
 SFX_FILE_GAIN = {"whoosh": 0.22, "pop": 0.25, "ding": 0.2}
 
 
-SFX_EVERY = 30.0      # 본편 효과음은 30초에 하나 꼴 (1분에 1~2개)
+SFX_EVERY = 20.0      # 본편 효과음은 20초에 하나 꼴 (1분에 2~3개, 2026-10-30: 배경음악 대신 조금 더)
 SFX_EDGE = 30.0       # 처음/끝 30초는 조금 더 자주 (인트로, 엔딩)
 SFX_EDGE_EVERY = 6.0
 SFX_PRIORITY = {"ding": 0, "whoosh": 1, "pop": 2}

@@ -328,13 +328,15 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         return _out_time(sentences[item["at"]].start + float(item.get("offset", 0)), tl)
 
     # 1. 슬라이드
-    st = sorted(((_out_time(x["t"], tl), x["asset"]) for x in slides), key=lambda x: (x[0] is None, x[0] or 0))
-    st = [(t, a) for t, a in st if t is not None and bd.start <= t < bd.end - SLIDE_MIN]
-    for k, (t, a) in enumerate(st):
+    st = sorted(((_out_time(x["t"], tl), x["asset"], x.get("card", ""), x.get("stop", False)) for x in slides),
+                key=lambda x: (x[0] is None, x[0] or 0))
+    st = [x for x in st if x[0] is not None and bd.start <= x[0] < bd.end - SLIDE_MIN]
+    for k, (t, a, cd, stop) in enumerate(st):
         nxt = st[k + 1][0] if k + 1 < len(st) else bd.end
         dur = min(SLIDE_MAX, nxt - t, bd.end - t)
-        if dur >= SLIDE_MIN:
+        if dur >= SLIDE_MIN and not stop:
             bd.add(a, "slide", t, dur)
+            bd.placed[-1].card = cd
 
     # 챕터 시작은 얼굴로 (큰 챕터 제목이 뜬다). 슬라이드가 이미 덮은 챕터는 제외
     keep_face = [(c, c + AVOID_AFTER_CHAPTER) for c in bd.chapters if bd.free_at(c)]
@@ -472,7 +474,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 fixed = True
                 continue
             # 카드만 이어지면 가운데쯤 카드 하나를 FACE_BREAK초 줄여 그 뒤에 얼굴이 나오게 한다
-            cards = [p for p in r[:-1] if p.mode == "slide" and p.dur >= SLIDE_MIN + FACE_BREAK and p.start - r0 >= 3]
+            cards = [p for p in r[:-1] if p.mode == "slide" and p.card != "paper" and p.dur >= SLIDE_MIN + FACE_BREAK and p.start - r0 >= 3]
             if cards:
                 c = min(cards, key=lambda p: abs(p.start + p.dur - mid))
                 c.dur = round(c.dur - FACE_BREAK, 4)
@@ -534,6 +536,10 @@ def enforce_min_show(placed: list[Placement], start: float, end: float) -> list[
             if _can_hold(p, p.dur + grow):
                 p.dur = round(p.dur + grow, 4)
                 continue
+        if p.mode == "slide" and p.card not in ("part", "paper") and nxt_seg and nxt_seg[0] is not None \
+                and nxt_seg[0].mode == "slide":
+            placed.remove(p)  # 카드가 줄줄이 붙으면 뒤 카드를 늦추지 않고 짧은 카드를 뺀다 (말과 카드가 어긋나지 않게, 2026-10-30)
+            continue
         if nxt_seg and nxt_seg[0] is not None and nxt_seg[0].dur - need >= MIN_SHOW:  # 뒤가 화면: 뒤를 조금 늦춘다
             q = nxt_seg[0]
             q.start, q.dur = round(q.start + need, 4), round(q.dur - need, 4)
