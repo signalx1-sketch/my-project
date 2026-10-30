@@ -12,7 +12,7 @@ CAPTION_STYLES = {
     "reference": {
         "font": "Pretendard",  # 굵기는 Bold 칸(-1)으로 고른다 (libass는 'Pretendard Bold'라는 이름으로 못 찾는다)
         "line": "52,&H00FFFFFF,&H00FFFFFF,&H80000000,&H80000000,-1,0,0,0,100,100,0,0,3,12,0,2,80,80,54,1",
-        "max_chars": 22, "max_words": 7, "highlight": False,
+        "max_chars": 22, "max_words": 9, "highlight": False,
     },
     # 예전 스타일: 어그로체 M 큰 글씨 + 검은 테두리, 핵심 단어 노란색
     "aggro": {
@@ -24,6 +24,7 @@ CAPTION_STYLES = {
 DEFAULT_CAPTION_STYLE = "reference"
 MAX_CHARS = 14      # 한 줄 최대 글자 수 (공백 제외) - 스타일마다 바뀐다
 MAX_WORDS = 6       # 한 줄 최대 어절 수
+LINE_COST = 160     # 자막 줄 하나를 더 쓰는 비용 (나쁜 자리에서 끊는 비용과 견준다)
 LINE_GAP = 0.5      # 출력 시간 기준으로 이만큼 비면 줄을 끊는다
 POP_MIN_GAP = 20.0  # 강조 효과음 최소 간격 (자주 나면 거슬린다)
 CTA_SEC = 6.0       # 마지막 구독 안내 표시 시간
@@ -141,6 +142,71 @@ def _leans(word: str) -> bool:
 GOOD_BREAK = (",", "다", "라", "까", "고", "서", "면", "며", "데", "는", "은", "도", "를", "을", "에", "게", "지만", "니까", "요", "죠")
 
 
+# 형태소 분석(Kiwi)으로 줄을 끊어도 되는 자리를 정한다 (2026-10-30). 없으면 위 낱말 목록 규칙만 쓴다
+_KIWI = None
+
+
+def _kiwi():
+    global _KIWI
+    if _KIWI is None:
+        try:
+            import os
+            from kiwipiepy import Kiwi
+            path = os.environ.get("KIWI_MODEL") or os.path.expanduser("~/tools/kiwi_model")
+            _KIWI = Kiwi(model_path=path) if os.path.isdir(path) else Kiwi()
+        except Exception:
+            _KIWI = False
+    return _KIWI
+
+
+def _pos_gaps(texts: list[str]) -> list[int] | None:
+    """어절 사이마다 끊기 비용 (len(texts)-1개). 꾸미는 어미·관형사 뒤, 의존명사·보조용언 앞, 명사+명사 사이는 비싸다."""
+    k = _kiwi()
+    if not k or len(texts) < 2:
+        return None
+    line = " ".join(texts)
+    starts, pos = [], 0
+    for t in texts:
+        starts.append(pos)
+        pos += len(t) + 1
+    try:
+        toks = k.tokenize(line)
+    except Exception:
+        return None
+    per = [[] for _ in texts]
+    for tk in toks:
+        i = max(j for j, st in enumerate(starts) if st <= tk.start)
+        per[i].append(tk.tag)
+    gaps = []
+    for i in range(len(texts) - 1):
+        a, b = per[i], per[i + 1]
+        if not a or not b:
+            gaps.append(60)
+            continue
+        last, first = a[-1], b[0]
+        if last in ("ETM", "MM") or first in ("NNB", "VX") or last == "XPN":
+            gaps.append(700)
+        elif last.startswith("NN") and first in ("VV", "VA"):
+            gaps.append(150)  # 조사 없는 명사 + 동사 ('돈 / 날리는')
+        elif last.startswith("NN") and first.startswith("NN"):
+            gaps.append(300)  # 명사 + 명사 ('혈관 / 확장과')
+        elif last in ("EF", "SF"):
+            gaps.append(-30)  # 말이 끝나는 곳 ('가라 / 홍조와')
+        elif last in ("EC", "SP"):
+            gaps.append(-10)  # 연결어미·쉼표 뒤가 가장 자연스럽다
+        elif last in ("JKO", "JC"):
+            gaps.append(120)  # 목적어 뒤('돈 / 날리는'), 이음 조사 뒤('주사와 / 홍조')
+        elif last in ("JKS", "JKC"):
+            gaps.append(50)   # 주어 뒤('효과가 / 없거나')
+        elif last.startswith("J"):
+            gaps.append(20)
+        elif last == "MAG":
+            gaps.append(120)  # 부사 뒤 ('크게 / 신경 쓰지')
+        else:
+            gaps.append(60)
+    return gaps
+
+
 def _chars(ws: list[OutWord]) -> int:
     return sum(len(x.text.replace(" ", "")) for x in ws)
 
@@ -155,6 +221,7 @@ def _balanced(seg: list[OutWord], max_chars: int, max_words: int) -> list[list[O
     k = max(-(-total // max_chars), -(-n // max_words))
     target = total / k
     INF = float("inf")
+    gaps = _pos_gaps([w.text for w in seg])
     # best[j]: 앞에서 j어절까지 줄로 나눴을 때 (줄 수, 비용)
     best: list[tuple[float, float]] = [(0, 0.0)] + [(INF, INF)] * n
     back = [0] * (n + 1)
@@ -164,19 +231,22 @@ def _balanced(seg: list[OutWord], max_chars: int, max_words: int) -> list[list[O
             c = _chars(line)
             if c > max_chars and j - i > 1 or j - i > max_words:
                 break
-            cost = (c - target) ** 2
+            cost = 0.5 * (c - target) ** 2
             if c < 4 and n > 1:
                 cost += 200  # 너무 짧은 줄
             elif c < 6 and n > 1:
                 cost += 40
-            if j < n and not seg[j - 1].text.rstrip().endswith(GOOD_BREAK):
+            if j < n and gaps is not None:
+                cost += gaps[j - 1]
+            elif j < n and not seg[j - 1].text.rstrip().endswith(GOOD_BREAK):
                 cost += 60   # 의미 단위가 아닌 곳에서 끊음
             if j < n and _leans(seg[j].text):
                 cost += 700
             if j < n and (seg[j - 1].text.rstrip(",") in NO_BREAK_AFTER or re.fullmatch(r"\d+,", seg[j - 1].text)):
                 cost += 700  # 꾸미는 말 뒤('웬만한 / 중고차', '이 / 세 줄')에서 끊지 않는다
             cand = (best[i][0] + 1, best[i][1] + cost)
-            if cand < best[j]:
+            # 줄 수가 하나 늘더라도 나쁜 자리에서 끊는 것보다 나으면 그쪽을 고른다 (줄 하나 = LINE_COST)
+            if cand[1] + LINE_COST * cand[0] < best[j][1] + LINE_COST * best[j][0]:
                 best[j], back[j] = cand, i
     out, j = [], n
     while j > 0:

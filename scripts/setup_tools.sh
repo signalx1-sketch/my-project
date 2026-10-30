@@ -61,4 +61,13 @@ if [ ! -d "$HOME/.claude/skills/real-sfx" ]; then
   rm -rf "$tmp"
 fi
 
+if [ ! -f "$TOOLS/kiwi_model/sj.morph" ]; then
+  step "Kiwi 형태소 분석기 (자막 줄바꿈)"
+  tmp=$(mktemp -d)
+  (cd "$tmp" && pip download -q kiwipiepy --no-deps --only-binary :all: -d . && pip install -q --no-deps ./kiwipiepy-*.whl \
+    && pip download -q "kiwipiepy_model>=0.24,<0.25" --no-deps --no-binary :all: -d . && tar xzf kiwipiepy_model-*.tar.gz \
+    && mkdir -p "$TOOLS/kiwi_model" && cp -r kiwipiepy_model-*/kiwipiepy_model/* "$TOOLS/kiwi_model/") >&2 || step "Kiwi 설치 실패 (줄바꿈은 낱말 규칙만)"
+  rm -rf "$tmp"
+fi
+
 step "끝"
