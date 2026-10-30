@@ -30,13 +30,16 @@ SLIDE_MIN = 1.5
 SIDE_SEC = 3.0       # 팝업 길이
 SIDE_MIN = 2.2
 SIDE_GAP = 12.0      # 팝업 사이 최소 간격
-FACE_KEEP = 1.5      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
+FACE_KEEP = 3.0      # 자료 화면 사이에 얼굴을 보여 줄 때는 최소 이만큼
 FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
-FACE_SHORT = 2.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
+FACE_SHORT = 3.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
 MAX_NO_FACE = 30.0
-FACE_BREAK = 2.5     # 그때 끼우는 얼굴 길이   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
+FACE_BREAK = 3.0     # 그때 끼우는 얼굴 길이   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
+MIN_SHOW = 3.0       # 얼굴·자료·카드 모두 한 화면은 최소 이만큼 (2026-10-30: 너무 짧게 지나가는 화면 없게)
+INTRO_FACE = 3.5     # 영상 맨 앞은 얼굴로 최소 이만큼 시작한다
+HOLD_MAX = 9.0       # 짧은 화면을 메우려고 카드를 늘릴 때 최대 길이
 AVOID_AFTER_CHAPTER = 1.8  # 챕터 제목이 크게 뜨는 동안은 얼굴로 둔다
 
 
@@ -476,7 +479,72 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 fixed = True
         if not fixed:
             break
-    return sorted(bd.placed, key=lambda p: p.start)
+    placed = [p for p in bd.placed if p.mode == "side"] + enforce_min_show(
+        [p for p in bd.placed if p.mode != "side"], bd.start, bd.end)
+    return sorted(placed, key=lambda p: p.start)
+
+
+def _can_hold(p: Placement, dur: float) -> bool:
+    if p.mode == "slide" or p.asset.kind == "image":
+        return dur <= HOLD_MAX
+    return dur <= p.asset.duration - 0.2
+
+
+def enforce_min_show(placed: list[Placement], start: float, end: float) -> list[Placement]:
+    """화면 하나하나(얼굴 구간 포함)가 MIN_SHOW초보다 짧지 않게 고친다. 맨 앞은 얼굴로 INTRO_FACE초 시작한다."""
+    placed = sorted(placed, key=lambda p: p.start)
+    # 맨 앞: 얼굴 먼저. 그 안에서 끝나는 화면은 빼고, 걸치는 화면은 뒤로 민다
+    head = start + INTRO_FACE
+    for p in list(placed):
+        if p.start < head:
+            if p.start + p.dur < head + MIN_SHOW:
+                placed.remove(p)
+            else:
+                p.dur, p.start = round(p.start + p.dur - head, 4), head
+    for _ in range(500):
+        segs, t = [], start
+        for p in placed:
+            if p.start > t + 0.05:
+                segs.append((None, t, p.start))
+            segs.append((p, p.start, p.start + p.dur))
+            t = p.start + p.dur
+        if end > t + 0.05:
+            segs.append((None, t, end))
+        bad = next((k for k, (p, a, b) in enumerate(segs) if b - a < MIN_SHOW - 1e-3 and not (p is None and k == len(segs) - 1)), None)
+        if bad is None:
+            break
+        p, a, b = segs[bad]
+        prev = segs[bad - 1][0] if bad > 0 else None
+        nxt_seg = segs[bad + 1] if bad + 1 < len(segs) else None
+        if p is None:  # 짧은 얼굴: 앞 화면을 늘려 덮거나, 뒤 화면을 당긴다
+            if prev and _can_hold(prev, prev.dur + (b - a)):
+                prev.dur = round(b - prev.start, 4)
+            elif nxt_seg and nxt_seg[0] and _can_hold(nxt_seg[0], nxt_seg[0].dur + (b - a)):
+                q = nxt_seg[0]
+                q.dur, q.start = round(q.start + q.dur - a, 4), a
+            elif prev:
+                prev.dur = round(b - prev.start, 4)  # 길이를 넘더라도 마지막 프레임을 잠깐 잡아 둔다
+            else:
+                break
+            continue
+        need = MIN_SHOW - (b - a)
+        if nxt_seg and nxt_seg[0] is None:  # 뒤가 얼굴: 그만큼 늘리고, 남는 얼굴이 짧으면 통째로 덮는다
+            f = nxt_seg[2] - nxt_seg[1]
+            grow = f if f - need < MIN_SHOW else need
+            if _can_hold(p, p.dur + grow):
+                p.dur = round(p.dur + grow, 4)
+                continue
+        if nxt_seg and nxt_seg[0] is not None and nxt_seg[0].dur - need >= MIN_SHOW:  # 뒤가 화면: 뒤를 조금 늦춘다
+            q = nxt_seg[0]
+            q.start, q.dur = round(q.start + need, 4), round(q.dur - need, 4)
+            p.dur = round(p.dur + need, 4)
+            continue
+        if prev is not None and prev.mode == p.mode == "slide" and _can_hold(prev, prev.dur + p.dur):
+            prev.dur = round(prev.dur + p.dur, 4)  # 짧은 카드는 앞 카드에 붙인다 (빼는 대신)
+            placed.remove(p)
+            continue
+        placed.remove(p)  # 늘릴 수 없는 짧은 화면은 뺀다
+    return placed
 
 
 FILLER_NEAR = 25.0  # 채움용 자료는 계획한 문장에서 이 시간 안쪽에만 쓴다
