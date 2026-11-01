@@ -278,5 +278,5 @@ def render(src: Path, tl: Timeline, ass: str, sfx_events: list[tuple[float, str]
     print("  자막과 소리를 입혀서 최종 렌더링 중...")
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", f"{vf};{audio}",
          "-map", "[vout]", "-map", "[aout]", "-t", f"{tl.duration}",
-         "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
+         "-c:v", "libx264", "-preset", "slow", "-crf", "16", "-pix_fmt", "yuv420p",
          "-c:a", "aac", "-b:a", "192k", "-ar", str(SR), "-movflags", "+faststart", str(out)])
