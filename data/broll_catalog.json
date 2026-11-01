@@ -2741,5 +2741,79 @@
   "mood": "좌절",
   "dur": 10.04,
   "exclude": false
+ },
+ {
+  "file": "영상_밤책상_병원영수증_한약봉지_한숨쉬는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1KLsYM54feoPXhm1lGe5zUHqq3p9r1WSd",
+  "desc": "밤 책상에 병원 영수증과 한약 파우치가 쌓여 있고 영수증을 넘겨 보다 한숨 (여러 병원·한약 다녀봄)",
+  "tags": [
+   "병원 여러 곳",
+   "한약",
+   "영수증",
+   "돈"
+  ],
+  "mood": "지침",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_약국봉투_털어_비슷한_연고들_늘어놓는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1LB98H8xTzxhVFqzseK7HPSNSomIYcLOR",
+  "desc": "약국 봉투를 털어 비슷한 연고 튜브를 늘어놓고 번갈아 보며 갸웃 (처방이 다 비슷함)",
+  "tags": [
+   "처방",
+   "연고",
+   "항생제",
+   "스테로이드"
+  ],
+  "mood": "의아",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_소파_시술영수증_읽고_이마짚는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1lqefSTim5LgCMAvDH2GiwTyxedE_qdz_",
+  "desc": "소파에서 긴 시술 영수증을 읽다 무릎에 내려놓고 이마를 짚음 (시술에 돈 씀)",
+  "tags": [
+   "시술",
+   "돈",
+   "영수증",
+   "후회"
+  ],
+  "mood": "후회",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_연고_바르고_가라앉았다_다시_붉어지는_여성.mp4",
+  "source": "drive",
+  "drive_id": "11CB2Aka55ovg9yReso0F0iX8d7Dv5HJe",
+  "desc": "욕실 거울 앞에서 연고를 바르고 안도했다가 서랍에 넣은 뒤 다시 붉어져 표정이 굳음 (스테로이드 반동)",
+  "tags": [
+   "스테로이드",
+   "반동",
+   "연고",
+   "악화"
+  ],
+  "mood": "불안",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_창가거울_볼_만지며_안도_미소_여성.mp4",
+  "source": "drive",
+  "drive_id": "1jeS-n2g2jlyThn91fB0oLmLWgk60jXYw",
+  "desc": "아침 창가 거울 앞에서 볼을 만지다 안도의 미소 (회복, 희망)",
+  "tags": [
+   "회복",
+   "희망",
+   "거울"
+  ],
+  "mood": "희망",
+  "dur": 10.04,
+  "exclude": false
  }
 ]
