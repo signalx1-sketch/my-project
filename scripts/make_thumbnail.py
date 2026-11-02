@@ -8,6 +8,7 @@
           "bg_blur": 5, "bg_x": 200}
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -80,7 +81,10 @@ def main():
     bg = bg.resize((int(bg.width * H / bg.height), H))
     x0 = cfg.get("bg_x", 0)
     bg = bg.crop((x0, 0, x0 + 760, H)).filter(ImageFilter.GaussianBlur(cfg.get("bg_blur", 5)))
-    bg = Image.blend(ImageEnhance.Brightness(bg).enhance(1.45), Image.new("RGB", bg.size, "white"), 0.45)
+    if cfg.get("bg_wash", True):  # 흐리고 하얗게 (글자가 검은 테두리 없이도 읽히게)
+        bg = Image.blend(ImageEnhance.Brightness(bg).enhance(1.45), Image.new("RGB", bg.size, "white"), 0.45)
+    else:  # 장면을 살린다 (두꺼운 검은 테두리 글자와 함께, 2026-11-02 고성과 썸네일 참고)
+        bg = ImageEnhance.Brightness(bg).enhance(cfg.get("bg_bright", 0.9))
     canvas.paste(bg, (0, 0) if text_left else (W - 760, 0))
     # 원장님 (배경 쪽 가장자리를 흰 배경으로 부드럽게)
     doc = Image.open(doc_p).convert("RGB").crop(tuple(cfg.get("doc_crop", [660, 260, 1370, 1060]))).resize((640, 720))
@@ -115,13 +119,32 @@ def main():
         big = cfg["big"]  # [(문구, 색, 테두리색)] 줄마다
         size = cfg.get("big_size", 112)
         lh = int(size * 1.05)
-        y = max(y + 14, H - 24 - lh * len(big))
+        total = sum(int((r[3] if len(r) > 3 else {}).get("size", size) * 1.05) for r in big)
+        y = max(y + 14, H - cfg.get("bottom", 24) - total)
+        sw = cfg.get("big_stroke", 13)
         for row in big:
             s, color = row[0], row[1]
             stroke = row[2] if len(row) > 2 else "black"
-            f = fit(d, s, size, col - 60)
-            text((40, y), s, f, color, stroke, 13)
-            y += lh
+            opt = row[3] if len(row) > 3 else {}
+            f = fit(d, s, opt.get("size", size), col - 60)
+            fs = f.size
+            if opt.get("banner"):  # 글자 뒤 비스듬한 띠
+                n = opt.get("banner_lines", 1)  # 여러 줄을 한 띠로 (다음 줄 글자 폭까지 덮는다)
+                w = max(d.textlength(r[0], font=fit(d, r[0], size, col - 60)) for r in big[big.index(row):big.index(row) + n]) + 70
+                top, bot = y + fs * 0.08, y + fs * 0.07 + int(size * 1.05) * (n - 1) + fs * 1.05
+                d.polygon([(14, top + 10), (14 + w, top - 6), (24 + w, bot - 8), (8, bot + 6)], fill=opt["banner"])
+            ns = opt.get("num_scale", 1.0)
+            if ns != 1.0:  # 숫자만 크게 (밑줄 맞춤)
+                x, base = 40, y + fs
+                for part in re.split(r"(\d+)", s):
+                    if not part:
+                        continue
+                    pf = ImageFont.truetype(f.path, int(fs * ns)) if part.isdigit() else f
+                    text((x, base), part, pf, opt.get("num_color", color) if part.isdigit() else color, stroke, sw, "ls")
+                    x += d.textlength(part, font=pf)
+            else:
+                text((40, y), s, f, color, stroke, sw)
+            y += int(opt.get("size", size) * 1.05)
     else:
         kf = ImageFont.truetype(AGGRO, 66)
         for i, s in enumerate(cfg["keyword"]):
