@@ -93,6 +93,16 @@ def main():
         doc = even_tone(doc, cfg["spots"])
     if cfg.get("beauty"):
         doc = beautify(doc, cfg.get("beauty_strength", 1.0))
+    if cfg.get("doc_bg") and cfg.get("doc_mask"):  # 원장님만 오려서 뒤에 관련 장면을 은은하게 (2026-11-02)
+        box = tuple(cfg.get("doc_crop", [660, 260, 1370, 1060]))
+        pm = Image.open(cfg["doc_mask"]).convert("L").crop(box).resize((640, 720))
+        sc = Image.open(cfg["doc_bg"]).convert("RGB")
+        sc = sc.resize((int(sc.width * 720 / sc.height), 720))
+        bx = cfg.get("doc_bg_x", (sc.width - 640) // 2)
+        sc = sc.crop((bx, 0, bx + 640, 720)).filter(ImageFilter.GaussianBlur(cfg.get("doc_bg_blur", 6)))
+        sc = Image.blend(ImageEnhance.Brightness(sc).enhance(1.1), Image.new("RGB", sc.size, "white"), cfg.get("doc_bg_wash", 0.35))
+        sc.paste(doc, (0, 0), pm)
+        doc = sc
     mask = Image.new("L", doc.size, 255)
     md = ImageDraw.Draw(mask)
     for i in range(130):
