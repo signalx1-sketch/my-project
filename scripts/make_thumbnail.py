@@ -119,7 +119,7 @@ def main():
         big = cfg["big"]  # [(문구, 색, 테두리색)] 줄마다
         size = cfg.get("big_size", 112)
         lh = int(size * 1.05)
-        total = sum(int((r[3] if len(r) > 3 else {}).get("size", size) * 1.05) for r in big)
+        total = sum(int((r[3] if len(r) > 3 else {}).get("size", size) * cfg.get("line_gap", 1.05)) for r in big)
         y = max(y + 14, H - cfg.get("bottom", 24) - total)
         sw = cfg.get("big_stroke", 13)
         for row in big:
@@ -131,7 +131,7 @@ def main():
             if opt.get("banner"):  # 글자 뒤 비스듬한 띠
                 n = opt.get("banner_lines", 1)  # 여러 줄을 한 띠로 (다음 줄 글자 폭까지 덮는다)
                 w = max(d.textlength(r[0], font=fit(d, r[0], size, col - 60)) for r in big[big.index(row):big.index(row) + n]) + 70
-                top, bot = y + fs * 0.08, y + fs * 0.07 + int(size * 1.05) * (n - 1) + fs * 1.05
+                top, bot = y + fs * 0.08, y + fs * 0.07 + int(size * cfg.get("line_gap", 1.05)) * (n - 1) + fs * 1.05
                 d.polygon([(14, top + 10), (14 + w, top - 6), (24 + w, bot - 8), (8, bot + 6)], fill=opt["banner"])
             ns = opt.get("num_scale", 1.0)
             if ns != 1.0:  # 숫자만 크게 (밑줄 맞춤)
@@ -144,7 +144,7 @@ def main():
                     x += d.textlength(part, font=pf)
             else:
                 text((40, y), s, f, color, stroke, sw)
-            y += int(opt.get("size", size) * 1.05)
+            y += int(opt.get("size", size) * cfg.get("line_gap", 1.05))
     else:
         kf = ImageFont.truetype(AGGRO, 66)
         for i, s in enumerate(cfg["keyword"]):
