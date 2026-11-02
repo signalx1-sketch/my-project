@@ -71,9 +71,91 @@ def even_tone(img: Image.Image, regions: list) -> Image.Image:
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
 
 
+def before_after(doc_p, out, cfg):
+    """비포·애프터 얼굴 근접샷으로 화면을 꽉 채우고, 원장님은 오려서 오른쪽, 글자는 아래 두 줄 (2026-11-02)."""
+    import numpy as np
+    def cover(src):  # 빈 곳은 애프터 장면을 흐리게 깔아 메운다
+        im = Image.open(src).convert("RGB")
+        sc = max(W / im.width, H / im.height)
+        im = im.resize((int(im.width * sc), int(im.height * sc))).crop((0, 0, W, H))
+        return ImageEnhance.Brightness(im.filter(ImageFilter.GaussianBlur(20))).enhance(0.9)
+
+    canvas = cover(cfg["after"]["src"])
+
+    def panel(src, box, w, h):
+        im = Image.open(src).convert("RGB").crop(tuple(box))
+        sc = max(w / im.width, h / im.height)
+        im = im.resize((int(im.width * sc), int(im.height * sc)), Image.LANCZOS)
+        im = im.crop(((im.width - w) // 2, 0, (im.width - w) // 2 + w, h))
+        return im.filter(ImageFilter.UnsharpMask(2, 60, 2))
+
+    b, a = cfg["before"], cfg["after"]
+    bw, aw, ax = cfg.get("before_w", 560), cfg.get("after_w", 560), cfg.get("after_x", 480)
+    canvas.paste(panel(b["src"], b["box"], bw, H), (0, 0))
+    ap = panel(a["src"], a["box"], aw, H)
+    if a.get("flip"):  # 얼굴이 원장님 쪽을 보면 가려지므로 좌우를 뒤집어 비포 쪽을 보게
+        ap = ap.transpose(Image.FLIP_LEFT_RIGHT)
+    fade = Image.new("L", ap.size, 255)
+    fd = ImageDraw.Draw(fade)
+    for i in range(80):  # 양쪽 가장자리를 부드럽게 (비포 쪽, 오른쪽 끝)
+        fd.line([(i, 0), (i, H)], fill=int(255 * i / 80))
+        fd.line([(aw - 1 - i, 0), (aw - 1 - i, H)], fill=int(255 * i / 80))
+    canvas.paste(ap, (ax, 0), fade)
+    d = ImageDraw.Draw(canvas)
+    # 빨간 >> 화살표
+    cx, cy, s = cfg.get("arrow", [ax + 10, 250, 62])
+    for k in range(2):
+        x = cx + k * s * 0.75
+        d.polygon([(x - s * 0.5, cy - s), (x - s * 0.1, cy - s), (x + s * 0.5, cy), (x - s * 0.1, cy + s),
+                   (x - s * 0.5, cy + s), (x + s * 0.1, cy)], fill="#E8202A", outline="black", width=5)
+    # 원장님 (오려서 오른쪽 아래)
+    doc = Image.open(doc_p).convert("RGB")
+    if cfg.get("beauty"):
+        doc = beautify(doc, cfg.get("beauty_strength", 1.0))
+    m = Image.open(cfg["doc_mask"]).convert("L")
+    box = tuple(cfg.get("doc_box", [640, 320, 1500, 1080]))
+    doc, m = doc.crop(box), m.crop(box)
+    dh = cfg.get("doc_h", 560)
+    sc = dh / doc.height
+    doc = ImageEnhance.Brightness(doc.resize((int(doc.width * sc), dh), Image.LANCZOS)).enhance(1.06)
+    m = m.resize(doc.size, Image.LANCZOS)
+    canvas.paste(doc, (W - doc.width + cfg.get("doc_dx", 40), H - dh), m)
+    # 아래쪽 어둡게 (글자 받침)
+    shade = Image.new("L", (W, H), 0)
+    sd = ImageDraw.Draw(shade)
+    top = H - cfg.get("shade_h", 300)
+    for y in range(top, H):
+        sd.line([(0, y), (W, y)], fill=int(200 * (y - top) / (H - top)))
+    canvas = Image.composite(Image.new("RGB", (W, H), "black"), canvas, shade)
+    d = ImageDraw.Draw(canvas)
+    size, sw = cfg.get("big_size", 120), cfg.get("big_stroke", 14)
+    y = H - cfg.get("bottom", 22) - int(size * cfg.get("line_gap", 1.02)) * len(cfg["big"])
+    for row in cfg["big"]:
+        txt, color = row[0], row[1]
+        opt = row[3] if len(row) > 3 else {}
+        f = fit(d, txt, size, W - 60)
+        fs = f.size
+        if opt.get("banner"):
+            w = d.textlength(txt, font=f) + 60
+            d.polygon([(14, y + fs * 0.1 + 8), (14 + w, y + fs * 0.1 - 4), (22 + w, y + fs * 1.1 - 6), (8, y + fs * 1.1 + 6)],
+                      fill=opt["banner"])
+        x, base = 36, y + fs
+        for part in re.split(r"(\d+)", txt):
+            if not part:
+                continue
+            big_num = part.isdigit() and opt.get("num_scale", 1.0) != 1.0
+            pf = ImageFont.truetype(f.path, int(fs * opt["num_scale"])) if big_num else f
+            d.text((x, base), part, font=pf, fill=color, stroke_width=sw, stroke_fill="black", anchor="ls")
+            x += d.textlength(part, font=pf)
+        y += int(size * cfg.get("line_gap", 1.02))
+    canvas.save(out, quality=95)
+
+
 def main():
     doc_p, bg_p, out, cfg_p = sys.argv[1:5]
     cfg = json.loads(Path(cfg_p).read_text(encoding="utf-8"))
+    if cfg.get("layout") == "before_after":  # 배경 이미지 인자는 쓰지 않는다
+        return before_after(doc_p, out, cfg)
     text_left = cfg.get("layout") == "text_left"  # 원장님 오른쪽, 글자는 전부 왼쪽 단에
     canvas = Image.new("RGB", (W, H), "white")
     # 흐리고 밝게 만든 관련 장면 (원장님 반대편)
