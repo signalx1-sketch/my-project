@@ -78,7 +78,7 @@ def before_after(doc_p, out, cfg):
         im = Image.open(src).convert("RGB")
         sc = max(W / im.width, H / im.height)
         im = im.resize((int(im.width * sc), int(im.height * sc))).crop((0, 0, W, H))
-        return ImageEnhance.Brightness(im.filter(ImageFilter.GaussianBlur(20))).enhance(0.9)
+        return ImageEnhance.Brightness(im.filter(ImageFilter.GaussianBlur(20))).enhance(cfg.get("fill_bright", 0.9))
 
     canvas = cover(cfg["after"]["src"])
 
@@ -87,7 +87,11 @@ def before_after(doc_p, out, cfg):
         sc = max(w / im.width, h / im.height)
         im = im.resize((int(im.width * sc), int(im.height * sc)), Image.LANCZOS)
         im = im.crop(((im.width - w) // 2, 0, (im.width - w) // 2 + w, h))
-        return im.filter(ImageFilter.UnsharpMask(2, 60, 2))
+        im = im.filter(ImageFilter.UnsharpMask(2, 60, 2))
+        if cfg.get("panel_lift"):  # 어두운 배경(벽)만 들어 올린다: 감마 보정
+            g = cfg["panel_lift"]
+            im = im.point(lambda v: int(255 * (v / 255) ** g))
+        return im
 
     b, a = cfg["before"], cfg["after"]
     bw, aw, ax = cfg.get("before_w", 560), cfg.get("after_w", 560), cfg.get("after_x", 480)
@@ -125,7 +129,7 @@ def before_after(doc_p, out, cfg):
     sd = ImageDraw.Draw(shade)
     top = H - cfg.get("shade_h", 300)
     for y in range(top, H):
-        sd.line([(0, y), (W, y)], fill=int(200 * (y - top) / (H - top)))
+        sd.line([(0, y), (W, y)], fill=int(cfg.get("shade", 200) * (y - top) / (H - top)))
     canvas = Image.composite(Image.new("RGB", (W, H), "black"), canvas, shade)
     d = ImageDraw.Draw(canvas)
     size, sw = cfg.get("big_size", 120), cfg.get("big_stroke", 14)
