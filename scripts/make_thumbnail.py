@@ -87,7 +87,7 @@ def before_after(doc_p, out, cfg):
         sc = max(w / im.width, h / im.height)
         im = im.resize((int(im.width * sc), int(im.height * sc)), Image.LANCZOS)
         im = im.crop(((im.width - w) // 2, 0, (im.width - w) // 2 + w, h))
-        im = im.filter(ImageFilter.UnsharpMask(2, 60, 2))
+        im = im.filter(ImageFilter.UnsharpMask(2, cfg.get("panel_sharpen", 60), 2))
         if cfg.get("panel_lift"):  # 어두운 배경(벽)만 들어 올린다: 감마 보정
             g = cfg["panel_lift"]
             im = im.point(lambda v: int(255 * (v / 255) ** g))
