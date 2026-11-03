@@ -1,0 +1,769 @@
+{
+ "1": {
+  "kind": "icontext",
+  "big": "보습",
+  "text": [
+   "진작",
+   "이렇게 할걸"
+  ]
+ },
+ "2": {
+  "kind": "icontext",
+  "icon": "eye",
+  "text": [
+   "끝까지 보면",
+   "똑같은 말이",
+   "나옵니다"
+  ]
+ },
+ "3": {
+  "kind": "icontext",
+  "icon": "droplets",
+  "text": [
+   "건조하고 당겨서",
+   "보습제를",
+   "바르는데"
+  ]
+ },
+ "4": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": [
+   "바를수록 따갑고",
+   "화끈거리고 더 붉어져요"
+  ],
+  "note": "이런 분 많습니다"
+ },
+ "5": {
+  "kind": "segments",
+  "title": "더 좋다는 걸로, 더 비싼 걸로",
+  "segs": [
+   {
+    "label": "보습제 A",
+    "w": 0.25
+   },
+   {
+    "label": "더 비싼 B",
+    "w": 0.33,
+    "color": "#d9822b"
+   },
+   {
+    "label": "더 비싼 C",
+    "w": 0.42,
+    "color": "#E63946"
+   }
+  ]
+ },
+ "6": {
+  "kind": "icons",
+  "items": [
+   [
+    "병원 화장품",
+    "pill-bottle"
+   ],
+   [
+    "닥터 브랜드",
+    "award"
+   ],
+   [
+    "앰플·세럼",
+    "droplets"
+   ]
+  ],
+  "caption": "겹겹이 바르는데"
+ },
+ "7": {
+  "kind": "compare2",
+  "title": "몇 달 뒤",
+  "left": {
+   "title": "피부",
+   "sub": "그대로",
+   "bar": 0.5,
+   "color": "#8A8A8A"
+  },
+  "right": {
+   "title": "통장",
+   "sub": "텅장",
+   "bar": 0.08,
+   "color": "#E63946"
+  },
+  "mid": "&"
+ },
+ "8": {
+  "kind": "icontext",
+  "icon": "hand-heart",
+  "text": [
+   "여러분 피부가",
+   "잘못된 게",
+   "절대 아닙니다"
+  ]
+ },
+ "9": {
+  "kind": "icontext",
+  "icon": "book-open-check",
+  "text": [
+   "보습을 설명하는 방식이",
+   "처음부터",
+   "잘못돼 있었습니다"
+  ],
+  "tone": "red"
+ },
+ "10": {
+  "kind": "icontext",
+  "big": "18",
+  "text": [
+   "년째 포기한 환자를 보며",
+   "제일 많이 받은 질문",
+   "보습"
+  ]
+ },
+ "11": {
+  "kind": "icontext",
+  "icon": "thumbs-up",
+  "text": [
+   "가벼운 증상은",
+   "오늘 영상만으로",
+   "병원에 안 오셔도 됩니다"
+  ]
+ },
+ "12": {
+  "kind": "icontext",
+  "icon": "file-text",
+  "text": [
+   "왜 따가웠는지, 어떻게 할지",
+   "근거 논문과 함께",
+   "정리합니다"
+  ]
+ },
+ "13": {
+  "kind": "icons",
+  "items": [
+   [
+    "수분크림 듬뿍",
+    "droplets"
+   ],
+   [
+    "앰플",
+    "pipette"
+   ],
+   [
+    "세럼",
+    "flask-conical"
+   ],
+   [
+    "크림",
+    "layers"
+   ]
+  ],
+  "caption": "층층이 쌓는 게 정석?"
+ },
+ "14": {
+  "kind": "icontext",
+  "icon": "brick-wall",
+  "text": [
+   "장벽이 무너진 피부엔",
+   "크게",
+   "도움이 안 됩니다"
+  ],
+  "tone": "red"
+ },
+ "15": {
+  "kind": "icontext",
+  "icon": "wallet",
+  "text": [
+   "이 방식이 유행하는 이유",
+   "더 많은",
+   "구매 유도"
+  ],
+  "tone": "red"
+ },
+ "16": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": "보습 = 수분을 넣는 것",
+  "note": "임상의 보습은 다릅니다"
+ },
+ "17": {
+  "kind": "part",
+  "num": 1,
+  "total": 4,
+  "title": "넣는 게 아니라 막는 것",
+  "sub": "보습의 정의"
+ },
+ "18": {
+  "kind": "icontext",
+  "icon": "brick-wall",
+  "text": [
+   "각질층은",
+   "벽돌과 시멘트로 된",
+   "벽"
+  ]
+ },
+ "19": {
+  "kind": "compare2",
+  "left": {
+   "title": "벽돌",
+   "sub": "각질세포",
+   "bar": 0.7,
+   "color": "#d9822b"
+  },
+  "right": {
+   "title": "시멘트",
+   "sub": "세라마이드 같은 지질",
+   "bar": 0.7,
+   "color": "#52B788"
+  },
+  "mid": "+"
+ },
+ "20": {
+  "kind": "icontext",
+  "icon": "shield-check",
+  "text": [
+   "벽이 멀쩡하면",
+   "몸속 수분이",
+   "새지 않습니다"
+  ]
+ },
+ "21": {
+  "kind": "icontext",
+  "icon": "cloud-drizzle",
+  "text": [
+   "벽이 손상되면",
+   "수분이 계속",
+   "증발합니다"
+  ],
+  "tone": "red"
+ },
+ "22": {
+  "kind": "icontext",
+  "big": "TEWL",
+  "text": [
+   "경표피수분손실",
+   "Trans Epidermal",
+   "Water Loss"
+  ]
+ },
+ "23": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": "물이 부족해서 건조하다",
+  "note": "핵심 문제는 그게 아닙니다"
+ },
+ "25": {
+  "kind": "icontext",
+  "icon": "wind",
+  "text": [
+   "겉에 물을 아무리 발라도",
+   "막지 않으면",
+   "날아갑니다"
+  ],
+  "tone": "red"
+ },
+ "26": {
+  "kind": "iconlist",
+  "rows": [
+   [
+    "shield",
+    "새는 걸 막고"
+   ],
+   [
+    "clock",
+    "장벽이 스스로 회복할 시간을 벌어주는 것"
+   ]
+  ],
+  "foot": "보습의 본질"
+ },
+ "27": {
+  "kind": "icontext",
+  "icon": "triangle-alert",
+  "text": [
+   "그런데 막겠다고 바르는",
+   "보습제가",
+   "자극이 됩니다"
+  ],
+  "tone": "red"
+ },
+ "28": {
+  "kind": "part",
+  "num": 2,
+  "total": 4,
+  "title": "보습제가 따가운 이유",
+  "sub": "일반 로션·크림"
+ },
+ "29": {
+  "kind": "timer",
+  "big": "물",
+  "text": [
+   "로션·크림은",
+   "대부분",
+   "물입니다"
+  ]
+ },
+ "30": {
+  "kind": "merge",
+  "title": "물과 기름은 안 섞이니까",
+  "chips": [
+   "물",
+   "기름"
+  ],
+  "result": "유화제(계면활성제)"
+ },
+ "32": {
+  "kind": "icons",
+  "items": [
+   [
+    "방부제",
+    "flask-conical"
+   ],
+   [
+    "향료",
+    "sparkles"
+   ],
+   [
+    "증점제·첨가물",
+    "beaker"
+   ]
+  ],
+  "caption": "물이 있으니 들어가는 것들"
+ },
+ "34": {
+  "kind": "icontext",
+  "icon": "brick-wall",
+  "text": [
+   "장벽이 무너져 틈이 벌어진 피부엔",
+   "첨가물이",
+   "파고듭니다"
+  ],
+  "tone": "red"
+ },
+ "35": {
+  "kind": "warning",
+  "tag": "주의",
+  "text": [
+   "방부제·향료는",
+   "접촉 알레르기의",
+   "원인이 될 수 있습니다"
+  ]
+ },
+ "36": {
+  "kind": "bubble",
+  "tone": "bad",
+  "text": "내 피부가 예민해서 따가운 거야",
+  "note": "아닙니다"
+ },
+ "37": {
+  "kind": "bubble",
+  "tone": "good",
+  "text": [
+   "이 성분은 지금",
+   "내 피부에 안 맞는다"
+  ],
+  "note": "피부가 보내는 신호"
+ },
+ "38": {
+  "kind": "icontext",
+  "icon": "ban",
+  "text": [
+   "저희 환자분들도",
+   "치료 초반엔 저희 제품을",
+   "쓰지 않게 합니다"
+  ],
+  "strike": true,
+  "tone": "red"
+ },
+ "39": {
+  "kind": "timeline",
+  "title": "피부과 화장품은 언제 쓰나",
+  "nodes": [
+   [
+    "치료 중",
+    ""
+   ],
+   [
+    "정상 회복",
+    ""
+   ],
+   [
+    "그 뒤에",
+    "유지용으로"
+   ]
+  ],
+  "accent": 2
+ },
+ "40": {
+  "kind": "merge",
+  "title": "반대로 생각해 보면",
+  "chips": [
+   "자극 첨가물 0",
+   "새는 건 확실히 막음"
+  ],
+  "result": "그런 물질이 있다면?"
+ },
+ "42": {
+  "kind": "part",
+  "num": 3,
+  "total": 4,
+  "title": "바셀린",
+  "sub": "자극이 극히 적은 이유 다섯 가지"
+ },
+ "43": {
+  "kind": "icontext",
+  "big": "1",
+  "text": [
+   "자극이 될",
+   "첨가물이",
+   "없습니다"
+  ]
+ },
+ "44": {
+  "kind": "icontext",
+  "icon": "test-tube",
+  "text": [
+   "정제한 석유 유래",
+   "포화 탄화수소를 굳힌",
+   "단일 성분"
+  ]
+ },
+ "45": {
+  "kind": "checklist",
+  "items": [
+   "방부제 필요 없음",
+   "유화제 필요 없음",
+   "향료 필요 없음"
+  ],
+  "caption": "물이 없으니까"
+ },
+ "46": {
+  "kind": "icontext",
+  "big": "2",
+  "text": [
+   "화학적으로",
+   "거의",
+   "반응하지 않습니다"
+  ]
+ },
+ "49": {
+  "kind": "compare2",
+  "title": "접촉피부염 발생",
+  "left": {
+   "title": "4명",
+   "sub": "항생제 연고",
+   "bar": 1.0,
+   "color": "#E63946"
+  },
+  "right": {
+   "title": "0명",
+   "sub": "바셀린",
+   "bar": 0.02,
+   "color": "#52B788"
+  },
+  "mid": "vs"
+ },
+ "50": {
+  "kind": "icontext",
+  "big": "3",
+  "text": [
+   "피부 깊이",
+   "들어가지",
+   "않습니다"
+  ]
+ },
+ "51": {
+  "kind": "icontext",
+  "icon": "ruler",
+  "text": [
+   "오일은",
+   "11마이크로미터보다",
+   "깊이 못 갑니다"
+  ]
+ },
+ "53": {
+  "kind": "icontext",
+  "icon": "shield-check",
+  "text": [
+   "살아있는 세포층,",
+   "면역 반응이 일어나는 층까지",
+   "안 내려갑니다"
+  ]
+ },
+ "55": {
+  "kind": "compare2",
+  "title": "경표피수분손실(TEWL)을 줄이는 정도",
+  "left": {
+   "title": "98%",
+   "sub": "바셀린",
+   "bar": 0.98,
+   "color": "#52B788"
+  },
+  "right": {
+   "title": "20~30%",
+   "sub": "다른 오일 보습제",
+   "bar": 0.25,
+   "color": "#8A8A8A"
+  },
+  "mid": "vs"
+ },
+ "58": {
+  "kind": "icontext",
+  "big": "5",
+  "text": [
+   "장벽 회복까지",
+   "돕습니다"
+  ]
+ },
+ "59": {
+  "kind": "timeline",
+  "title": "1992년 미국 피부과학회지",
+  "nodes": [
+   [
+    "아세톤으로",
+    "장벽 손상"
+   ],
+   [
+    "바셀린",
+    "바름"
+   ],
+   [
+    "장벽 회복",
+    "더 빨라짐"
+   ]
+  ],
+  "accent": 2
+ },
+ "61": {
+  "kind": "compare2",
+  "left": {
+   "title": "랩",
+   "sub": "밀폐만",
+   "bar": 0.4,
+   "color": "#8A8A8A"
+  },
+  "right": {
+   "title": "바셀린",
+   "sub": "회복 동안 틈을 메움",
+   "bar": 0.9,
+   "color": "#52B788"
+  },
+  "mid": "≠"
+ },
+ "63": {
+  "kind": "checklist",
+  "items": [
+   "첨가물 없음",
+   "반응 안 함",
+   "깊이 안 들어감",
+   "막는 힘 최강",
+   "장벽 회복 도움"
+  ],
+  "caption": "정리"
+ },
+ "64": {
+  "kind": "part",
+  "num": 4,
+  "total": 4,
+  "title": "바르는 법과 한계",
+  "sub": "얇게, 촉촉할 때"
+ },
+ "65": {
+  "kind": "timer",
+  "big": "3분",
+  "text": [
+   "세안 후 물기 톡톡",
+   "촉촉할 때",
+   "3분 안에"
+  ]
+ },
+ "66": {
+  "kind": "icontext",
+  "icon": "hand",
+  "text": [
+   "쌀알~콩알 양을",
+   "손에서 체온으로 녹여",
+   "얇게"
+  ]
+ },
+ "68": {
+  "kind": "checklist",
+  "items": [
+   "성분표에 '페트롤라툼' 하나만",
+   "정제된 흰색"
+  ],
+  "caption": "제품 고르기"
+ },
+ "69": {
+  "kind": "compare2",
+  "left": {
+   "title": "흰색",
+   "sub": "정제",
+   "bar": 0.9,
+   "color": "#52B788"
+  },
+  "right": {
+   "title": "노란색",
+   "sub": "저정제 · 피하기",
+   "bar": 0.3,
+   "color": "#d9822b"
+  },
+  "mid": "vs"
+ },
+ "70": {
+  "kind": "icontext",
+  "icon": "circle-check",
+  "text": [
+   "지금 보습제가 따갑지도 붉지도 않고",
+   "잘 맞으면",
+   "바꾸지 마세요"
+  ]
+ },
+ "71": {
+  "kind": "timeline",
+  "title": "저희 환자분들이 정 보습을 원하시면",
+  "nodes": [
+   [
+    "1",
+    "저희 크림 먼저"
+   ],
+   [
+    "자극 있으면",
+    ""
+   ],
+   [
+    "2",
+    "자윤수액 → 바셀린"
+   ]
+  ],
+  "accent": 2
+ },
+ "72": {
+  "kind": "merge",
+  "title": "그래도 자극이면",
+  "chips": [
+   "자윤수액 먼저",
+   "바셀린 얇게"
+  ],
+  "result": "이 순서로"
+ },
+ "73": {
+  "kind": "warning",
+  "tag": "한계",
+  "text": [
+   "바셀린이",
+   "모두의 정답은",
+   "아닙니다"
+  ]
+ },
+ "74": {
+  "kind": "icons",
+  "items": [
+   [
+    "여드름·모낭염",
+    "circle-alert"
+   ],
+   [
+    "지루성 번들거림",
+    "droplet"
+   ]
+  ],
+  "caption": "이런 부위는 답답할 수 있습니다"
+ },
+ "75": {
+  "kind": "icontext",
+  "icon": "thermometer-sun",
+  "text": [
+   "열감 심한 홍조는 열이 갇히는 느낌",
+   "아주 얇게,",
+   "일부 부위부터"
+  ],
+  "tone": "red"
+ },
+ "76": {
+  "kind": "icontext",
+  "icon": "bandage",
+  "text": [
+   "상처가 곪았거나",
+   "감염이 의심되면",
+   "덮어두지 마세요"
+  ],
+  "tone": "red"
+ },
+ "77": {
+  "kind": "warning",
+  "tag": "가장 중요한 것",
+  "text": [
+   "바셀린은",
+   "치료가",
+   "아닙니다"
+  ]
+ },
+ "79": {
+  "kind": "icontext",
+  "icon": "shield-alert",
+  "text": [
+   "장벽 보호일 뿐,",
+   "염증·면역 문제의 원인은",
+   "없애지 못합니다"
+  ],
+  "tone": "red"
+ },
+ "80": {
+  "kind": "graph",
+  "title": "따가움은 줄었는데…",
+  "stop": "약 끊음",
+  "lines": [
+   "원래대로",
+   "도로 올라옴"
+  ]
+ },
+ "81": {
+  "kind": "icontext",
+  "icon": "stethoscope",
+  "text": [
+   "보습의 문제가 아니라",
+   "치료가 필요한",
+   "단계입니다"
+  ]
+ },
+ "82": {
+  "kind": "compare2",
+  "left": {
+   "title": "보습",
+   "sub": "관리",
+   "bar": 0.45,
+   "color": "#8A8A8A"
+  },
+  "right": {
+   "title": "치료",
+   "sub": "원인 해결",
+   "bar": 0.95,
+   "color": "#52B788"
+  },
+  "mid": "≠"
+ },
+ "83": {
+  "kind": "icontext",
+  "icon": "sprout",
+  "text": [
+   "피부과에서 포기한 질환도",
+   "치료는",
+   "충분히 가능합니다"
+  ]
+ },
+ "84": {
+  "kind": "iconlist",
+  "rows": [
+   [
+    "award",
+    "피부 난치 18년"
+   ],
+   [
+    "receipt",
+    "충분히 치료하고도 효과 없으면 전액 환불"
+   ],
+   [
+    "message-circle",
+    "문의는 고정댓글"
+   ]
+  ],
+  "foot": "더마허브TV · 스킨룩스한의원"
+ }
+}
