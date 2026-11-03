@@ -174,8 +174,10 @@ def _content_tokens(a: Asset) -> list[str]:
 
 def family(a: Asset) -> str:
     """비슷한 자료끼리 묶는 이름. '사진_욕조_홍조_여성_정면_3' → '사진 욕조 홍조'."""
-    kind = a.id.split("/")[-1].split("_")[0]
-    return " ".join([kind] + _content_tokens(a)[:2])
+    name = a.id.split("/")[-1]  # 폴더 이름(스톡_pexels 등)은 빼고 파일 이름으로만 묶는다
+    kind = name.split("_")[0]
+    toks = [t for t in re.findall(r"[가-힣A-Za-z0-9]{2,}", Path(name).stem) if t not in STOP and not t.isdigit()]
+    return " ".join([kind] + toks[1:3])
 
 
 def default_mode(a: Asset) -> str:
