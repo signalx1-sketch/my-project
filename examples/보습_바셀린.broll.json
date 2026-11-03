@@ -49,23 +49,9 @@
   "keep": true
  },
  {
-  "at": 16,
-  "offset": 3.6,
-  "asset": "스톡_pexels/영상_노트북_옆_장바구니_온라인쇼핑.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 19,
-  "offset": 3,
+  "offset": 7.6,
   "asset": "영상_피부_장벽_수분_보습_vs_건조_도식.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
-  "at": 19,
-  "offset": 7.7,
-  "asset": "스톡_pexels/영상_벽돌_시멘트_담장_쌓는_공사.mp4",
   "mode": "full",
   "keep": true
  },
