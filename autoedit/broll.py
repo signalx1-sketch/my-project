@@ -451,8 +451,11 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 prev.dur = round(snap(e0) - prev.start, 4)
             elif nxt.mode == "full":
                 bd.placed.remove(nxt)
-    # 6. 얼굴이 너무 오래 안 나오면 (카드와 자료가 MAX_NO_FACE초 넘게 이어지면) 가운데쯤의 자료 화면 하나를 뺀다
-    for _ in range(100):
+    # 6. 얼굴이 너무 오래 안 나오면 (카드와 자료가 max_run초 넘게 이어지면) 가운데쯤의 자료 화면 하나를 뺀다.
+    #    얼굴 목표가 낮을수록 얼굴 없이 이어지는 구간을 길게 허용한다 (15%면 30초, 10%면 45초)
+    max_run = MAX_NO_FACE * max(1.0, 0.15 / max(face_target, 0.05))
+
+    def no_face_runs() -> list[list[Placement]]:
         full = sorted((p for p in bd.placed if p.mode != "side"), key=lambda p: p.start)
         runs, cur = [], []
         for p in full:
@@ -462,10 +465,13 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             cur.append(p)
         if cur:
             runs.append(cur)
+        return runs
+
+    for _ in range(100):
         fixed = False
-        for r in runs:
+        for r in no_face_runs():
             r0, r1 = r[0].start, r[-1].start + r[-1].dur
-            if r1 - r0 <= MAX_NO_FACE:
+            if r1 - r0 <= max_run:
                 continue
             mid = (r0 + r1) / 2
             cands = [p for p in r if p.mode == "full" and not p.keep and p.start - r0 >= 4 and r1 - (p.start + p.dur) >= 4]
@@ -481,6 +487,27 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 fixed = True
         if not fixed:
             break
+    # 7. 6단계에서 카드를 줄여 생긴 얼굴 자리에, 아직 못 들어간 계획 자료를 한 번 더 넣어 본다
+    #    (얼굴 비율이 목표보다 높을 때만, 넣어도 얼굴 없는 구간이 max_run을 넘지 않을 때만)
+    for item in items:
+        a = by_id.get(item.get("asset", ""))
+        if item.get("filler") or item.get("mode", "full") != "full" or not a or a.id in bd.used:
+            continue
+        face = sum(e - s for s, e in bd.face_windows())
+        if face <= (bd.end - bd.start) * face_target:
+            break
+        t = out_t(item)
+        if t is None:
+            continue
+        fit = fit_full(a, t, FULL_SEC)
+        if not fit:
+            continue
+        bd.add(a, "full", *fit)
+        if any(r[-1].start + r[-1].dur - r[0].start > max_run for r in no_face_runs()):
+            bd.placed.pop()
+            bd.used.discard(a.id)
+        elif item.get("keep"):
+            bd.placed[-1].keep = True
     placed = [p for p in bd.placed if p.mode == "side"] + enforce_min_show(
         [p for p in bd.placed if p.mode != "side"], bd.start, bd.end)
     return sorted(placed, key=lambda p: p.start)
