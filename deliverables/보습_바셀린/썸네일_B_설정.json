@@ -1,0 +1,64 @@
+{
+ "layout": "before_after",
+ "before": {
+  "src": "deliverables/주사피부염_치료_세가지/썸네일_비포_자연.png",
+  "box": [
+   600,
+   40,
+   1000,
+   500
+  ]
+ },
+ "after": {
+  "src": "deliverables/주사피부염_치료_세가지/썸네일_애프터_자연.png",
+  "box": [
+   600,
+   40,
+   1000,
+   500
+  ]
+ },
+ "before_w": 540,
+ "after_x": 470,
+ "after_w": 560,
+ "arrow": [
+  480,
+  250,
+  58
+ ],
+ "doc_mask": "deliverables/보습_바셀린/썸네일_원장님_마스크.png",
+ "doc_box": [
+  580,
+  330,
+  1440,
+  1080
+ ],
+ "doc_h": 600,
+ "doc_dx": 110,
+ "big_size": 124,
+ "big_stroke": 14,
+ "line_gap": 1.0,
+ "bottom": 18,
+ "shade_h": 260,
+ "big": [
+  [
+   "바를수록 빨개진다면",
+   "white",
+   "black",
+   {
+    "banner": "#E8202A"
+   }
+  ],
+  [
+   "진작 이렇게 할걸",
+   "#FFE600",
+   "black",
+   {}
+  ]
+ ],
+ "beauty": true,
+ "fill_bright": 1.7,
+ "shade": 130,
+ "panel_lift": 0.82,
+ "panel_sharpen": 20
+}
