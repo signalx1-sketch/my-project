@@ -42,9 +42,30 @@
   "keep": true
  },
  {
+  "at": 13,
+  "offset": 9.6,
+  "asset": "영상_세면대_앰플세럼크림_겹겹이_바르다_따끔.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 16,
+  "offset": 3.6,
+  "asset": "스톡_pexels/영상_노트북_옆_장바구니_온라인쇼핑.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 19,
   "offset": 3,
   "asset": "영상_피부_장벽_수분_보습_vs_건조_도식.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 19,
+  "offset": 7.7,
+  "asset": "스톡_pexels/영상_벽돌_시멘트_담장_쌓는_공사.mp4",
   "mode": "full",
   "keep": true
  },
@@ -79,7 +100,35 @@
  {
   "at": 33,
   "offset": 0,
-  "asset": "영상_화장솜_깜짝_놀란_홍조_여성.mp4",
+  "asset": "영상_소파_달아오른_볼에_손등_대고_눈감는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 43,
+  "offset": 2.75,
+  "asset": "스톡_pexels/영상_바셀린_발뒤꿈치에_바르는_손.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 48,
+  "offset": 1.3,
+  "asset": "스톡_pexels/영상_아로마오일_병_라벤더.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 72,
+  "offset": 0,
+  "asset": "스톡_pexels/영상_손끝에_크림_조금_짜기.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 74,
+  "offset": 0,
+  "asset": "영상_흰_연고통_성분표_읽고_노란통과_비교.mp4",
   "mode": "full",
   "keep": true
  },
@@ -92,8 +141,15 @@
  },
  {
   "at": 80,
-  "offset": 4,
+  "offset": 1,
   "asset": "영상_얼굴_구진_홍조_코_만지는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 85,
+  "offset": 4,
+  "asset": "영상_연고_바르고_가라앉았다_다시_붉어지는_여성.mp4",
   "mode": "full",
   "keep": true
  },
