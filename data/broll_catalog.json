@@ -2272,7 +2272,8 @@
   ],
   "mood": "괴로움",
   "dur": 6.04,
-  "exclude": false
+  "exclude": true,
+  "note": "입 벌리고 놀라는 표정이 어색하다는 지적 (2026-11-03)"
  },
  {
   "file": "영상_화장솜_볼_닦는_홍조_여성.mp4",
@@ -2814,6 +2815,132 @@
   ],
   "mood": "희망",
   "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_소파_달아오른_볼에_손등_대고_눈감는_여성.mp4",
+  "source": "drive",
+  "desc": "소파에서 달아오른 볼에 손등을 대고 열감에 눈을 질끈 감는 여성 (화끈거림, 자극 신호)",
+  "tags": [
+   "화끈거림",
+   "홍조",
+   "자극"
+  ],
+  "mood": "불편",
+  "dur": 10.04,
+  "exclude": false,
+  "drive_id": "1UjNWNUOpBrVQ1kr_7Iwd6D1mjpwuJrG1"
+ },
+ {
+  "file": "영상_흰_연고통_성분표_읽고_노란통과_비교.mp4",
+  "source": "drive",
+  "desc": "흰 연고 통 뒷면 성분표를 손가락으로 짚어 읽고 노란 통과 비교해 흰 통을 고름 (성분표, 바셀린 고르기)",
+  "tags": [
+   "성분표",
+   "제품 고르기",
+   "바셀린"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false,
+  "drive_id": "1myhKLujA_LRuasO6qbnW3PygidQRjQl9"
+ },
+ {
+  "file": "영상_세면대_앰플세럼크림_겹겹이_바르다_따끔.mp4",
+  "source": "drive",
+  "desc": "세면대 앰플·세럼·크림을 차례로 겹겹이 바르다 따끔해 미간을 찡그림 (레이어링, 바를수록 따가움)",
+  "tags": [
+   "레이어링",
+   "따가움",
+   "보습제"
+  ],
+  "mood": "불편",
+  "dur": 10.04,
+  "exclude": false,
+  "drive_id": "1uSClEk0kgSr3-LlFadrnjaRtNna0-llx"
+ },
+ {
+  "file": "스톡_pexels/영상_바셀린_발뒤꿈치에_바르는_손.mp4",
+  "source": "pexels",
+  "desc": "침대 위 바셀린 통 옆에서 발뒤꿈치에 바르는 손 (바셀린, 페트롤라툼)",
+  "tags": [
+   "바셀린",
+   "보습"
+  ],
+  "mood": "정보",
+  "dur": 12.03,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_벽돌_시멘트_담장_쌓는_공사.mp4",
+  "source": "pexels",
+  "desc": "벽돌과 시멘트로 담장을 쌓는 공사장 원경 (브릭앤 몰타르 비유)",
+  "tags": [
+   "벽돌",
+   "장벽 비유"
+  ],
+  "mood": "정보",
+  "dur": 16.04,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_노트북_옆_장바구니_온라인쇼핑.mp4",
+  "source": "pexels",
+  "desc": "노트북 옆 작은 장바구니 (구매 유도, 마케팅, 온라인 쇼핑)",
+  "tags": [
+   "쇼핑",
+   "마케팅"
+  ],
+  "mood": "정보",
+  "dur": 9.96,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_현미경_들여다보는_연구자.mp4",
+  "source": "pexels",
+  "desc": "실험실에서 현미경을 들여다보는 연구자 (현미경 연구, 논문)",
+  "tags": [
+   "연구",
+   "현미경"
+  ],
+  "mood": "정보",
+  "dur": 8.68,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_거울앞_세안하는_여성.mp4",
+  "source": "pexels",
+  "desc": "수건 두른 여성이 세면대에서 물로 세안 (세안 직후)",
+  "tags": [
+   "세안",
+   "루틴"
+  ],
+  "mood": "일상",
+  "dur": 12.68,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_아로마오일_병_라벤더.mp4",
+  "source": "pexels",
+  "desc": "라벤더 꽃잎이 든 아로마 오일 병과 스포이트 병 (아로마 오일, 천연 오일)",
+  "tags": [
+   "오일",
+   "아로마"
+  ],
+  "mood": "정보",
+  "dur": 9.09,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_손끝에_크림_조금_짜기.mp4",
+  "source": "pexels",
+  "desc": "분홍 배경, 손끝에 튜브 크림을 쌀알만큼 짜는 손 (바르는 양)",
+  "tags": [
+   "바르는 양",
+   "크림"
+  ],
+  "mood": "정보",
+  "dur": 6.32,
   "exclude": false
  }
 ]
