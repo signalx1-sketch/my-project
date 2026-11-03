@@ -215,8 +215,10 @@ def beautify_source(src: Path, work: Path) -> Path:
     if out.exists() and out.stat().st_mtime > src.stat().st_mtime:
         return out
     print("  얼굴 피부 보정 (뽀샤시) 중...")
+    tmp = out.with_suffix(".part.mp4")  # 중간에 끊기면 반쪽 파일을 다시 쓰지 않도록 다 만든 뒤에 이름을 바꾼다
     run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-filter_complex", BEAUTY_VF.format(a=int(255 * BEAUTY_MIX)),
-         "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-c:a", "copy", str(out)])
+         "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-c:a", "copy", str(tmp)])
+    tmp.replace(out)
     return out
 
 

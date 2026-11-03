@@ -536,6 +536,14 @@ def enforce_min_show(placed: list[Placement], start: float, end: float) -> list[
             if _can_hold(p, p.dur + grow):
                 p.dur = round(p.dur + grow, 4)
                 continue
+        if p.mode == "slide" and p.card in ("part", "paper") and nxt_seg and nxt_seg[0] is not None \
+                and nxt_seg[0].mode == "slide" and nxt_seg[0].card not in ("part", "paper") \
+                and nxt_seg[0].dur - need < MIN_SHOW:
+            # 파트 표지·논문 카드는 빼지 않는다: 대신 바로 뒤의 짧은 카드를 빼고 그 자리까지 늘린다
+            q = nxt_seg[0]
+            p.dur = round(q.start + q.dur - p.start, 4)
+            placed.remove(q)
+            continue
         if p.mode == "slide" and p.card not in ("part", "paper") and nxt_seg and nxt_seg[0] is not None \
                 and nxt_seg[0].mode == "slide":
             placed.remove(p)  # 카드가 줄줄이 붙으면 뒤 카드를 늦추지 않고 짧은 카드를 뺀다 (말과 카드가 어긋나지 않게, 2026-10-30)

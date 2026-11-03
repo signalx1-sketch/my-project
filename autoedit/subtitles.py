@@ -130,10 +130,11 @@ def _fix_phrases(out: list[OutWord], fixes: dict[str, str]) -> list[OutWord]:
 # 뒤 말을 꾸미는 어절: 이 뒤에서 줄을 바꾸면 의미가 끊긴다 (2026-10-30)
 NO_BREAK_AFTER = {"이", "그", "저", "이런", "그런", "저런", "웬만한", "어떤", "모든", "몇", "한", "두", "세", "네", "더", "가장",
                   "제일", "너무", "아주", "좀", "다른", "같은", "약", "총", "첫", "첫째", "둘째", "셋째", "다", "또", "안", "못", "잘",
-                  "딱", "이거", "그거", "저거", "짧은", "큰", "작은", "새", "엉뚱한", "강력한", "충분한"}
+                  "딱", "이거", "그거", "저거", "짧은", "큰", "작은", "새", "엉뚱한", "강력한", "충분한", "보다"}
 # 앞말에 기대는 말: 이 말 앞에서 줄을 바꾸지 않는다 ('있는 / 거랑', '없다는 / 게', '바르다 / 보니')
 NO_BREAK_BEFORE = ("거", "것", "게", "데", "때", "수", "줄", "적", "분이", "분들", "순간", "같은", "같이", "때문", "싶", "보니", "입니다",
-                   "라는", "라고", "보다", "정도", "있는", "있다", "있어", "있죠", "있고", "있을", "있으면", "한다면", "하는")
+                   "라는", "라고", "보다", "정도", "있는", "있다", "있어", "있죠", "있고", "있을", "있으면", "한다면", "하는",
+                   "없고", "없는", "없이", "없어", "된", "될", "하면")
 
 
 def _leans(word: str) -> bool:
@@ -196,6 +197,8 @@ def _pos_gaps(texts: list[str]) -> list[int] | None:
             gaps.append(-10)  # 연결어미·쉼표 뒤가 가장 자연스럽다
         elif last in ("JKO", "JC"):
             gaps.append(120)  # 목적어 뒤('돈 / 날리는'), 이음 조사 뒤('주사와 / 홍조')
+        elif last == "JKG":
+            gaps.append(500)  # '보습의 / 본질은': 관형격 조사 뒤는 꾸밈을 받는 말과 붙인다
         elif last in ("JKS", "JKC"):
             gaps.append(50)   # 주어 뒤('효과가 / 없거나')
         elif last.startswith("J"):
@@ -261,7 +264,8 @@ def group_lines(ws: list[OutWord], max_chars: int = MAX_CHARS, max_words: int = 
     segs: list[list[OutWord]] = []
     cur: list[OutWord] = []
     for w in ws:
-        glued = cur and (cur[-1].text.rstrip(",") in NO_BREAK_AFTER or _leans(w.text))
+        glued = cur and (cur[-1].text.rstrip(",") in NO_BREAK_AFTER or _leans(w.text)
+                         or (len(cur[-1].text) > 1 and cur[-1].text.endswith("의")))  # '보습의 / 본질은'
         if cur and (w.section != cur[-1].section or not glued and (w.s - cur[-1].e > LINE_GAP or _ends_sentence(cur[-1].text))):
             segs.append(cur)
             cur = []

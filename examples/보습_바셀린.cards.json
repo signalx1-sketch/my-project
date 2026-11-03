@@ -1,8 +1,9 @@
 {
  "1": {
   "kind": "icontext",
-  "big": "보습",
+  "icon": "droplets",
   "text": [
+   "보습,",
    "진작",
    "이렇게 할걸"
   ]
@@ -159,7 +160,7 @@
  },
  "14": {
   "kind": "icontext",
-  "icon": "brick-wall",
+  "icon": "shield-alert",
   "text": [
    "장벽이 무너진 피부엔",
    "크게",
@@ -187,12 +188,12 @@
   "kind": "part",
   "num": 1,
   "total": 4,
-  "title": "넣는 게 아니라 막는 것",
-  "sub": "보습의 정의"
+  "title": "막는 것",
+  "sub": "보습의 정의 · 넣는 게 아니라"
  },
  "18": {
   "kind": "icontext",
-  "icon": "brick-wall",
+  "icon": "layers",
   "text": [
    "각질층은",
    "벽돌과 시멘트로 된",
@@ -287,8 +288,8 @@
   "kind": "part",
   "num": 2,
   "total": 4,
-  "title": "보습제가 따가운 이유",
-  "sub": "일반 로션·크림"
+  "title": "따가운 이유",
+  "sub": "일반 보습제가"
  },
  "29": {
   "kind": "timer",
@@ -328,7 +329,7 @@
  },
  "34": {
   "kind": "icontext",
-  "icon": "brick-wall",
+  "icon": "circle-alert",
   "text": [
    "장벽이 무너져 틈이 벌어진 피부엔",
    "첨가물이",
@@ -482,7 +483,7 @@
   "icon": "shield-check",
   "text": [
    "살아있는 세포층,",
-   "면역 반응이 일어나는 층까지",
+   "면역 반응 층까지",
    "안 내려갑니다"
   ]
  },
@@ -610,8 +611,8 @@
   "kind": "icontext",
   "icon": "circle-check",
   "text": [
-   "지금 보습제가 따갑지도 붉지도 않고",
-   "잘 맞으면",
+   "지금 보습제가",
+   "따갑지도 붉지도 않으면",
    "바꾸지 마세요"
   ]
  },
@@ -670,9 +671,9 @@
   "kind": "icontext",
   "icon": "thermometer-sun",
   "text": [
-   "열감 심한 홍조는 열이 갇히는 느낌",
-   "아주 얇게,",
-   "일부 부위부터"
+   "열감 심한 홍조는",
+   "열이 갇힐 수 있어",
+   "아주 얇게, 일부부터"
   ],
   "tone": "red"
  },
