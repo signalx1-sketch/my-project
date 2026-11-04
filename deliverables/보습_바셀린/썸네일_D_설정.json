@@ -1,0 +1,34 @@
+{
+ "left": {
+  "src": "/tmp/claude-0/-home-user-my-project/cdf7cb7b-c330-5dbc-b6f2-45320596bd58/scratchpad/th6/before.png",
+  "center": [
+   640,
+   330
+  ],
+  "zoom": 1.35,
+  "label": "겹겹이 보습"
+ },
+ "right": {
+  "src": "/tmp/claude-0/-home-user-my-project/cdf7cb7b-c330-5dbc-b6f2-45320596bd58/scratchpad/th6/after.png",
+  "center": [
+   700,
+   330
+  ],
+  "zoom": 1.2,
+  "label": "제대로 보습",
+  "label_color": "#FFE14D",
+  "bright": 1.03
+ },
+ "doc": "deliverables/보습_바셀린/썸네일_원장님_프레임_원본.png",
+ "doc_mask": "deliverables/보습_바셀린/썸네일_원장님_마스크_원본.png",
+ "doc_box": [
+  610,
+  330,
+  1470,
+  1080
+ ],
+ "doc_h": 470,
+ "doc_dx": 70,
+ "title": "보습, 진작 이렇게 할걸...",
+ "title_size": 118
+}
