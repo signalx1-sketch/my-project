@@ -1,0 +1,44 @@
+{
+ "left": {
+  "src": "/tmp/claude-0/-home-user-my-project/cdf7cb7b-c330-5dbc-b6f2-45320596bd58/scratchpad/th6/before.png",
+  "center": [
+   640,
+   260
+  ],
+  "zoom": 1.3,
+  "label": "겹겹이 보습"
+ },
+ "right": {
+  "src": "/tmp/claude-0/-home-user-my-project/cdf7cb7b-c330-5dbc-b6f2-45320596bd58/scratchpad/th6/after.png",
+  "center": [
+   560,
+   330
+  ],
+  "zoom": 1.25,
+  "label": "제대로 보습",
+  "label_color": "#FFE14D",
+  "bright": 1.03
+ },
+ "title": "보습, 진작 이렇게 할걸",
+ "title_size": 180,
+ "title_gap": 0.98,
+ "title_bottom": 46,
+ "shade_h": 260,
+ "shade": 120,
+ "split_stop": 190,
+ "title_stroke": 16,
+ "title_margin": 34,
+ "title_color": "#FFE600",
+ "banner": "#E8202A",
+ "banner_pad": 26,
+ "title_parts": [
+  [
+   "보습, ",
+   "white"
+  ],
+  [
+   "진작 이렇게 할걸",
+   "#FFE600"
+  ]
+ ]
+}

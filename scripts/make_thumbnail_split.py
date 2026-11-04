@@ -93,8 +93,23 @@ def main():
         f = ImageFont.truetype(AGGRO, size)
     gap = int(size * cfg.get("title_gap", 1.02))
     y = H - cfg.get("title_bottom", 34) - gap * (len(lines) - 1)
+    sw = cfg.get("title_stroke", 14)
+    # 투톤: title_parts [[글자, 색], ...]를 한 줄로 이어 쓴다 (합친 글자는 title과 같아야 한다)
+    parts = cfg.get("title_parts")
+    # 글자 뒤 띠 (예: 빨강). 위아래 검은 테두리
+    if cfg.get("banner"):
+        bb = d.textbbox((W // 2, y), lines[-1], font=f, anchor="ms")
+        pad = cfg.get("banner_pad", 18)
+        top = y - gap * (len(lines) - 1) + (bb[1] - y) - pad
+        d.rectangle([0, top, W, bb[3] + pad], fill=cfg["banner"], outline="black", width=6)
     for t in lines:
-        stroke_text(d, (W // 2, y), t, f, cfg.get("title_color", "#2BF24A"), "black", cfg.get("title_stroke", 14), anchor="ms")
+        if parts and len(lines) == 1:
+            x = W // 2 - d.textlength(t, font=f) / 2
+            for s, col in parts:
+                stroke_text(d, (x, y), s, f, col, "black", sw, anchor="ls")
+                x += d.textlength(s, font=f)
+        else:
+            stroke_text(d, (W // 2, y), t, f, cfg.get("title_color", "#2BF24A"), "black", sw, anchor="ms")
         y += gap
     canvas.save(out, quality=95)
 
