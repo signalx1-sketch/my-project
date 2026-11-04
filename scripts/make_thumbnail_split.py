@@ -43,22 +43,23 @@ def main():
     canvas.paste(panel(L["src"], sx, L["center"], L.get("zoom", 1.0), L.get("bright", 1.0)), (0, 0))
     canvas.paste(panel(R["src"], W - sx, R["center"], R.get("zoom", 1.0), R.get("bright", 1.0)), (sx, 0))
 
-    # 원장님 (오려서 오른쪽 아래)
-    doc = Image.open(cfg["doc"]).convert("RGB")
-    if cfg.get("beauty", True):
-        doc = beautify(doc, cfg.get("beauty_strength", 1.0))
-    m = Image.open(cfg["doc_mask"]).convert("L")
-    box = tuple(cfg["doc_box"])
-    doc, m = doc.crop(box), m.crop(box)
-    dh = cfg.get("doc_h", 460)
-    sc = dh / doc.height
-    doc = doc.resize((int(doc.width * sc), dh), Image.LANCZOS)
-    m = m.resize(doc.size, Image.LANCZOS)
-    # 원장님 둘레에 얇은 흰 테두리 (배경과 떨어져 보이게)
-    if cfg.get("doc_outline", 6):
-        edge = m.filter(ImageFilter.MaxFilter(cfg.get("doc_outline", 6) * 2 + 1))
-        canvas.paste(Image.new("RGB", doc.size, "white"), (W - doc.width + cfg.get("doc_dx", 60), H - dh), edge)
-    canvas.paste(doc, (W - doc.width + cfg.get("doc_dx", 60), H - dh), m)
+    # 원장님 (오려서 오른쪽 아래). 설정에 doc이 없으면 넣지 않는다
+    if cfg.get("doc"):
+        doc = Image.open(cfg["doc"]).convert("RGB")
+        if cfg.get("beauty", True):
+            doc = beautify(doc, cfg.get("beauty_strength", 1.0))
+        m = Image.open(cfg["doc_mask"]).convert("L")
+        box = tuple(cfg["doc_box"])
+        doc, m = doc.crop(box), m.crop(box)
+        dh = cfg.get("doc_h", 460)
+        sc = dh / doc.height
+        doc = doc.resize((int(doc.width * sc), dh), Image.LANCZOS)
+        m = m.resize(doc.size, Image.LANCZOS)
+        # 원장님 둘레에 얇은 흰 테두리 (배경과 떨어져 보이게)
+        if cfg.get("doc_outline", 6):
+            edge = m.filter(ImageFilter.MaxFilter(cfg.get("doc_outline", 6) * 2 + 1))
+            canvas.paste(Image.new("RGB", doc.size, "white"), (W - doc.width + cfg.get("doc_dx", 60), H - dh), edge)
+        canvas.paste(doc, (W - doc.width + cfg.get("doc_dx", 60), H - dh), m)
 
     # 아래쪽 어둡게 (큰 글자 받침)
     shade = Image.new("L", (W, H), 0)
@@ -82,16 +83,19 @@ def main():
         d.rounded_rectangle([lx, ly + cfg.get("label_size", 64) + 16, lx + tw, ly + cfg.get("label_size", 64) + 28],
                             radius=6, fill=side.get("bar", col), outline="black", width=3)
 
-    # 아래 큰 문구
-    title = cfg["title"]
+    # 아래 큰 문구 (줄바꿈 \n이 있으면 여러 줄, 가장 긴 줄이 폭에 맞게)
+    lines = cfg["title"].split("\n")
     size = cfg.get("title_size", 120)
-    f = ImageFont.truetype(AGGRO, size)
     maxw = W - 2 * cfg.get("title_margin", 30)
-    while d.textlength(title, font=f) > maxw and size > 50:
+    f = ImageFont.truetype(AGGRO, size)
+    while max(d.textlength(t, font=f) for t in lines) > maxw and size > 50:
         size -= 2
         f = ImageFont.truetype(AGGRO, size)
-    stroke_text(d, (W // 2, H - cfg.get("title_bottom", 34)), title, f, cfg.get("title_color", "#2BF24A"),
-                "black", cfg.get("title_stroke", 14), anchor="ms")
+    gap = int(size * cfg.get("title_gap", 1.02))
+    y = H - cfg.get("title_bottom", 34) - gap * (len(lines) - 1)
+    for t in lines:
+        stroke_text(d, (W // 2, y), t, f, cfg.get("title_color", "#2BF24A"), "black", cfg.get("title_stroke", 14), anchor="ms")
+        y += gap
     canvas.save(out, quality=95)
 
 
