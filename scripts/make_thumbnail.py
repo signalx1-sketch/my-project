@@ -246,6 +246,12 @@ def main():
         x = i if text_left else 639 - i
         md.line([(x, 0), (x, H)], fill=int(255 * i / 130))
     canvas.paste(doc, (W - 640, 0) if text_left else (0, 0), mask)
+    if cfg.get("full_bg"):  # 원장님 없이 사진 한 장을 화면 가득 (2026-11-06). full_bg_x: 가로로 자를 시작점
+        im = Image.open(cfg["full_bg"]).convert("RGB")
+        im = im.resize((int(im.width * H / im.height), H), Image.LANCZOS)
+        fx = min(cfg.get("full_bg_x", 0), im.width - W)
+        im = im.crop((fx, 0, fx + W, H))
+        canvas.paste(ImageEnhance.Brightness(im).enhance(cfg.get("full_bg_bright", 1.0)))
     d = ImageDraw.Draw(canvas)
 
     def text(xy, s, font, fill, stroke, sw, anchor="la"):
