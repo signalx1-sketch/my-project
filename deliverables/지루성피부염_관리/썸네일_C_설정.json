@@ -1,0 +1,55 @@
+{
+ "layout": "text_left",
+ "keyword": [],
+ "bg_wash": false,
+ "bg_bright": 1.1,
+ "bg_blur": 3,
+ "bg_x": 0,
+ "big_stroke": 16,
+ "big_size": 162,
+ "col_w": 1120,
+ "bottom": 26,
+ "big": [
+  [
+   "피부염이",
+   "white",
+   "black",
+   {
+    "banner": "#E8202A",
+    "banner_lines": 2,
+    "banner_fx": "brush"
+   }
+  ],
+  [
+   "심하다면",
+   "white",
+   "black"
+  ],
+  [
+   "이것만",
+   "#FFE600",
+   "black",
+   {
+    "size": 196
+   }
+  ],
+  [
+   "외우세요",
+   "white",
+   "black"
+  ]
+ ],
+ "beauty": true,
+ "doc_crop": [
+  540,
+  60,
+  1460,
+  1095
+ ],
+ "line_gap": 0.98,
+ "doc_bg": "deliverables/지루성피부염_관리/썸네일_배경_거울홍조.jpg",
+ "doc_mask": "deliverables/주사피부염_치료_세가지/썸네일_원장님_마스크.png",
+ "doc_bg_x": 640,
+ "doc_bg_blur": 1.2,
+ "doc_bg_wash": 0.08
+}
