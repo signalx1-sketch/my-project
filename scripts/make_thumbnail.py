@@ -12,7 +12,7 @@ import re
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
+from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 AGGRO = str(ROOT / "assets" / "fonts" / "SBAggroM.woff")
@@ -69,6 +69,57 @@ def even_tone(img: Image.Image, regions: list) -> Image.Image:
         gain = np.clip(target - low, 0, None)  # 어두운 곳만 올린다
         a = a + gain * m * skin
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+
+def brush_band(canvas: Image.Image, top: float, bot: float, x0: float, x1: float, color: str, seed: int = 7):
+    """붓으로 칠한 듯 가장자리가 들쭉날쭉한 띠 + 붉은 번짐 + 아래쪽 어두운 그림자 (2026-11-06, '소변이 자주 마렵다면' 레퍼런스)."""
+    import random
+    rnd = random.Random(seed)
+    def ragged(t, b, l, r, amp):
+        pts, step = [], 14
+        x = l
+        while x <= r:  # 윗변
+            pts.append((x, t + rnd.uniform(-amp, amp) + (l - x) * 0.025))
+            x += step
+        y = t
+        while y <= b:  # 오른쪽 끝: 붓 끝처럼 크게 들쭉날쭉
+            pts.append((r + rnd.uniform(-amp * 2.2, amp * 2.2), y))
+            y += step
+        x = r
+        while x >= l:  # 아랫변
+            pts.append((x, b + rnd.uniform(-amp, amp) + (l - x) * 0.025))
+            x -= step
+        y = b
+        while y >= t:
+            pts.append((l + rnd.uniform(-amp, amp * 1.5), y))
+            y -= step
+        return pts
+    layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    ld = ImageDraw.Draw(layer)
+    rgb = ImageColor.getrgb(color)
+    # 번짐(바깥으로 퍼지는 붉은 빛)
+    glow = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    ImageDraw.Draw(glow).polygon(ragged(top - 6, bot + 6, x0 - 6, x1 + 10, 8), fill=rgb + (200,))
+    glow = glow.filter(ImageFilter.GaussianBlur(16))
+    # 그림자 (아래·오른쪽으로 살짝)
+    ld.polygon(ragged(top + 8, bot + 10, x0 + 8, x1 + 8, 7), fill=(90, 0, 0, 230))
+    ld.polygon(ragged(top, bot, x0, x1, 7), fill=rgb + (255,))
+    # 붓결: 띠 안에 밝고 어두운 가는 줄 몇 개
+    for _ in range(int((bot - top) / 9)):
+        yy = rnd.uniform(top + 6, bot - 6)
+        xa = rnd.uniform(x0, x0 + (x1 - x0) * 0.4)
+        xb = rnd.uniform(x0 + (x1 - x0) * 0.6, x1)
+        shade = rnd.choice([(255, 70, 70, 70), (150, 0, 0, 80)])
+        ld.line([(xa, yy), (xb, yy + (xa - xb) * 0.02)], fill=shade, width=rnd.randint(2, 5))
+    # 오른쪽 끝 튄 물감 몇 방울
+    for _ in range(4):
+        cx, cy = x1 + rnd.uniform(8, 22), rnd.uniform(top + 10, bot - 10)
+        r = rnd.uniform(3, 7)
+        ld.ellipse([cx - r, cy - r, cx + r, cy + r], fill=rgb + (255,))
+    base = canvas.convert("RGBA")
+    base = Image.alpha_composite(base, glow)
+    base = Image.alpha_composite(base, layer)
+    canvas.paste(base.convert("RGB"))
 
 
 def before_after(doc_p, out, cfg):
@@ -228,7 +279,10 @@ def main():
                 n = opt.get("banner_lines", 1)  # 여러 줄을 한 띠로 (다음 줄 글자 폭까지 덮는다)
                 w = max(d.textlength(r[0], font=fit(d, r[0], size, col - 60)) for r in big[big.index(row):big.index(row) + n]) + 70
                 top, bot = y + fs * 0.08, y + fs * 0.07 + int(size * cfg.get("line_gap", 1.05)) * (n - 1) + fs * 1.05
-                d.polygon([(14, top + 10), (14 + w, top - 6), (24 + w, bot - 8), (8, bot + 6)], fill=opt["banner"])
+                if opt.get("banner_fx") == "brush":
+                    brush_band(canvas, top - 4, bot + 4, 0, 14 + w, opt["banner"])
+                else:
+                    d.polygon([(14, top + 10), (14 + w, top - 6), (24 + w, bot - 8), (8, bot + 6)], fill=opt["banner"])
             ns = opt.get("num_scale", 1.0)
             if ns != 1.0:  # 숫자만 크게 (밑줄 맞춤)
                 x, base = 40, y + fs
