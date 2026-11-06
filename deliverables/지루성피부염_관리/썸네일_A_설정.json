@@ -1,0 +1,49 @@
+{
+ "layout": "text_left",
+ "keyword": [],
+ "bg_wash": false,
+ "bg_bright": 1.1,
+ "bg_blur": 2,
+ "bg_x": 260,
+ "big_stroke": 16,
+ "big_size": 162,
+ "col_w": 1120,
+ "bottom": 26,
+ "big": [
+  [
+   "지루성",
+   "white",
+   "black",
+   {
+    "banner": "#E8202A",
+    "banner_lines": 2
+   }
+  ],
+  [
+   "피부염 관리",
+   "white",
+   "black"
+  ],
+  [
+   "이것만",
+   "#FFE600",
+   "black",
+   {
+    "size": 196
+   }
+  ],
+  [
+   "외우세요",
+   "white",
+   "black"
+  ]
+ ],
+ "beauty": true,
+ "doc_crop": [
+  540,
+  60,
+  1460,
+  1095
+ ],
+ "line_gap": 0.98
+}
