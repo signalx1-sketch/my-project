@@ -21,7 +21,7 @@ from pathlib import Path
 
 ICONS = Path(__file__).resolve().parent.parent / "assets" / "vendor" / "icons"
 GREEN, RED, GREY = "#52B788", "#E63946", "#8A8A8A"
-KINDS = {"icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
+KINDS = {"comment", "icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
          "icontext", "diverge", "tags", "prompt", "timer", "segments", "merge", "iconlist"}
 
 
@@ -222,6 +222,19 @@ def _bubble(spec, paras, cid, tl):
     tl.add(f"#{cid}st", {"scale": 2.4, "opacity": 0, "rotation": -25}, {"scale": 1, "opacity": 1, "rotation": -8, "ease": "expo.out"}, at, 0.4)
     _draw(tl, f"#{cid}st .st *", at + 0.1, 0.35)
     _rise(tl, f"#{cid} .bnote .li", at + 0.3)
+    return "card tpl", body
+
+
+def _comment(spec, paras, cid, tl):
+    """실제 댓글 화면 (2026-11-08): 프로필 동그라미 + 닉네임 + 댓글 본문이 단어 단위로 나타난다."""
+    words = "".join(f"<span class=w>{_e(w)}</span> " for w in spec["text"].split())
+    body = (_title(spec, cid, tl) +
+            f'<div class="cmt" id="{cid}cm"><div class="cav">{svg("user-round", "ic")}</div>'
+            f'<div class="cbody"><div class="cname">{_e(spec.get("name", "시청자"))}<span class="cago">{_e(spec.get("ago", ""))}</span></div>'
+            f'<div class="ctext">{words}</div></div></div>')
+    nw = len(spec["text"].split())
+    tl.add(f"#{cid}cm", {"y": 50, "opacity": 0.2}, {"y": 0, "opacity": 1, "ease": "expo.out"}, 0.05, 0.5)
+    tl.add(f"#{cid} .ctext .w", {"opacity": 0.12}, {"opacity": 1, "ease": "none", "stagger": min(0.08, 1.6 / max(nw, 1)), "_n": nw}, 0.4, 0.12)
     return "card tpl", body
 
 
@@ -465,6 +478,11 @@ def _iconlist(spec, paras, cid, tl):
 
 
 CSS = """
+.cmt{display:flex;gap:40px;align-items:flex-start;background:#f4f4f4;color:#111;border-radius:36px;padding:52px 64px;max-width:1560px;margin-top:40px}
+.cav{flex:none;width:120px;height:120px;border-radius:50%;background:#d9d9d9;display:flex;align-items:center;justify-content:center}
+.cav .ic{width:72px;height:72px;stroke:#777}
+.cname{font-size:44px;font-weight:700;color:#333;margin-bottom:18px}.cago{font-weight:400;color:#888;margin-left:18px;font-size:38px}
+.ctext{font-size:62px;line-height:1.45;font-weight:500}
 .tpl .fit{display:flex;flex-direction:column;align-items:flex-start}
 .ttl{font-size:92px;line-height:1.2}
 .big{font-size:104px;line-height:1.22}

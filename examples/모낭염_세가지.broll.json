@@ -35,13 +35,6 @@
   "keep": true
  },
  {
-  "at": 20,
-  "offset": 0,
-  "asset": "영상_피부_위_세균_미생물_3D_클로즈업.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 22,
   "offset": 0,
   "asset": "영상_말라세지아_곰팡이_현미경.mp4",
@@ -127,7 +120,7 @@
  },
  {
   "at": 76,
-  "offset": 3,
+  "offset": 2,
   "asset": "영상_진료실_의사_고개젓자_표정굳는_여성.mp4",
   "mode": "full",
   "keep": true
