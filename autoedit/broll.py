@@ -334,7 +334,9 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                 key=lambda x: (x[0] is None, x[0] or 0))
     st = [x for x in st if x[0] is not None and bd.start <= x[0] < bd.end - SLIDE_MIN]
     for k, (t, a, cd, stop) in enumerate(st):
-        nxt = st[k + 1][0] if k + 1 < len(st) else bd.end
+        # 다음 슬라이드에서 끝낸다. 뺀 슬라이드(stop)가 MIN_SHOW 안쪽에 붙어 있으면 경계로 보지 않는다
+        # (자동 매칭이 뺀 슬라이드를 고정한 카드 바로 뒤에 놓아 카드가 1초 만에 잘려 사라지는 것 방지, 2026-11-08)
+        nxt = next((x[0] for x in st[k + 1:] if not (x[3] and x[0] - t < MIN_SHOW)), bd.end)
         dur = min(SLIDE_MAX, nxt - t, bd.end - t)
         if dur >= SLIDE_MIN and not stop:
             bd.add(a, "slide", t, dur)
