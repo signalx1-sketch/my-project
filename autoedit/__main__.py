@@ -123,7 +123,7 @@ def main():
         specs = json.loads(args.cards.read_text(encoding="utf-8")) if args.cards else {}
         card_kind = motion_hf.card_kinds(args.slides.resolve(), specs)
         if not args.no_motion:
-            cards = motion_hf.render(args.slides.resolve(), work, specs) or motion.render(args.slides.resolve(), work)
+            cards = motion_hf.render(args.slides.resolve(), work, specs, set(plan.get("slide_skip", []))) or motion.render(args.slides.resolve(), work)
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}",
                                              cards[m["slide"].no][0] if cards and m["slide"].no in cards else m["slide"].path,
                                              "slide", 0.0, m["slide"].text), "t": m["t"],

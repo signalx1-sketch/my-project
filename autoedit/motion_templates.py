@@ -21,7 +21,7 @@ from pathlib import Path
 
 ICONS = Path(__file__).resolve().parent.parent / "assets" / "vendor" / "icons"
 GREEN, RED, GREY = "#52B788", "#E63946", "#8A8A8A"
-KINDS = {"comment", "icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
+KINDS = {"image", "comment", "icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
          "icontext", "diverge", "tags", "prompt", "timer", "segments", "merge", "iconlist"}
 
 
@@ -40,8 +40,13 @@ def svg(name: str, cls: str = "ic") -> str:
     return re.sub(r"<(path|line|circle|polyline|rect|polygon|ellipse)\b", r'<\1 pathLength="1"', s)
 
 
+def _hl(t) -> str:
+    """**강조어** → 초록 강조 (2026-11-09: 핵심어만 색이 바뀌게)."""
+    return re.sub(r"\*\*(.+?)\*\*", r'<span class="hl">\1</span>', _e(t))
+
+
 def _lines(texts, cls: str, cid: str, tag: str) -> str:
-    return "".join(f'<div class="ln {cls}" id="{cid}{tag}{i}"><div class="li">{_e(t)}</div></div>'
+    return "".join(f'<div class="ln {cls}" id="{cid}{tag}{i}"><div class="li">{_hl(t)}</div></div>'
                    for i, t in enumerate(texts))
 
 
@@ -59,7 +64,11 @@ def _rise(tl, sel: str, at: float, n: int = 1, stagger: float = 0.12, dur: float
 def build(spec: dict, paras: list[str], cid: str, tl) -> tuple[str, str]:
     """(카드 class, 본문 HTML). tl은 motion_hf._TL."""
     k = spec["kind"]
-    return globals()[f"_{k}"](spec, paras, cid, tl)
+    cls, body = globals()[f"_{k}"](spec, paras, cid, tl)
+    if 'class="hl"' in body:  # 글자가 다 올라온 뒤 핵심어만 초록으로 물든다
+        tl.add(f"#{cid} .hl", {"color": "#ffffff", "textShadow": "0 0 0 rgba(82,183,136,0)"},
+               {"color": GREEN, "textShadow": "0 0 28px rgba(82,183,136,.45)", "ease": "power2.out"}, 0.85, 0.45)
+    return cls, body
 
 
 def _title(spec, cid, tl, at=0.0, cls="ttl") -> str:
@@ -113,7 +122,7 @@ def _phone(spec, paras, cid, tl):
 
 def _checklist(spec, paras, cid, tl):
     rows = "".join(f'<div class="crow" id="{cid}r{j}"><div class="cbox">{svg("check", "ck")}</div>'
-                   f'<div class="ln"><div class="li">{_e(it)}</div></div></div>' for j, it in enumerate(spec["items"]))
+                   f'<div class="ln"><div class="li">{_hl(it)}</div></div></div>' for j, it in enumerate(spec["items"]))
     body = _title(spec, cid, tl) + f'<div class="clist">{rows}</div>'
     t = 0.15
     acc = spec.get("accent")
@@ -222,6 +231,22 @@ def _bubble(spec, paras, cid, tl):
     tl.add(f"#{cid}st", {"scale": 2.4, "opacity": 0, "rotation": -25}, {"scale": 1, "opacity": 1, "rotation": -8, "ease": "expo.out"}, at, 0.4)
     _draw(tl, f"#{cid}st .st *", at + 0.1, 0.35)
     _rise(tl, f"#{cid} .bnote .li", at + 0.3)
+    return "card tpl", body
+
+
+def _image(spec, paras, cid, tl):
+    """캡처 이미지를 그대로 (2026-11-09: 실제 댓글 캡처). 흰 판 위에 이미지, 살짝 올라오며 천천히 다가온다."""
+    import base64, mimetypes
+    path = Path(spec["src"])
+    mime = mimetypes.guess_type(path.name)[0] or "image/png"
+    data = base64.b64encode(path.read_bytes()).decode()
+    body = (_title(spec, cid, tl) +
+            f'<div class="imgp" id="{cid}im"><img src="data:{mime};base64,{data}"></div>')
+    if spec.get("caption"):
+        body += _lines([spec["caption"]], "icap", cid, "c")
+        _rise(tl, f"#{cid} .icap .li", 0.7)
+    tl.add(f"#{cid}im", {"y": 60, "opacity": 0, "scale": 0.96}, {"y": 0, "opacity": 1, "scale": 1, "ease": "expo.out"}, 0.05, 0.6)
+    tl.add(f"#{cid}im img", {"scale": 1}, {"scale": 1.04, "ease": "none"}, 0.6, 5.0)
     return "card tpl", body
 
 
@@ -462,7 +487,7 @@ def _merge(spec, paras, cid, tl):
 
 def _iconlist(spec, paras, cid, tl):
     """아이콘 + 한 줄씩 (채널 소개, 안내 사항)."""
-    rows = "".join(f'<div class="ilr" id="{cid}r{k}"><div class="ilc">{svg(ic)}</div><div class="ln"><div class="li">{_e(t)}</div></div></div>'
+    rows = "".join(f'<div class="ilr" id="{cid}r{k}"><div class="ilc">{svg(ic)}</div><div class="ln"><div class="li">{_hl(t)}</div></div></div>'
                    for k, (ic, t) in enumerate(spec["rows"]))
     body = _title(spec, cid, tl) + f'<div class="il">{rows}</div>'
     if spec.get("foot"):
@@ -478,6 +503,9 @@ def _iconlist(spec, paras, cid, tl):
 
 
 CSS = """
+.hl{color:#52B788}
+.imgp{background:#fff;border-radius:28px;padding:36px 44px;margin-top:40px;box-shadow:0 30px 80px rgba(0,0,0,.55);overflow:hidden;max-width:1640px}
+.imgp img{display:block;width:100%;transform-origin:30% 50%}
 .cmt{display:flex;gap:40px;align-items:flex-start;background:#f4f4f4;color:#111;border-radius:36px;padding:52px 64px;max-width:1560px;margin-top:40px}
 .cav{flex:none;width:120px;height:120px;border-radius:50%;background:#d9d9d9;display:flex;align-items:center;justify-content:center}
 .cav .ic{width:72px;height:72px;stroke:#777}

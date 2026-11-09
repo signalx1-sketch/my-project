@@ -44,7 +44,7 @@
  {
   "at": 27,
   "offset": 0.5,
-  "asset": "영상_피부_위_곰팡이_진드기_3D_미생물_모낭충.mp4",
+  "asset": "스톡_pexels/영상_피부_모공_극접사_볼.mp4",
   "mode": "full",
   "keep": true
  },
@@ -79,7 +79,7 @@
  {
   "at": 55,
   "offset": 1,
-  "asset": "영상_피지선_모낭_3D_일러스트.mp4",
+  "asset": "스톡_pexels/영상_세균_배양_페트리접시_손에_든_실험실.mp4",
   "mode": "full",
   "keep": true
  },
@@ -87,6 +87,13 @@
   "at": 58,
   "offset": 0,
   "asset": "영상_사우나_땀_홍조_여성_열감.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 62,
+  "offset": 0,
+  "asset": "스톡_pexels/영상_세균_콜로니_페트리접시_들여다보기.mp4",
   "mode": "full",
   "keep": true
  },

@@ -37,6 +37,7 @@ HF_VERSION = "0.8.191"
 FPS = 30
 LEAD = 0.1           # 모든 등장을 이만큼 앞당긴다: 카드 첫 프레임이 빈 배경이면 화면이 깜빡이는 것처럼 보인다
 PREROLL = 3          # 카드 영상을 이만큼(프레임) 진행된 시점부터 쓴다 (카드끼리 컷으로 넘어갈 때 빈 화면 깜빡임 방지)
+AMBIENT_MIN = 6.5   # 카드 영상 최소 길이: 애니메이션이 끝나도 배경 빛·카메라가 천천히 움직여 멈춘 화면이 안 되게 (2026-11-09)
 HOLD = 0.35          # 애니메이션이 끝난 뒤 카드별로 남겨 두는 시간 (나머지는 편집기가 마지막 장면을 늘린다)
 TEXT_STYLES = ["maskrise", "blurword", "wipe", "greyink", "center"]
 
@@ -370,13 +371,19 @@ def build_project(cards: list[Card], folder: Path, specs: dict | None = None) ->
         prev_style = style
         prev_variant = spec.get("variant") if spec and spec.get("kind") == "icontext" else None
         dur = round(max(1.0, tl.end) + HOLD, 3)
+        dur = max(dur, AMBIENT_MIN)
         dur = round(round(dur * FPS) / FPS, 4)
+        # 계속 움직이는 바탕: 빛 두 개가 천천히 흐르고, 화면이 아주 조금씩 다가온다 (끝난 카드가 정지 화면처럼 보이지 않게)
+        tl.raw(f'tl.fromTo("#{cid} .amb .g1",{{x:-90,y:-30,opacity:.85}},{{x:110,y:40,opacity:1,duration:{dur},ease:"sine.inOut"}},{t:.3f});')
+        tl.raw(f'tl.fromTo("#{cid} .amb .g2",{{x:80,y:30}},{{x:-100,y:-30,duration:{dur},ease:"sine.inOut"}},{t:.3f});')
+        if style != "part":
+            tl.raw(f'tl.fromTo("#{cid} .stage",{{scale:1}},{{scale:1.035,duration:{dur},ease:"none"}},{t:.3f});')
         header = f'<div class="hdr" id="{cid}h">{_esc(c.header)}</div>' if c.header else ""
         if c.kind == "part" or style == "part":  # 초록 패널이 화면 전체를 쓸고 지나간다
             header += f'<div class="sweep" id="{cid}sw"></div>'
         # 머리말(섹션 이름)은 첫 프레임부터 떠 있게 둔다 (카드가 바뀌어도 화면이 비지 않게)
         sections.append(f'<section id="{cid}" class="clip {cls}" data-start="{t:.4f}" data-duration="{dur}" '
-                        f'data-track-index="0">{header}<div class="stage"><div class="fit">{body}</div></div></section>')
+                        f'data-track-index="0"><div class="amb"><i class="g1"></i><i class="g2"></i></div>{header}<div class="stage"><div class="fit">{body}</div></div></section>')
         scripts.extend(tl.lines)
         spans.append((c.no, t, dur))
         t = round(t + dur, 4)
@@ -400,6 +407,16 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0A0A}
 .card{position:absolute;inset:0;overflow:hidden;
  background:radial-gradient(1100px 760px at 6% 0%,rgba(82,183,136,.11),transparent 62%),
             radial-gradient(900px 700px at 100% 100%,rgba(230,57,70,.07),transparent 60%),#0A0A0A}
+
+.amb{position:absolute;inset:0;pointer-events:none;z-index:0}
+.amb i{position:absolute;border-radius:50%;filter:blur(40px)}
+.amb .g1{width:1100px;height:800px;left:-260px;top:-300px;background:radial-gradient(closest-side,rgba(82,183,136,.20),transparent)}
+.amb .g2{width:1000px;height:760px;right:-280px;bottom:-320px;background:radial-gradient(closest-side,rgba(230,57,70,.13),transparent)}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;
+ background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%),
+ url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.stage{z-index:2;transform-origin:center center}
+.hdr{z-index:3}
 .hdr{position:absolute;left:130px;top:62px;font-size:34px;font-weight:700;color:#52B788;letter-spacing:.02em}
 .stage{position:absolute;left:130px;right:130px;top:150px;height:700px;display:flex;align-items:center}
 .fit{position:relative;width:100%;transform-origin:left center}
@@ -447,11 +464,11 @@ tl.seek(0);
 </body></html>"""
 
 
-def render(pptx: Path, work: Path, specs: dict | None = None) -> dict[int, tuple[Path, float]] | None:
-    """슬라이드 번호 → (카드 mp4, 길이). HyperFrames를 쓸 수 없으면 None."""
+def render(pptx: Path, work: Path, specs: dict | None = None, skip: set | None = None) -> dict[int, tuple[Path, float]] | None:
+    """슬라이드 번호 → (카드 mp4, 길이). HyperFrames를 쓸 수 없으면 None. skip: 쓰지 않을 슬라이드 번호 (렌더하지 않는다)"""
     folder = work / "hf_cards"
     folder.mkdir(parents=True, exist_ok=True)
-    cards = read_cards(pptx)
+    cards = [c for c in read_cards(pptx) if not skip or c.no not in skip]
     try:
         spans = build_project(cards, folder, specs)
     except RuntimeError as e:
