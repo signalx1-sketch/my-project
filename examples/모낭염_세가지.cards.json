@@ -98,7 +98,8 @@
    "**세균 때문이**",
    "아닐 수 있습니다"
   ],
-  "strike": true
+  "strike": true,
+  "bg": "deliverables/모낭염_세가지/card_bg/세균_콜로니.jpg"
  },
  "10": {
   "kind": "graph",
@@ -497,12 +498,19 @@
   "caption": "처음엔"
  },
  "53": {
-  "kind": "warning",
-  "tag": "함정",
-  "text": [
-   "그런데 모낭염에서는",
-   "이게 함정입니다"
-  ]
+  "kind": "punch",
+  "lines": [
+   [
+    "그런데",
+    "모낭염에서는"
+   ],
+   [
+    "이게",
+    "함정입니다"
+   ]
+  ],
+  "box": "함정입니다",
+  "bg": "deliverables/모낭염_세가지/card_bg/붉어진_얼굴_연고.jpg"
  },
  "54": {
   "kind": "icontext",
@@ -511,7 +519,8 @@
    "스테로이드는",
    "**면역을 억제**해서",
    "염증을 가라앉히는 약"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/연고_바르기.jpg"
  },
  "55": {
   "kind": "icons",

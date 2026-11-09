@@ -317,6 +317,21 @@ def card_kinds(pptx: Path, specs: dict | None = None) -> dict[int, str]:
     return out
 
 
+def _bg_html(spec, cid: str) -> str:
+    """카드 뒤에 깔 장면 사진 (설정의 "bg": 이미지 경로). 흐리고 어둡게 해서 글자가 잘 읽히게 (2026-11-09)."""
+    if not spec or not spec.get("bg"):
+        return ""
+    import base64
+    from PIL import Image, ImageFilter, ImageEnhance
+    import io
+    im = Image.open(spec["bg"]).convert("RGB")
+    im = im.resize((2000, int(im.height * 2000 / im.width)))
+    im = ImageEnhance.Brightness(im.filter(ImageFilter.GaussianBlur(spec.get("bg_blur", 3)))).enhance(spec.get("bg_bright", 0.7))
+    buf = io.BytesIO()
+    im.save(buf, "JPEG", quality=82)
+    return f'<div class="cbg" style="background-image:url(data:image/jpeg;base64,{base64.b64encode(buf.getvalue()).decode()})"></div>'
+
+
 def build_project(cards: list[Card], folder: Path, specs: dict | None = None) -> list[tuple[int, float, float]]:
     """카드들을 이어 붙인 HyperFrames 프로젝트를 쓴다. [(슬라이드 번호, 시작 초, 길이)]를 돌려준다.
     specs: {슬라이드 번호: 템플릿 설정} (motion_templates 참고). 없는 카드는 글자 카드로 만든다."""
@@ -374,16 +389,16 @@ def build_project(cards: list[Card], folder: Path, specs: dict | None = None) ->
         dur = max(dur, AMBIENT_MIN)
         dur = round(round(dur * FPS) / FPS, 4)
         # 계속 움직이는 바탕: 빛 두 개가 천천히 흐르고, 화면이 아주 조금씩 다가온다 (끝난 카드가 정지 화면처럼 보이지 않게)
+        if spec and spec.get("bg"):
+            tl.raw(f'tl.fromTo("#{cid} .cbg",{{x:-40}},{{x:40,duration:{dur},ease:"none"}},{t:.3f});')
         tl.raw(f'tl.fromTo("#{cid} .amb .g1",{{x:-90,y:-30,opacity:.85}},{{x:110,y:40,opacity:1,duration:{dur},ease:"sine.inOut"}},{t:.3f});')
         tl.raw(f'tl.fromTo("#{cid} .amb .g2",{{x:80,y:30}},{{x:-100,y:-30,duration:{dur},ease:"sine.inOut"}},{t:.3f});')
-        if style != "part":
-            tl.raw(f'tl.fromTo("#{cid} .stage",{{scale:1}},{{scale:1.035,duration:{dur},ease:"none"}},{t:.3f});')
         header = f'<div class="hdr" id="{cid}h">{_esc(c.header)}</div>' if c.header else ""
         if c.kind == "part" or style == "part":  # 초록 패널이 화면 전체를 쓸고 지나간다
             header += f'<div class="sweep" id="{cid}sw"></div>'
         # 머리말(섹션 이름)은 첫 프레임부터 떠 있게 둔다 (카드가 바뀌어도 화면이 비지 않게)
         sections.append(f'<section id="{cid}" class="clip {cls}" data-start="{t:.4f}" data-duration="{dur}" '
-                        f'data-track-index="0"><div class="amb"><i class="g1"></i><i class="g2"></i></div>{header}<div class="stage"><div class="fit">{body}</div></div></section>')
+                        f'data-track-index="0">{_bg_html(spec, cid)}<div class="amb"><i class="g1"></i><i class="g2"></i></div>{header}<div class="stage"><div class="fit">{body}</div></div></section>')
         scripts.extend(tl.lines)
         spans.append((c.no, t, dur))
         t = round(t + dur, 4)
@@ -408,6 +423,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0A0A}
  background:radial-gradient(1100px 760px at 6% 0%,rgba(82,183,136,.11),transparent 62%),
             radial-gradient(900px 700px at 100% 100%,rgba(230,57,70,.07),transparent 60%),#0A0A0A}
 
+.cbg{position:absolute;left:-60px;right:-60px;top:0;bottom:0;background-size:cover;background-position:center;z-index:0}
+.cbg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,.62),rgba(10,10,10,.12) 70%)}
 .amb{position:absolute;inset:0;pointer-events:none;z-index:0}
 .amb i{position:absolute;border-radius:50%;filter:blur(40px)}
 .amb .g1{width:1100px;height:800px;left:-260px;top:-300px;background:radial-gradient(closest-side,rgba(82,183,136,.20),transparent)}

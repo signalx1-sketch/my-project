@@ -21,7 +21,7 @@ from pathlib import Path
 
 ICONS = Path(__file__).resolve().parent.parent / "assets" / "vendor" / "icons"
 GREEN, RED, GREY = "#52B788", "#E63946", "#8A8A8A"
-KINDS = {"image", "comment", "icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
+KINDS = {"punch", "image", "comment", "icons", "phone", "checklist", "compare2", "dots", "fork", "timeline", "bubble", "warning", "graph", "part",
          "icontext", "diverge", "tags", "prompt", "timer", "segments", "merge", "iconlist"}
 
 
@@ -42,7 +42,7 @@ def svg(name: str, cls: str = "ic") -> str:
 
 def _hl(t) -> str:
     """**강조어** → 초록 강조 (2026-11-09: 핵심어만 색이 바뀌게)."""
-    return re.sub(r"\*\*(.+?)\*\*", r'<span class="hl">\1</span>', _e(t))
+    return re.sub(r"\*\*(.+?)\*\*", r'<span class="hl"><i class="hlm"></i>\1</span>', _e(t))
 
 
 def _lines(texts, cls: str, cid: str, tag: str) -> str:
@@ -66,8 +66,7 @@ def build(spec: dict, paras: list[str], cid: str, tl) -> tuple[str, str]:
     k = spec["kind"]
     cls, body = globals()[f"_{k}"](spec, paras, cid, tl)
     if 'class="hl"' in body:  # 글자가 다 올라온 뒤 핵심어만 초록으로 물든다
-        tl.add(f"#{cid} .hl", {"color": "#ffffff", "textShadow": "0 0 0 rgba(82,183,136,0)"},
-               {"color": GREEN, "textShadow": "0 0 28px rgba(82,183,136,.45)", "ease": "power2.out"}, 0.85, 0.45)
+        tl.add(f"#{cid} .hl .hlm", {"scaleX": 0}, {"scaleX": 1, "ease": "power3.inOut", "stagger": 0.15, "_n": body.count('class="hlm"')}, 0.8, 0.5)
     return cls, body
 
 
@@ -232,6 +231,27 @@ def _bubble(spec, paras, cid, tl):
     _draw(tl, f"#{cid}st .st *", at + 0.1, 0.35)
     _rise(tl, f"#{cid} .bnote .li", at + 0.3)
     return "card tpl", body
+
+
+def _punch(spec, paras, cid, tl):
+    """짧고 센 문장 (2026-11-09): 어절이 하나씩 크게 '쾅' 박히고, 마지막 말(box)은 초록 상자에 담긴다.
+    spec: {"lines": [["그런데"], ["모낭염에서는"], ["이게", "함정입니다"]], "box": "함정입니다"}"""
+    rows, k = [], 0
+    for row in spec["lines"]:
+        ws = []
+        for w in row:
+            cls = "pw pbx" if w == spec.get("box") else "pw"
+            ws.append(f'<span class="{cls}" id="{cid}w{k}">{_e(w)}</span>')
+            k += 1
+        rows.append(f'<div class="prow">{" ".join(ws)}</div>')
+    body = f'<div class="punch">{"".join(rows)}</div>'
+    for j in range(k):
+        tl.add(f"#{cid}w{j}", {"scale": 1.9, "opacity": 0, "filter": "blur(10px)"},
+               {"scale": 1, "opacity": 1, "filter": "blur(0px)", "ease": "back.out(2.2)"}, 0.05 + 0.32 * j, 0.42)
+    if spec.get("box"):
+        tl.add(f"#{cid} .pbx", {"backgroundColor": "rgba(82,183,136,0)", "color": "#ffffff"},
+               {"backgroundColor": "rgba(82,183,136,1)", "color": "#0A0A0A", "ease": "power2.out"}, 0.1 + 0.32 * k, 0.3)
+    return "card tpl center", body
 
 
 def _image(spec, paras, cid, tl):
@@ -503,7 +523,12 @@ def _iconlist(spec, paras, cid, tl):
 
 
 CSS = """
-.hl{color:#52B788}
+.punch{text-align:center;width:100%}
+.prow{font-size:150px;line-height:1.25;letter-spacing:-.01em}
+.pw{display:inline-block}
+.pbx{padding:0 .18em;border-radius:.12em}
+.hl{position:relative;display:inline-block;z-index:0}
+.hlm{position:absolute;left:-.14em;right:-.14em;bottom:.02em;height:.5em;background:#36b37e;border-radius:.1em;transform:skewX(-10deg) rotate(-1deg);transform-origin:left center;z-index:-1}
 .imgp{background:#fff;border-radius:28px;padding:36px 44px;margin-top:40px;box-shadow:0 30px 80px rgba(0,0,0,.55);overflow:hidden;max-width:1640px}
 .imgp img{display:block;width:100%;transform-origin:30% 50%}
 .cmt{display:flex;gap:40px;align-items:flex-start;background:#f4f4f4;color:#111;border-radius:36px;padding:52px 64px;max-width:1560px;margin-top:40px}
