@@ -667,6 +667,7 @@ CSS = """
 .imark.red{color:#E63946}
 .imark .ic{width:520px;height:520px;stroke-width:1.3;color:inherit}
 .imark .ibig{font-size:560px;color:inherit}
+.itx.mark .itext{position:relative;z-index:1;max-width:calc(100% - 600px)}
 .itx.mark .itext .ln{font-size:118px}
 .ibar{height:14px;width:420px;background:#52B788;border-radius:7px;margin-top:34px;transform-origin:left center}
 """
