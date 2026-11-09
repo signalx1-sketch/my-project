@@ -2978,5 +2978,102 @@
   "mood": "정보",
   "dur": 10.0,
   "exclude": false
+ },
+ {
+  "file": "영상_거울앞_턱_모낭염_구진_만지는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1x7JKitKRED528btnXTRAbddGIVFbuBO3",
+  "desc": "거울 앞 턱·입가 작은 붉은 모낭염 구진을 손가락으로 만지며 걱정 (구진은 옅게 보임)",
+  "tags": [
+   "모낭염",
+   "턱",
+   "거울"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_식탁_항생제_캡슐_먹고_연고_집는_여성.mp4",
+  "source": "drive",
+  "drive_id": "165FKul_GwubKEwgdWE_nfgFxwgOndkLk",
+  "desc": "식탁에서 약 봉투 뜯어 캡슐을 물과 삼키고 흰 연고 튜브를 집음 (항생제 복용)",
+  "tags": [
+   "항생제",
+   "약",
+   "연고"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_소파_가려워_턱이마_긁는_여성_구진.mp4",
+  "source": "drive",
+  "drive_id": "19bP7Fthb8DIpPRtWFill5Dzyxjodc6va",
+  "desc": "소파에서 휴대폰 보다 가려워 턱·이마를 긁고 참음 (가려움, 구진)",
+  "tags": [
+   "가려움",
+   "모낭염"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_약국_약사에게_연고_성분_묻는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1A7StOXw0gUlosskIK6DPlmvm3DTMNHUu",
+  "desc": "약국 카운터에서 흰 연고 튜브를 내밀며 묻고 약사가 뒷면을 가리키며 설명 (복약 지도)",
+  "tags": [
+   "약국",
+   "약사",
+   "연고"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_땀젖은_운동복_미지근한물_헹구고_갈아입는_여성.mp4",
+  "source": "drive",
+  "drive_id": "10Ux7zwE9HdBrPgQn_1PVUxgfz8TWSNN6",
+  "desc": "땀에 젖은 회색 운동복, 세면대에서 물로 얼굴 헹구고 수건으로 두드린 뒤 마른 옷을 집음 (땀 관리)",
+  "tags": [
+   "땀",
+   "세안",
+   "운동"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_마스크_벗자_턱_모낭염_넉넉한_마스크로_바꾸는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1EIPuse8D17QHAL1Y9jb7-m2Fsddh2Q4e",
+  "desc": "거울 앞에서 마스크를 벗고 턱을 만진 뒤 넉넉한 마스크로 바꿔 씀 (마스크 마찰)",
+  "tags": [
+   "마스크",
+   "모낭염",
+   "턱"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_면도후_턱_모낭염_찡그리는_남성.mp4",
+  "source": "drive",
+  "drive_id": "19XFl9GTOeYWpo2jWM-I5Qb1cP9ahRc9k",
+  "desc": "30대 남성이 면도 후 거울 속 턱의 붉은 모낭염을 보고 만지며 찡그림",
+  "tags": [
+   "면도",
+   "남성",
+   "모낭염"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
  }
 ]
