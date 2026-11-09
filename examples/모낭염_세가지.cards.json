@@ -25,7 +25,8 @@
     "줄일 수 있습니다"
    ]
   ],
-  "accent": 2
+  "accent": 2,
+  "bg": "deliverables/모낭염_세가지/card_bg/card2.jpg"
  },
  "3": {
   "kind": "graph",
@@ -66,12 +67,17 @@
   "note": "겪어보셨죠?"
  },
  "6": {
-  "kind": "checklist",
-  "items": [
-   "약을 제대로 안 써서 ✕",
-   "관리를 못 해서 ✕"
+  "kind": "punch",
+  "lines": [
+   [
+    "여러분",
+    "탓이"
+   ],
+   [
+    "아닙니다"
+   ]
   ],
-  "caption": "여러분 탓이 아닙니다"
+  "box": "아닙니다"
  },
  "7": {
   "kind": "icontext",
@@ -88,7 +94,8 @@
   "text": [
    "항생제는",
    "**세균**을 잡는 약입니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card8.jpg"
  },
  "9": {
   "kind": "icontext",
@@ -117,7 +124,8 @@
    "년째 피부과·대학병원에서",
    "**포기한 환자분**만",
    "봅니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card11.jpg"
  },
  "12": {
   "kind": "icons",
@@ -164,24 +172,19 @@
   "caption": "이 영상 안 보셔도 됩니다"
  },
  "16": {
-  "kind": "segments",
-  "title": "이런 분만 끝까지 보세요",
-  "segs": [
-   {
-    "label": "약 써서 좋아짐",
-    "w": 0.32,
-    "color": "#52B788"
-   },
-   {
-    "label": "끊으면 올라옴",
-    "w": 0.32,
-    "color": "#E63946"
-   },
-   {
-    "label": "병원 바꿔도 반복",
-    "w": 0.36
-   }
-  ]
+  "kind": "punch",
+  "lines": [
+   [
+    "병원을",
+    "바꿔도",
+    "반복된다면"
+   ],
+   [
+    "끝까지",
+    "보세요"
+   ]
+  ],
+  "box": "끝까지"
  },
  "17": {
   "kind": "icontext",
@@ -233,7 +236,8 @@
    "영상 끝에는",
    "이렇게도 안 낫는 모낭염",
    "**치료 방법**도 알려드립니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card21.jpg"
  },
  "23": {
   "kind": "icontext",
@@ -348,7 +352,8 @@
    "오히려 항생제가",
    "피부 균 균형을 바꿔",
    "**악화**시킬 수 있습니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card31.jpg"
  },
  "33": {
   "kind": "icontext",
@@ -402,7 +407,8 @@
    "소염 치료로",
    "**잘 가라앉지 않습니다**"
   ],
-  "strike": true
+  "strike": true,
+  "bg": "deliverables/모낭염_세가지/card_bg/card40.jpg"
  },
  "41": {
   "kind": "icontext",
@@ -428,7 +434,8 @@
     "icon": "target",
     "color": "#d9822b"
    }
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card43.jpg"
  },
  "44": {
   "kind": "checklist",
@@ -472,13 +479,20 @@
   ]
  },
  "49": {
-  "kind": "icontext",
-  "icon": "circle-alert",
-  "text": [
-   "이것보다 더 흔하게",
-   "많은 분들이 하는",
-   "**실수**가 있습니다"
-  ]
+  "kind": "punch",
+  "lines": [
+   [
+    "이것보다",
+    "더",
+    "흔한"
+   ],
+   [
+    "실수가",
+    "있습니다"
+   ]
+  ],
+  "box": "실수가",
+  "bg": "deliverables/모낭염_세가지/card_bg/card49.jpg"
  },
  "51": {
   "kind": "graph",
@@ -506,10 +520,10 @@
    ],
    [
     "이게",
-    "함정입니다"
+    "불행의 시작"
    ]
   ],
-  "box": "함정입니다",
+  "box": "불행의 시작",
   "bg": "deliverables/모낭염_세가지/card_bg/붉어진_얼굴_연고.jpg"
  },
  "54": {
@@ -593,7 +607,8 @@
    "그냥",
    "“모낭염 연고”예요"
   ],
-  "note": "이름도 모르고 바르는 분이 많습니다"
+  "note": "이름도 모르고 바르는 분이 많습니다",
+  "bg": "deliverables/모낭염_세가지/card_bg/card63.jpg"
  },
  "64": {
   "kind": "checklist",
@@ -715,7 +730,8 @@
   "text": [
    "%가 따뜻한 환경에서",
    "일하고 있었습니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card76.jpg"
  },
  "77": {
   "kind": "icontext",
@@ -784,7 +800,8 @@
    "**오일 제품**을",
    "빼 보세요"
   ],
-  "strike": true
+  "strike": true,
+  "bg": "deliverables/모낭염_세가지/card_bg/card84.jpg"
  },
  "85": {
   "kind": "icontext",
@@ -793,7 +810,8 @@
    "마스크·헬멧처럼",
    "계속 비비는 부위는",
    "**헐렁하게**"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card85.jpg"
  },
  "86": {
   "kind": "icontext",
@@ -843,7 +861,8 @@
    "이것만 해도",
    "웬만한 모낭염에는",
    "**상당히 도움**이 됩니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card91.jpg"
  },
  "93": {
   "kind": "icontext",
@@ -861,7 +880,8 @@
    "오래 끌거나 반복 사용하면",
    "세 가지 일이",
    "생깁니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card94.jpg"
  },
  "95": {
   "kind": "icontext",
@@ -870,7 +890,8 @@
    "하나, 혈관이 늘어난 채",
    "돌아오지 않아",
    "**주사피부염** 같은 상태"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card95.jpg"
  },
  "96": {
   "kind": "icontext",
@@ -879,7 +900,8 @@
    "둘, 피부 장벽과 상재균 생태계가",
    "무너져",
    "**지루성피부염** 같은 증상"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card96.jpg"
  },
  "97": {
   "kind": "icontext",
@@ -888,7 +910,8 @@
    "셋, 피부 신경이 과민해져",
    "작은 온도 변화에도",
    "**염증 신호**가 올라옵니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card97.jpg"
  },
  "98": {
   "kind": "icontext",
@@ -1013,7 +1036,8 @@
    "경험적으로 효과가 좋았던 생약을",
    "**자윤수액**에",
    "적용했습니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card107.jpg"
  },
  "108": {
   "kind": "timeline",
@@ -1057,7 +1081,8 @@
   "text": [
    "이런 질문을",
    "자주 받습니다"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card110.jpg"
  },
  "112": {
   "kind": "warning",
@@ -1075,7 +1100,8 @@
    "제가 직접",
    "**증상을 본 것도**",
    "아니니까요"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card113.jpg"
  },
  "114": {
   "kind": "timeline",
@@ -1111,7 +1137,8 @@
    "다른 병원에서",
    "많이 당하셔서",
    "**걱정**이 크시죠"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card116.jpg"
  },
  "117": {
   "kind": "bubble",
@@ -1129,7 +1156,8 @@
    "치료를 충분히 하고도 효과가 없으면",
    "치료비 **전액**",
    "환불 프로그램"
-  ]
+  ],
+  "bg": "deliverables/모낭염_세가지/card_bg/card118.jpg"
  },
  "119": {
   "kind": "icontext",
