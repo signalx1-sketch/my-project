@@ -97,6 +97,8 @@ def _icons(spec, paras, cid, tl):
 
 def _phone(spec, paras, cid, tl):
     left = spec.get("title") or paras
+    if isinstance(left, str):  # 제목을 문자열 하나로 주면 글자마다 한 줄이 되던 문제 (2026-11-13)
+        left = [left]
     rows = []
     for j, ln in enumerate(spec["lines"]):
         txt, tone = (ln, "") if isinstance(ln, str) else (ln[0], ln[1])
