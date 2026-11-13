@@ -265,7 +265,10 @@ def group_lines(ws: list[OutWord], max_chars: int = MAX_CHARS, max_words: int = 
     cur: list[OutWord] = []
     for w in ws:
         glued = cur and (cur[-1].text.rstrip(",") in NO_BREAK_AFTER or _leans(w.text)
-                         or (len(cur[-1].text) > 1 and cur[-1].text.endswith("의")))  # '보습의 / 본질은'
+                         or (len(cur[-1].text) > 1 and cur[-1].text.endswith("의"))  # '보습의 / 본질은'
+                         # '왔다 / 갔다 / 해요?': '왔다 갔다 하다'는 한 덩어리 (2026-11-13: '갔다'만 따로 한 줄로 나옴)
+                         or (cur[-1].text.endswith("왔다") and w.text.startswith("갔다"))
+                         or (cur[-1].text.endswith("갔다") and w.text[:1] in ("해", "하")))
         if cur and (w.section != cur[-1].section or not glued and (w.s - cur[-1].e > LINE_GAP or _ends_sentence(cur[-1].text))):
             segs.append(cur)
             cur = []
