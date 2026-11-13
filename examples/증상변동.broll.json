@@ -14,9 +14,23 @@
   "keep": true
  },
  {
+  "at": 7,
+  "offset": 6,
+  "asset": "영상_욕실_거울_홍조_얼굴_걱정_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 11,
   "offset": 0,
   "asset": "영상_거울앞_붉은볼_눌러보며_가라앉는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 15,
+  "offset": 6,
+  "asset": "스톡_pexels/영상_현미경_들여다보는_연구자.mp4",
   "mode": "full",
   "keep": true
  },
@@ -91,13 +105,6 @@
   "keep": true
  },
  {
-  "at": 77,
-  "offset": 0,
-  "asset": "영상_밤책상_병원영수증_한약봉지_한숨쉬는_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 74,
   "offset": 0,
   "asset": "영상_거울_속_홍조_구진_볼_여성.mp4",
@@ -105,9 +112,23 @@
   "keep": true
  },
  {
+  "at": 75,
+  "offset": 4,
+  "asset": "영상_거울_보며_홍조_볼_만지는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 76,
   "offset": 6,
   "asset": "영상_깨끗한피부_현관문_나서며_웃는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 77,
+  "offset": 0,
+  "asset": "영상_밤책상_병원영수증_한약봉지_한숨쉬는_여성.mp4",
   "mode": "full",
   "keep": true
  }
