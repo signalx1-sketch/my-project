@@ -3075,5 +3075,99 @@
   "mood": "정보",
   "dur": 10.04,
   "exclude": false
+ },
+ {
+  "file": "영상_새벽3시_침대_볼_화끈거려_잠못드는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1XRXJxuOAsH3Q4jfoVpHEGQlbEk0UUIgw",
+  "desc": "새벽 3시 침대에서 뒤척이다 일어나 달아오른 볼을 손등으로 식힘 (밤에 심해짐, 수면)",
+  "tags": [
+   "밤",
+   "수면",
+   "화끈거림"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_소파_담요_체온계_감기몸살_여성.mp4",
+  "source": "drive",
+  "drive_id": "1qgM1rp9-0Ew7Fce1LkjJTHjTP31hOHc-",
+  "desc": "소파에 담요 두르고 체온계를 보고 찡그림, 티슈·감기약 (감기 몸살)",
+  "tags": [
+   "감기",
+   "몸살"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_팔에_독감백신_맞고_반창고_붙이는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1IZZ76VD4tglkkSc3wh6zH9uw8-UI3CWI",
+  "desc": "간호사가 팔에 주사하고 반창고, 살짝 찡그림 (독감 백신)",
+  "tags": [
+   "백신",
+   "주사"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_레드와인_마시고_볼_붉어지는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1lOsn-bj_raXCOm4ROHz8yj_mWwJrfjFZ",
+  "desc": "식당에서 레드와인 마신 뒤 볼이 붉어져 손으로 감싸며 웃음 (술, 붉은기는 조금 진하게 보임)",
+  "tags": [
+   "술",
+   "홍조"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_밤_사무실_노트북_야근_지친_여성.mp4",
+  "source": "drive",
+  "drive_id": "1Yb29TxkMGm4WweiDqs2Ljh7pyr5orfjL",
+  "desc": "밤 사무실 노트북 앞에서 눈 비비고 뒤로 기대 천장 봄 (과로, 야근)",
+  "tags": [
+   "과로",
+   "스트레스"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_알약_먹고_붉고_부은_얼굴_각질_걱정하는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1umAPgc1CUEbO05eWV8VrMw9aE6ohybZ0",
+  "desc": "알약을 먹고 거울 속 붉고 부은 얼굴과 코 옆 각질을 걱정스럽게 만짐 (치료 초반 악화)",
+  "tags": [
+   "치료 초반",
+   "악화",
+   "각질"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
+ },
+ {
+  "file": "영상_벽달력_짚어보고_옅어진_얼굴에_안도하는_여성.mp4",
+  "source": "drive",
+  "drive_id": "1D2N_5gV3aXG1h5nl-NG6G_-Boa3_QNHn",
+  "desc": "벽 달력 날짜를 짚어 보다 거울 속 옅어진 얼굴에 안도의 미소 (추세 개선)",
+  "tags": [
+   "달력",
+   "회복",
+   "추세"
+  ],
+  "mood": "정보",
+  "dur": 10.04,
+  "exclude": false
  }
 ]
