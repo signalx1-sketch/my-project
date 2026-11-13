@@ -35,13 +35,6 @@
   "keep": true
  },
  {
-  "at": 33,
-  "offset": 8,
-  "asset": "영상_햇빛_자외선_일광화상_얼굴_가리는_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 36,
   "offset": 6,
   "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
@@ -77,13 +70,6 @@
   "keep": true
  },
  {
-  "at": 53,
-  "offset": 12,
-  "asset": "영상_벽달력_날짜에_동그라미_치는_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 57,
   "offset": 4,
   "asset": "영상_연고_바르고_가라앉았다_다시_붉어지는_여성.mp4",
@@ -108,6 +94,20 @@
   "at": 77,
   "offset": 0,
   "asset": "영상_밤책상_병원영수증_한약봉지_한숨쉬는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 74,
+  "offset": 0,
+  "asset": "영상_거울_속_홍조_구진_볼_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 76,
+  "offset": 6,
+  "asset": "영상_깨끗한피부_현관문_나서며_웃는_여성.mp4",
   "mode": "full",
   "keep": true
  }

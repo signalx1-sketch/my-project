@@ -129,7 +129,7 @@ def main():
                                              "slide", 0.0, m["slide"].text), "t": m["t"],
                         "card": card_kind.get(m["slide"].no, ""),
                         # 계획에서 뺀 슬라이드(자료 영상으로 대신): 화면에 넣지 않고, 앞 카드가 그 자리까지 늘어나지 않게 경계로만 쓴다
-                        "stop": m["slide"].no in set(plan.get("slide_skip", []))} for m in matched]
+                        "stop": m["slide"].no in set(plan.get("slide_skip", [])) | set(plan.get("slide_hide", []))} for m in matched]
         # 슬라이드에 적힌 용어로 자막 오타를 고친다 (직접 적은 fix가 우선)
         auto_fix = slides_mod.term_fixes(sl, words)
         plan["fix"] = {**auto_fix, **plan.get("fix", {})}
