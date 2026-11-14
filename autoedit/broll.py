@@ -27,6 +27,8 @@ LOOKAHEAD = 3.5     # 그 문장 자리가 이미 덮여 있으면 이만큼 뒤
 FULL_MAX = 6.0
 SLIDE_MAX = 6.0      # 슬라이드는 다음 슬라이드가 나올 때까지, 최대 이만큼 (화면이 3.5~5.5초마다 바뀌게)
 SLIDE_MIN = 1.5
+PAPER_MIN = 6.0      # 논문 카드는 최소 이만큼 (글이 많다)
+PAPER_MAX = 8.0
 SIDE_SEC = 3.0       # 팝업 길이
 SIDE_MIN = 2.2
 SIDE_GAP = 12.0      # 팝업 사이 최소 간격
@@ -297,13 +299,15 @@ def video_twin(a: Asset, videos: list[Asset]) -> Asset | None:
 
 
 def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset], tl: Timeline,
-          slides: list[dict] = (), face_target: float = FACE_TARGET) -> list[Placement]:
+          slides: list[dict] = (), face_target: float = FACE_TARGET,
+          squint: list[tuple[float, float]] = ()) -> list[Placement]:
     """자료 화면을 출력 시간에 배치한다.
 
     1. 슬라이드: 그 내용을 말하는 순간부터 다음 슬라이드 전까지 (최대 SLIDE_MAX초)
     2. 얼굴 옆 팝업: 얼굴이 보이는 곳에 (그 자리는 얼굴로 남긴다)
     3. 계획에서 내용이 맞는 전체 화면 자료: 빈 곳에 FULL_SEC초씩 (앞 자료와 바로 붙어도 된다)
     4. 얼굴이 보이는 시간이 본편의 face_target을 넘으면, 긴 얼굴 구간부터 채움용 자료로 덮는다
+    4b. 실눈 구간(squint, 원본 시각)은 얼굴로 두지 않는다: 앞 화면을 늘리거나 채움용 자료로 덮는다 (2026-11-14)
     plan_broll 항목: {at, offset, asset, mode, filler?}. slides 항목: {asset: Asset, t: 원본 초}
     """
     # 전체 화면은 사진을 확대하는 것보다 영상이 낫다: 같은 장면의 영상이 있으면 그걸로, 없으면 사진은 전체 화면에 쓰지 않는다
@@ -336,8 +340,10 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
     for k, (t, a, cd, stop) in enumerate(st):
         # 다음 슬라이드에서 끝낸다. 뺀 슬라이드(stop)가 MIN_SHOW 안쪽에 붙어 있으면 경계로 보지 않는다
         # (자동 매칭이 뺀 슬라이드를 고정한 카드 바로 뒤에 놓아 카드가 1초 만에 잘려 사라지는 것 방지, 2026-11-08)
-        nxt = next((x[0] for x in st[k + 1:] if not (x[3] and x[0] - t < MIN_SHOW)), bd.end)
-        dur = min(SLIDE_MAX, nxt - t, bd.end - t)
+        # 논문 카드는 글이 많아 PAPER_MIN초는 보여 준다: 그 안의 뺀 슬라이드는 경계로 보지 않는다 (2026-11-14)
+        hold = PAPER_MIN if cd == "paper" else MIN_SHOW
+        nxt = next((x[0] for x in st[k + 1:] if not (x[3] and x[0] - t < hold)), bd.end)
+        dur = min(PAPER_MAX if cd == "paper" else SLIDE_MAX, nxt - t, bd.end - t)
         if dur >= SLIDE_MIN and not stop:
             bd.add(a, "slide", t, dur)
             bd.placed[-1].card = cd
@@ -406,6 +412,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             if item.get("keep"):  # 계획에서 꼭 넣으라고 한 자료는 얼굴을 보여 주려고 뺄 때도 남긴다
                 bd.placed[-1].keep = True
 
+    hard_keep = list(keep_face)  # 꼭 얼굴로 둘 곳 (챕터 시작, 맨 앞, 끝인사). 4단계의 '채울 자료 없음'은 실눈이면 덮는다
     # 4. 얼굴 비율 맞추기: 긴 얼굴 구간 가운데를 채움용 전체 화면으로 덮는다
     body_len = bd.end - bd.start
     fillers = [x for x in items if x.get("mode", "full") == "full"]
@@ -435,6 +442,11 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             keep_face.append((s, e))
             continue
         bd.add(pick, "full", t, dur)
+
+    # 4b. 실눈 얼굴 덮기: 눈을 크게 뜬 곳만 얼굴로 남긴다 (2026-11-14: 밤 조명에 눈이 부셔 실눈인 장면이 많았다)
+    sq_out = _squint_out(squint, tl)
+    if sq_out:
+        _cover_squint(bd, sq_out, hard_keep, fillers, by_id, sentences, tl)
 
     # 5. 자료 사이에 잠깐(2초 미만) 얼굴이 비치는 곳은 화면이 깜빡이는 것처럼 어색하다.
     #    챕터 시작/팝업 자리가 아니면 앞 자료를 늘려서(안 되면 뒤 자료를 당겨서) 메운다
@@ -471,6 +483,11 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             runs.append(cur)
         return runs
 
+    # 얼굴을 끼울 자리는 눈을 크게 뜬 곳으로 고른다 (2026-11-14). 후보: 자료 하나 빼기, 카드 끝을 줄이기,
+    # 카드 시작을 늦추기. 어디든 실눈이면 얼굴 없는 구간을 max_run의 SQUINT_RUN배까지는 그대로 둔다
+    def open_frac(a, b):
+        return _squint_frac(a, b, sq_out)
+
     for _ in range(100):
         fixed = False
         for r in no_face_runs():
@@ -478,19 +495,32 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             if r1 - r0 <= max_run:
                 continue
             mid = (r0 + r1) / 2
-            cands = [p for p in r if p.mode == "full" and not p.keep and p.start - r0 >= 4 and r1 - (p.start + p.dur) >= 4]
-            if cands:
-                bd.placed.remove(min(cands, key=lambda p: abs(p.start + p.dur / 2 - mid)))
-                fixed = True
+            opts = []
+            for q in r:
+                if q.mode == "full" and not q.keep and q.start - r0 >= 4 and r1 - (q.start + q.dur) >= 4:
+                    opts.append((open_frac(q.start, q.start + q.dur), abs(q.start + q.dur / 2 - mid), "drop", q))
+                if q.mode == "slide" and q.card != "paper" and q.dur >= SLIDE_MIN + FACE_BREAK:
+                    if q is not r[-1] and q.start - r0 >= 3:
+                        e = q.start + q.dur
+                        opts.append((open_frac(e - FACE_BREAK, e), abs(e - mid), "end", q))
+                    if q is not r[0] and q.card != "part" and r1 - q.start >= 3:
+                        opts.append((open_frac(q.start, q.start + FACE_BREAK), abs(q.start - mid) + 4, "start", q))
+            if not opts:
                 continue
-            # 카드만 이어지면 가운데쯤 카드 하나를 FACE_BREAK초 줄여 그 뒤에 얼굴이 나오게 한다
-            cards = [p for p in r[:-1] if p.mode == "slide" and p.card != "paper" and p.dur >= SLIDE_MIN + FACE_BREAK and p.start - r0 >= 3]
-            if cards:
-                c = min(cards, key=lambda p: abs(p.start + p.dur - mid))
-                c.dur = round(c.dur - FACE_BREAK, 4)
-                fixed = True
+            fr, _, how, q = min(opts, key=lambda o: (o[0] > SQUINT_OK, round(o[0], 1), o[1]))
+            if fr > SQUINT_OK and r1 - r0 <= max_run * SQUINT_RUN:
+                continue
+            if how == "drop":
+                bd.placed.remove(q)
+            elif how == "end":
+                q.dur = round(q.dur - FACE_BREAK, 4)
+            else:
+                q.start, q.dur = round(q.start + FACE_BREAK, 4), round(q.dur - FACE_BREAK, 4)
+            fixed = True
         if not fixed:
             break
+    if sq_out:  # 6단계에서 자료를 빼 드러난 얼굴도 눈을 크게 뜬 부분만 남긴다
+        _cover_squint(bd, sq_out, hard_keep, fillers, by_id, sentences, tl, trim_only=True)
     # 7. 6단계에서 카드를 줄여 생긴 얼굴 자리에, 아직 못 들어간 계획 자료를 한 번 더 넣어 본다
     #    (얼굴 비율이 목표보다 높을 때만, 넣어도 얼굴 없는 구간이 max_run을 넘지 않을 때만)
     for item in items:
@@ -515,6 +545,85 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
     placed = [p for p in bd.placed if p.mode == "side"] + enforce_min_show(
         [p for p in bd.placed if p.mode != "side"], bd.start, bd.end)
     return sorted(placed, key=lambda p: p.start)
+
+
+def _squint_out(squint, tl: Timeline) -> list[tuple[float, float]]:
+    """원본 시각의 실눈 구간을 출력 시각으로."""
+    out = []
+    for a, b in squint:
+        for c in tl.clips:
+            if c.kind != "body":
+                continue
+            s, e = max(a, c.src_start), min(b, c.src_end)
+            if e > s:
+                out.append((round(c.to_out(s), 4), round(c.to_out(e), 4)))
+    return sorted(out)
+
+
+def _squint_frac(a: float, b: float, sq: list[tuple[float, float]]) -> float:
+    if b <= a or not sq:
+        return 0.0
+    return sum(max(0.0, min(b, e) - max(a, s)) for s, e in sq) / (b - a)
+
+
+SQUINT_OK = 0.25  # 얼굴 구간에서 실눈이 이 비율 아래면 그대로 둔다
+SQUINT_RUN = 1.4  # 얼굴을 끼울 자리가 모두 실눈이면 얼굴 없는 구간을 max_run의 이 배까지 둔다
+
+
+def _cover_squint(bd: "_Board", sq: list[tuple[float, float]], keep_face, fillers, by_id, sentences, tl,
+                  trim_only: bool = False):
+    """얼굴 구간마다 눈을 크게 뜬 가장 긴 부분만 남기고 나머지를 덮는다.
+    덮는 순서: 앞 화면 늘리기(카드는 HOLD_MAX까지, 영상은 길이까지) → 뒤 화면 당기기 → 채움용 자료."""
+    def adj(t, end=True):
+        for p in bd.placed:
+            if p.mode != "side" and abs((p.start + p.dur if end else p.start) - t) < 0.05:
+                return p
+        return None
+
+    def cover(a: float, b: float) -> bool:
+        if b - a < 0.05:
+            return True
+        prev, nxt = adj(a, True), adj(b, False)
+        if prev and _can_hold(prev, b - prev.start):
+            prev.dur = round(snap(b) - prev.start, 4)
+            return True
+        if nxt and _can_hold(nxt, nxt.start + nxt.dur - a):
+            nxt.dur, nxt.start = round(nxt.start + nxt.dur - snap(a), 4), snap(a)
+            return True
+        if b - a >= FULL_MIN:
+            pick = _pick_filler(fillers, by_id, bd, sentences, tl, a)
+            if pick:
+                d = b - a if pick.kind != "video" else min(b - a, pick.duration - 0.2)
+                if d >= FULL_MIN:
+                    bd.add(pick, "full", a, d)
+                    return cover(a + d, b) or True
+        # 앞뒤를 반씩 늘려 본다
+        if prev and nxt:
+            m = (a + b) / 2
+            if _can_hold(prev, m - prev.start) and _can_hold(nxt, nxt.start + nxt.dur - m):
+                prev.dur = round(snap(m) - prev.start, 4)
+                nxt.dur, nxt.start = round(nxt.start + nxt.dur - snap(m), 4), snap(m)
+                return True
+        return False
+
+    for s, e in list(bd.face_windows()):
+        kept = [(ks, ke) for ks, ke in keep_face if ks < e and s < ke]
+        if kept:  # 챕터 시작·영상 맨 앞·끝인사는 얼굴로 둔다. 챕터 시작 뒤로 길게 남은 실눈 얼굴만 덮는다
+            k1 = max(max(ke for _, ke in kept), s + FACE_KEEP)
+            if any(ks > s + 0.05 for ks, _ in kept) or e - k1 < FULL_MIN or _squint_frac(k1, e, sq) < SQUINT_OK:
+                continue
+            cover(k1, e)
+            continue
+        if _squint_frac(s, e, sq) < SQUINT_OK:
+            continue
+        opens = [w for w in _subtract(s, e, sq) if w[1] - w[0] >= FACE_KEEP]
+        if opens:
+            o0, o1 = max(opens, key=lambda w: w[1] - w[0])
+            o1 = min(o1, o0 + FACE_LONG)
+            cover(o1, e)
+            cover(s, o0)
+        elif not trim_only:  # trim_only: 얼굴을 보여 주려고 연 자리는 통째로 덮지 않고 실눈 부분만 줄인다
+            cover(s, e)
 
 
 def _can_hold(p: Placement, dur: float) -> bool:

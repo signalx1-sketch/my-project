@@ -199,24 +199,29 @@ def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path)
         f.writeframes((np.clip(track, -1, 1) * 32767).astype(np.int16).tobytes())
 
 
-# 얼굴 뽀샤시 (2026-10-30): 피부색 영역에만 경계를 살리는 흐림(bilateral)과 약간의 밝기.
-# 피부 마스크는 1/4 크기로 계산해서 키운다 (geq가 느리다). BEAUTY_MIX는 보정 세기 (1이면 최대)
-BEAUTY_MIX = 0.8
+# 얼굴 뽀샤시 (2026-10-30, 2026-11-14 더 세게): 피부색 영역에만 경계를 살리는 흐림(bilateral)과 밝기,
+# 그 위에 화면 전체에 은은한 빛 번짐(흐린 사본을 screen으로 22%)과 어두운 곳 살짝 들기, 아주 약한 따뜻한 톤.
+# 피부 마스크는 1/4 크기로 계산해서 키운다 (geq가 느리다). BEAUTY_MIX는 피부 보정 세기 (1이면 최대)
+BEAUTY_MIX = 0.95
+BEAUTY_GLOW = 0.22
 BEAUTY_VF = ("[0:v]format=yuv444p,split=3[o][s][m];"
-             "[s]bilateral=sigmaS=12:sigmaR=0.07:planes=7,eq=brightness=0.03:saturation=0.95[sm];"
+             "[s]bilateral=sigmaS=18:sigmaR=0.10:planes=7,gblur=sigma=1.2,eq=brightness=0.045:saturation=0.93[sm];"
              "[m]scale=480:-2,geq=lum='{a}*between(cb(X\\,Y)\\,85\\,125)*between(cr(X\\,Y)\\,135\\,170)*gt(lum(X\\,Y)\\,70)'"
              ":cb=128:cr=128,format=gray,scale=1920:1080,gblur=sigma=6[mk];"
-             "[sm][mk]alphamerge[sa];[o][sa]overlay=format=auto,format=yuv420p[v]")
+             "[sm][mk]alphamerge[sa];[o][sa]overlay=format=auto,format=gbrp,split[b][g];"
+             "[g]gblur=sigma=24,curves=all='0/0.08 0.5/0.62 1/1'[gl];"
+             "[b][gl]blend=all_mode=screen:all_opacity={g},curves=all='0/0.02 0.5/0.53 1/1',"
+             "colorbalance=rm=0.02:bm=-0.01,format=yuv420p[v]")
 
 
 def beautify_source(src: Path, work: Path) -> Path:
     """원본 얼굴 영상에 피부 보정을 입힌 사본 (작업 폴더에 한 번 만들어 두고 다시 쓴다)."""
-    out = work / f"beauty_{int(BEAUTY_MIX * 100)}.mp4"
+    out = work / f"beauty_{int(BEAUTY_MIX * 100)}_g{int(BEAUTY_GLOW * 100)}.mp4"
     if out.exists() and out.stat().st_mtime > src.stat().st_mtime:
         return out
     print("  얼굴 피부 보정 (뽀샤시) 중...")
     tmp = out.with_suffix(".part.mp4")  # 중간에 끊기면 반쪽 파일을 다시 쓰지 않도록 다 만든 뒤에 이름을 바꾼다
-    run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-filter_complex", BEAUTY_VF.format(a=int(255 * BEAUTY_MIX)),
+    run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-filter_complex", BEAUTY_VF.format(a=int(255 * BEAUTY_MIX), g=BEAUTY_GLOW),
          "-map", "[v]", "-map", "0:a", "-c:v", "libx264", "-preset", "fast", "-crf", "14", "-c:a", "copy", str(tmp)])
     tmp.replace(out)
     return out

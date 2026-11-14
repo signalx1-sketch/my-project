@@ -70,4 +70,12 @@ if [ ! -f "$TOOLS/kiwi_model/sj.morph" ]; then
   rm -rf "$tmp"
 fi
 
+if [ ! -f "$TOOLS/mediapipe/face_landmarker.task" ] || ! python3 -c "import mediapipe" 2>/dev/null; then
+  step "MediaPipe 얼굴 랜드마크 (실눈 장면 찾기)"
+  (pip install -q mediapipe && (ldconfig -p | grep -q libEGL.so.1 || apt-get install -y -q libegl1 libgles2 >/dev/null) \
+    && mkdir -p "$TOOLS/mediapipe" && curl -sSfL -o "$TOOLS/mediapipe/face_landmarker.task" \
+    https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task) >&2 \
+    || step "MediaPipe 설치 실패 (실눈 장면도 얼굴로 둔다)"
+fi
+
 step "끝"

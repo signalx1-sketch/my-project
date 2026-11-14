@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from . import broll, cuts, progress, fonts, motion, motion_hf, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
+from . import broll, cuts, eyes, progress, fonts, motion, motion_hf, plan as plan_mod, render, slides as slides_mod, subtitles, timeline, transcribe
 
 
 def load_dotenv(path: Path):
@@ -52,6 +52,7 @@ def main():
     p.add_argument("--caption-style", choices=list(subtitles.CAPTION_STYLES), default=subtitles.DEFAULT_CAPTION_STYLE,
                    help="자막 모양: reference(더마허브 레퍼런스: Pretendard, 반투명 박스) 또는 aggro(어그로체 큰 글씨)")
     p.add_argument("--channel", default="더마허브", help="우상단 로고 글자")
+    p.add_argument("--keep-squint", action="store_true", help="실눈 얼굴 구간도 그대로 얼굴로 둔다 (눈 크기 측정 안 함)")
     p.add_argument("--no-beauty", action="store_true", help="얼굴 피부 보정(뽀샤시)을 하지 않는다")
     p.add_argument("--no-ai", action="store_true", help="Claude API를 쓰지 않는다")
     p.add_argument("--model", default="large-v3-turbo", help="음성 인식 모델")
@@ -164,7 +165,13 @@ def main():
         if not args.popups:
             items = [x for x in items if x.get("mode", "full") != "side"]
     if slide_items or items:
-        placements = broll.place(items, sentences, assets, tl, slide_items, args.face)
+        squint = []
+        if not args.keep_squint:  # 실눈 얼굴 구간은 카드·자료로 덮는다 (2026-11-14)
+            samples = eyes.measure(src, work)
+            squint = eyes.squint_ranges(samples) if samples else []
+            if squint:
+                print(f"  실눈 구간 {len(squint)}곳 {sum(b - a for a, b in squint):.0f}초 → 얼굴로 두지 않음")
+        placements = broll.place(items, sentences, assets, tl, slide_items, args.face, squint)
         for pl in placements:
             if pl.mode == "slide":
                 pl.card = card_kind.get(int(pl.asset.id.split("/")[-1]), "")
