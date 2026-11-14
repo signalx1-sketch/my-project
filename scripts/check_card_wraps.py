@@ -16,8 +16,11 @@ from autoedit import motion_hf  # noqa: E402
 
 JS = r"""
 () => {
+  // 애니메이션이 다 끝난 모습으로 본다 (처음엔 글자가 아직 제자리에 오기 전이라 겹쳐 보인다)
+  try { window.__timelines.main.progress(1); } catch (e) {}
   const out = [];
-  const isBlock = el => { const d = getComputedStyle(el).display; return !d.startsWith('inline') || d === 'inline-block' || d === 'inline-flex'; };
+  const shown = el => { for (let e = el; e && e.nodeType === 1; e = e.parentElement) { const cs = getComputedStyle(e); if (+cs.opacity < 0.1 || cs.visibility === 'hidden' || cs.display === 'none') return false; } return true; };
+  const isBlock = el => !getComputedStyle(el).display.startsWith('inline');  // 강조어(inline-block)도 문장과 한 덩어리로 본다
   for (const sec of document.querySelectorAll('section.clip')) {
     const groups = new Map();
     const walker = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT);
@@ -34,6 +37,27 @@ JS = r"""
         if (b.width === 0 && b.height === 0) continue;
         groups.get(blk).push({c: n.textContent[i], top: b.top, h: b.height});
       }
+    }
+    // 서로 다른 글 덩어리가 겹치는 곳 (예: 큰 숫자 '50%'가 문장 밑으로 들어감)
+    const boxes = [];
+    for (const [blk, chars] of groups) {
+      if (!chars.length || !shown(blk)) continue;
+      const r = document.createRange();
+      const rects = [];
+      for (const n of [...blk.querySelectorAll('*'), blk].flatMap(e => [...e.childNodes]).filter(x => x.nodeType === 3 && x.textContent.trim())) {
+        r.selectNodeContents(n); rects.push(...r.getClientRects());
+      }
+      const vis = rects.filter(q => q.width > 2);
+      if (!vis.length) continue;
+      const b = {l: Math.min(...vis.map(q => q.left)), r: Math.max(...vis.map(q => q.right)), t: Math.min(...vis.map(q => q.top)), b: Math.max(...vis.map(q => q.bottom)),
+                 s: chars.map(c => c.c).join('').trim().slice(0, 12), el: blk};
+      boxes.push(b);
+    }
+    for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i], c = boxes[j];
+      if (a.el.contains(c.el) || c.el.contains(a.el)) continue;
+      const ox = Math.min(a.r, c.r) - Math.max(a.l, c.l), oy = Math.min(a.b, c.b) - Math.max(a.t, c.t);
+      if (ox > 20 && oy > 20) out.push({card: sec.id, lines: [a.s, c.s], bad: [`글자 겹침 '${a.s}' ↔ '${c.s}'`]});
     }
     for (const [blk, chars] of groups) {
       const lines = [];

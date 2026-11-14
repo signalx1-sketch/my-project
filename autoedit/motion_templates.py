@@ -42,7 +42,10 @@ def svg(name: str, cls: str = "ic") -> str:
 
 def _hl(t) -> str:
     """**강조어** → 초록 강조 (2026-11-09: 핵심어만 색이 바뀌게)."""
-    return re.sub(r"\*\*(.+?)\*\*", r'<span class="hl"><i class="hlm"></i>\1</span>', _e(t))
+    # 강조어 바로 뒤에 붙은 조사·어미('심해진다**는**')는 강조어와 한 덩어리로 묶어 따로 줄을 넘어가지 않게 한다 (2026-11-14)
+    return re.sub(r"\*\*(.+?)\*\*([가-힣]*)",
+                  lambda m: (f'<span class="hlw"><span class="hl"><i class="hlm"></i>{m.group(1)}</span>{m.group(2)}</span>'
+                             if m.group(2) else f'<span class="hl"><i class="hlm"></i>{m.group(1)}</span>'), _e(t))
 
 
 def _lines(texts, cls: str, cid: str, tag: str) -> str:
@@ -354,6 +357,8 @@ def _icontext(spec, paras, cid, tl):
     var = spec.get("variant", "badge")
     if spec.get("strike") and var == "mark":
         var = "badge"
+    if spec.get("big") and var == "mark":  # 큰 숫자를 오른쪽 반투명 그림으로 두면 글자와 겹친다 (2026-11-14: '50%+')
+        var = "top"
     inner = (f'<div class="ibig">{_e(spec["big"])}</div>' if spec.get("big") else svg(spec.get("icon", "sparkles")))
     strike = '<div class="istrike" id="%sx"></div>' % cid if spec.get("strike") else ""
     lines = spec.get("text") or paras
@@ -367,7 +372,11 @@ def _icontext(spec, paras, cid, tl):
         _rise(tl, f"#{cid} .itext .li", 0.1, n, 0.12)
         tl.add(f"#{cid}u", {"scaleX": 0}, {"scaleX": 1, "ease": "power3.inOut"}, 0.35 + 0.12 * n, 0.55)
     elif var == "top":
-        body = (f'<div class="itx top"><div class="ibadge {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>{inner}{strike}</div>'
+        if spec.get("big") and len(spec["big"]) > 2:  # 긴 숫자('50%+')는 원 안에 안 들어간다: 원 없이 크게
+            head = f'<div class="itopnum {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>{_e(spec["big"])}</div>'
+        else:
+            head = f'<div class="ibadge {tone}" id="{cid}b"><div class="ipulse" id="{cid}p"></div>{inner}{strike}</div>'
+        body = (f'<div class="itx top">{head}'
                 f'<div class="itext">{_lines(lines, "big", cid, "t")}</div></div>')
         tl.add(f"#{cid}b", {"y": -70, "opacity": 0.3}, {"y": 0, "opacity": 1, "ease": "bounce.out"}, 0.0, 0.7)
         _draw(tl, f"#{cid}b .ic *", 0.2, 0.5, 0.04, 4)
@@ -530,6 +539,10 @@ CSS = """
 .pw{display:inline-block}
 .pbx{padding:0 .18em;border-radius:.12em}
 .hl{position:relative;display:inline-block;z-index:0}
+.hlw{white-space:nowrap}
+.itopnum{position:relative;font-size:170px;font-weight:900;line-height:1;color:#52B788;margin-bottom:24px;white-space:nowrap}
+.itopnum.red{color:#E63946}
+.itopnum .ipulse{display:none}
 .hlm{position:absolute;left:-.14em;right:-.14em;bottom:.02em;height:.5em;background:#36b37e;border-radius:.1em;transform:skewX(-10deg) rotate(-1deg);transform-origin:left center;z-index:-1}
 .imgp{background:#fff;border-radius:28px;padding:36px 44px;margin-top:40px;box-shadow:0 30px 80px rgba(0,0,0,.55);overflow:hidden;max-width:1640px}
 .imgp img{display:block;width:100%;transform-origin:30% 50%}
