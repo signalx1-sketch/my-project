@@ -49,6 +49,20 @@
   "keep": true
  },
  {
+  "at": 25,
+  "offset": 1.5,
+  "asset": "영상_피지선_모낭_3D_일러스트.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 30,
+  "offset": 0,
+  "asset": "영상_손거울_보며_볼_만지는_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 36,
   "offset": 6,
   "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
@@ -80,6 +94,13 @@
   "at": 49,
   "offset": 0,
   "asset": "영상_새벽3시_침대_볼_화끈거려_잠못드는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 55,
+  "offset": 1.0,
+  "asset": "영상_더붉어진얼굴_뾰루지_연고_다시꺼내는_여성.mp4",
   "mode": "full",
   "keep": true
  },

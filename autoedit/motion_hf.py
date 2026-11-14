@@ -293,6 +293,34 @@ def _paper_card(c: Card, cid: str, tl: _TL) -> tuple[str, str]:
     return "card paper-card", body
 
 
+_HANGUL = re.compile(r"[\uac00-\ud7a3]")
+
+
+def _paper_ko_card(c: Card, cid: str, tl: _TL, spec: dict) -> tuple[str, str]:
+    """한국어 요약을 크게, 출처(저자·제목·영어 원문·링크)는 아래 작은 상자에 (2026-11-14: 영어 원문이 먼저 눈에 들어와 못 읽고 넘긴다).
+    spec: {"ko": ["한국어 요약 줄", ...]} (**강조어** 가능)."""
+    texts = ["".join(r.text for r in p).strip() for p in c.paras]
+    cite = texts[0] if texts else ""
+    title = texts[1] if len(texts) > 1 and not texts[1].startswith("http") else ""
+    quotes = [t for i, t in enumerate(texts[2:], 2) if t and not t.startswith("http") and not _HANGUL.search(t)]
+    link = next((t for t in texts if t.startswith("http")), "")
+    ko = "".join(f'<div class="ln kp-l" id="{cid}k{i}"><div class="li">{tpl._hl(t)}</div></div>' for i, t in enumerate(spec["ko"]))
+    src = (f'<div class="kp-src" id="{cid}s"><div class="kp-cite">{_esc(cite)}</div>'
+           + (f'<div class="kp-title">{_esc(title)}</div>' if title else "")
+           + "".join(f'<div class="kp-q">{_esc(q)}</div>' for q in quotes)
+           + (f'<div class="kp-link">{_esc(link)}</div>' if link else "") + "</div>")
+    if spec.get("note"):  # 한계(증례 1건, 설문이라 인과 불명확 등)는 작게 함께 적는다
+        ko += f'<div class="ln kp-l kp-note" id="{cid}n"><div class="li">{_esc(spec["note"])}</div></div>'
+    body = (f'<div class="kp" id="{cid}p"><div class="kp-tag" id="{cid}t">논문 근거</div>{ko}{src}</div>')
+    tl.add(f"#{cid}t", {"opacity": 0, "x": -30}, {"opacity": 1, "x": 0, "ease": "power3.out"}, 0.1, 0.5)
+    tl.add(f"#{cid} .kp-l .li", {"opacity": 0, "y": 22, "filter": "blur(8px)"},
+           {"opacity": 1, "y": 0, "filter": "blur(0px)", "ease": "power3.out", "stagger": 0.18, "_n": len(spec["ko"]) + bool(spec.get("note"))}, 0.3, 0.6)
+    t_hl = 0.3 + 0.18 * len(spec["ko"]) + 0.5
+    tl.add(f"#{cid} .hl .hlm", {"scaleX": 0}, {"scaleX": 1, "ease": "power2.inOut"}, t_hl, 0.6)
+    tl.add(f"#{cid}s", {"opacity": 0, "y": 30}, {"opacity": 1, "y": 0, "ease": "power3.out"}, t_hl + 0.3, 0.7)
+    return "card paper-card", body
+
+
 def auto_spec(c: Card) -> dict | None:
     """설정 파일이 없어도 알아볼 수 있는 카드: 파트 표지('PART 1/3'), 경고('오해 금지', '한계', '주의')."""
     texts = ["".join(r.text for r in p).strip() for p in c.paras]
@@ -370,6 +398,9 @@ def build_project(cards: list[Card], folder: Path, specs: dict | None = None) ->
         elif c.kind == "part":
             cls, body = _part_card(c, cid, tl)
             style = "part"
+        elif c.kind == "paper" and spec and spec.get("ko"):
+            cls, body = _paper_ko_card(c, cid, tl, spec)
+            style = "paper"
         elif c.kind == "paper":
             cls, body = _paper_card(c, cid, tl)
             style = "paper"
@@ -462,6 +493,15 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0A0A}
 .pbar{position:absolute;left:36px;top:44px;bottom:44px;width:6px;background:#52B788;border-radius:3px;transform-origin:top}
 .paper .title{margin-bottom:14px}
 .quote{margin:12px 0}
+.kp{width:1640px}
+.kp-tag{display:inline-block;font-size:34px;font-weight:800;color:#0B0B0B;background:#52B788;border-radius:12px;padding:6px 20px;margin-bottom:26px}
+.kp-l{font-size:76px;font-weight:800;line-height:1.28;color:#fff}
+.kp-note{font-size:36px;font-weight:600;color:#a8a8a8;margin-top:10px}
+.kp-src{margin-top:40px;border-left:5px solid #52B788;padding:6px 0 6px 28px;max-width:1400px}
+.kp-cite{font-size:28px;font-weight:700;color:#52B788}
+.kp-title{font-size:24px;color:#9a9a9a;margin-top:4px}
+.kp-q{font-size:24px;font-style:italic;color:#8a8a8a;margin-top:6px;line-height:1.35}
+.kp-link{font-size:20px;color:#6a6a6a;margin-top:8px}
 {TPL_CSS}
 </style></head>
 <body>
