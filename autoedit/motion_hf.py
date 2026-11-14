@@ -303,6 +303,8 @@ def _paper_ko_card(c: Card, cid: str, tl: _TL, spec: dict) -> tuple[str, str]:
     cite = texts[0] if texts else ""
     title = texts[1] if len(texts) > 1 and not texts[1].startswith("http") else ""
     quotes = [t for i, t in enumerate(texts[2:], 2) if t and not t.startswith("http") and not _HANGUL.search(t)]
+    if "drop_quotes" in spec:  # 출처 상자에서 뺄 원문 인용 (번호, 0부터)
+        quotes = [q for i, q in enumerate(quotes) if i not in spec["drop_quotes"]]
     link = next((t for t in texts if t.startswith("http")), "")
     ko = "".join(f'<div class="ln kp-l" id="{cid}k{i}"><div class="li">{tpl._hl(t)}</div></div>' for i, t in enumerate(spec["ko"]))
     src = (f'<div class="kp-src" id="{cid}s"><div class="kp-cite">{_esc(cite)}</div>'
