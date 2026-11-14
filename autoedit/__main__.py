@@ -124,6 +124,17 @@ def main():
         specs = json.loads(args.cards.read_text(encoding="utf-8")) if args.cards else {}
         card_kind = motion_hf.card_kinds(args.slides.resolve(), specs)
         if not args.no_motion:
+            try:  # 카드 글자가 한두 글자만 넘어가거나 낱말 가운데서 끊기는 곳 (2026-11-14)
+                import importlib.util
+                spec_ = importlib.util.spec_from_file_location("cw", Path(__file__).resolve().parent.parent / "scripts/check_card_wraps.py")
+                cw = importlib.util.module_from_spec(spec_)
+                spec_.loader.exec_module(cw)
+                hidden = {f"c{n:02d}" for n in plan.get("slide_hide", [])}
+                bad = [r for r in cw.check(args.slides.resolve(), args.cards, args.plan) if r["card"] not in hidden] if args.cards else []
+                for r in bad:
+                    print(f"  [줄바꿈 확인] 슬라이드 {r['card'][1:]}: {' / '.join(r['lines'])} → {'; '.join(r['bad'])}")
+            except Exception as e:
+                print(f"  줄바꿈 검사 건너뜀 ({e})")
             cards = motion_hf.render(args.slides.resolve(), work, specs, set(plan.get("slide_skip", []))) or motion.render(args.slides.resolve(), work)
         slide_items = [{"asset": broll.Asset(f"슬라이드/{m['slide'].no:02d}",
                                              cards[m["slide"].no][0] if cards and m["slide"].no in cards else m["slide"].path,

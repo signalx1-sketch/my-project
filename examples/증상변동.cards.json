@@ -18,7 +18,7 @@
   "branches": [
    {
     "icon": "hospital",
-    "label": "다른 병원 치료",
+    "label": "타 병원 치료",
     "tag": "왔다갔다"
    },
    {

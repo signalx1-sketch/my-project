@@ -452,6 +452,8 @@ PAGE = """<!doctype html>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1920px;height:1080px;overflow:hidden;background:#0A0A0A}
 #root{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:"Pretendard",sans-serif;font-weight:800;color:#fff}
+/* 한글은 띄어쓰기에서만 줄을 바꾸고, 여러 줄이면 길이를 고르게 (2026-11-14: '치/료', '왔다갔/다'처럼 한두 글자만 넘어가 지저분) */
+.card,.card *{word-break:keep-all;overflow-wrap:normal;text-wrap:balance}
 .card{position:absolute;inset:0;overflow:hidden;
  background:radial-gradient(1100px 760px at 6% 0%,rgba(82,183,136,.11),transparent 62%),
             radial-gradient(900px 700px at 100% 100%,rgba(230,57,70,.07),transparent 60%),#0A0A0A}
