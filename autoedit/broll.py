@@ -36,7 +36,7 @@ FACE_KEEP = 3.0      # 자료 화면 사이에 얼굴을 보여 줄 때는 최�
 FACE_LONG = 5.5      # 얼굴만 이보다 오래 이어지면 비율과 상관없이 자료를 끼운다
 FACE_SHORT = 3.0     # 자료 사이 얼굴이 이보다 짧게 비치면 메운다 (깜빡임처럼 보인다)
 MAX_NO_FACE = 30.0
-FACE_BREAK = 3.0     # 그때 끼우는 얼굴 길이   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
+FACE_BREAK = 3.2     # 그때 끼우는 얼굴 길이 (프레임 맞춤 뒤에도 MIN_SHOW 3초가 남게)   # 얼굴 없이 자료/카드만 이보다 오래 이어지면 중간 자료 하나를 빼서 얼굴을 보여 준다 (토크 영상)
 FACE_MIN = 1.0       # 이보다 짧은 얼굴 조각은 남기지 않는다 (앞뒤 자료를 늘려서 붙인다)
 FAMILY_RECENT = 5    # 최근 이만큼의 자료와 같은 종류(예: 욕조 홍조 여성 사진들)는 다시 쓰지 않는다
 MIN_SHOW = 3.0       # 얼굴·자료·카드 모두 한 화면은 최소 이만큼 (2026-10-30: 너무 짧게 지나가는 화면 없게)
@@ -499,7 +499,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             for q in r:
                 if q.mode == "full" and not q.keep and q.start - r0 >= 4 and r1 - (q.start + q.dur) >= 4:
                     opts.append((open_frac(q.start, q.start + q.dur), abs(q.start + q.dur / 2 - mid), "drop", q))
-                if q.mode == "slide" and q.card != "paper" and q.dur >= SLIDE_MIN + FACE_BREAK:
+                if q.mode == "slide" and q.card != "paper" and q.dur >= MIN_SHOW + FACE_BREAK:
                     if q is not r[-1] and q.start - r0 >= 3:
                         e = q.start + q.dur
                         opts.append((open_frac(e - FACE_BREAK, e), abs(e - mid), "end", q))
@@ -507,7 +507,20 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
                         opts.append((open_frac(q.start, q.start + FACE_BREAK), abs(q.start - mid) + 4, "start", q))
             if not opts:
                 continue
-            fr, _, how, q = min(opts, key=lambda o: (o[0] > SQUINT_OK, round(o[0], 1), o[1]))
+            def span(o):  # 끼운 얼굴이 놓이는 자리
+                how, q = o[2], o[3]
+                if how == "drop":
+                    return q.start, q.start + q.dur
+                if how == "end":
+                    return q.start + q.dur - FACE_BREAK, q.start + q.dur
+                return q.start, q.start + FACE_BREAK
+
+            def longest(o):  # 끼운 뒤 남는 얼굴 없는 구간 중 긴 쪽
+                a, b = span(o)
+                return max(a - r0, r1 - b)
+            # 눈을 뜬 자리 먼저, 그다음 구간을 제대로 나누는 자리(남는 쪽이 max_run 안쪽), 그다음 눈 크기·가운데
+            fr, _, how, q = min(opts, key=lambda o: (o[0] > SQUINT_OK, longest(o) > max_run,
+                                                     round(o[0], 1), longest(o)))
             if fr > SQUINT_OK and r1 - r0 <= max_run * SQUINT_RUN:
                 continue
             if how == "drop":

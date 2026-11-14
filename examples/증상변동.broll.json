@@ -63,6 +63,13 @@
   "keep": true
  },
  {
+  "at": 34,
+  "offset": 0,
+  "asset": "영상_겨울거리_쇼윈도_코옆_각질_만지는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 36,
   "offset": 6,
   "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
@@ -94,6 +101,20 @@
   "at": 49,
   "offset": 0,
   "asset": "영상_새벽3시_침대_볼_화끈거려_잠못드는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 52,
+  "offset": 0,
+  "asset": "영상_침대_사진첩_거꾸로_넘기다_볼_짚는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 54,
+  "offset": 0,
+  "asset": "영상_노트_기록에_동그라미_미소_여성.mp4",
   "mode": "full",
   "keep": true
  },
