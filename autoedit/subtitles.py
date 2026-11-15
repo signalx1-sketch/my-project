@@ -43,6 +43,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Cap,{cap},{capline}
 Style: Label,{big},44,&H00FFFFFF,&H00FFFFFF,&H38141414,&H38141414,0,0,0,0,100,100,0,0,3,14,0,7,56,56,52,1
 Style: Logo,Pretendard,34,&H10FFFFFF,&H10FFFFFF,&H50000000,&H00000000,-1,0,0,0,100,100,0,0,1,3,1,9,56,56,56,1
+Style: Hook,{big},128,&H00FFFFFF,&H00FFFFFF,&H00000000,&H96000000,0,0,0,0,100,100,0,0,1,9,4,5,100,100,0,1
 Style: Big,{big},110,&H00FFFFFF,&H00FFFFFF,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,7,3,5,120,120,0,1
 Style: Sub,{big},48,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,4,0,5,120,120,0,1
 Style: Cta,{big},58,&H00FFFFFF,&H00FFFFFF,&H202020E0,&H202020E0,0,0,0,0,100,100,0,0,3,18,0,8,80,80,70,1
@@ -321,6 +322,14 @@ def build_ass(words: list[dict], tl: Timeline, plan: dict, channel: str,
 
     def add(layer: int, start: float, end: float, style: str, text: str):
         events.append(f"Dialogue: {layer},{ts(start)},{ts(end)},{style},,0,0,0,,{text}")
+
+    # 맨 앞 질문 문구 (2026-11-15, 레퍼런스 ck0LZwH-FW8: 첫 2초 화면 가운데에 '치료가 안 된다고요?' 같은 큰 질문)
+    # 계획 JSON의 "hook_text"(**강조어**는 초록), "hook_dur"(기본 2.2초). 0초 타격음과 함께 살짝 커졌다 자리 잡는다
+    if plan.get("hook_text"):
+        ht = esc(plan["hook_text"]).replace("\n", "\\N")
+        ht = re.sub(r"\*\*(.+?)\*\*", r"{\\c&H0088B752&}\1{\\c&H00FFFFFF&}", ht)
+        hd = float(plan.get("hook_dur", 2.2))
+        add(4, 0.0, hd, "Hook", "{\\an5\\pos(960,235)\\fad(0,180)\\fscx118\\fscy118\\t(0,160,\\fscx100\\fscy100)}" + ht)
 
     # 자막
     lines = group_lines(map_words(words, tl, plan.get("fix", {})), cs["max_chars"], cs["max_words"])
