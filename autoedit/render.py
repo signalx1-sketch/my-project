@@ -43,6 +43,8 @@ SFX_FILE_GAIN = {"whoosh": 0.22, "pop": 0.25, "ding": 0.2}
 SFX_EVERY = 20.0      # 본편 효과음은 20초에 하나 꼴 (1분에 2~3개, 2026-10-30: 배경음악 대신 조금 더)
 SFX_EDGE = 30.0       # 처음/끝 30초는 조금 더 자주 (인트로, 엔딩)
 SFX_EDGE_EVERY = 6.0
+INTRO_BED = True      # 처음 10초 아래 낮은 임팩트 + 패드 (assets/sfx/intro_bed.wav, scripts/make_intro_bed.py)
+INTRO_BED_GAIN = 1.0
 SFX_PRIORITY = {"ding": 0, "whoosh": 1, "pop": 2}
 
 
@@ -184,6 +186,12 @@ def build_sfx_track(events: list[tuple[float, str]], duration: float, out: Path)
         sounds[k] = ([_read_pcm(["-i", str(f)]) * SFX_FILE_GAIN[k] for f in files] if files
                      else [_read_pcm(["-f", "lavfi", "-i", src]) * SFX_GAIN[k] for src in srcs])
     track = np.zeros((int(duration * SR) + SR, 2), np.float32)
+    # 맨 앞 10초 사운드 디자인 (2026-11-15 vidIQ: 처음 10초가 말소리뿐이면 첫 주 조회수가 덜 나온다)
+    bed = SFX_DIR / "intro_bed.wav"
+    if INTRO_BED and bed.exists():
+        snd = _read_pcm(["-i", str(bed)]) * INTRO_BED_GAIN
+        n = min(len(track), len(snd))
+        track[:n] += snd[:n]
     used = {k: 0 for k in sounds}
     for t, kind in events:
         snd = sounds[kind][used[kind] % len(sounds[kind])]
