@@ -69,6 +69,34 @@ def main():
         sd.line([(0, y), (W, y)], fill=int(cfg.get("shade", 200) * (y - (H - sh)) / sh))
     canvas = Image.composite(Image.new("RGB", (W, H), "black"), canvas, shade)
 
+    # 패널 위 추세선 (2026-11-15: 왼쪽 빨강 상승, 오른쪽 초록 하락). side["trend"]: [[x, y], ...] 패널 안 0~1 좌표
+    for side, x0, x1 in ((L, 0, sx), (R, sx, W)):
+        tr = side.get("trend")
+        if not tr:
+            continue
+        box = side.get("trend_box")  # [x0, y0, x1, y1] 패널 안 0~1: 작은 차트 상자 안에 그린다 (얼굴을 가리지 않게)
+        if box:
+            bx0, by0, bx1, by1 = x0 + box[0] * (x1 - x0), box[1] * H, x0 + box[2] * (x1 - x0), box[3] * H
+            panel_bg = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            ImageDraw.Draw(panel_bg).rounded_rectangle([bx0, by0, bx1, by1], radius=22, fill=(10, 10, 10, 190),
+                                                       outline=(255, 255, 255, 230), width=4)
+            canvas = Image.alpha_composite(canvas.convert("RGBA"), panel_bg).convert("RGB")
+            m = 0.14
+            pts = [(bx0 + (m + px * (1 - 2 * m)) * (bx1 - bx0), by0 + (m + py * (1 - 2 * m)) * (by1 - by0)) for px, py in tr]
+        else:
+            pts = [(x0 + px * (x1 - x0), py * H) for px, py in tr]
+        col = side.get("trend_color", "#FF3B30" if side is L else "#2BF24A")
+        tw = cfg.get("trend_w", 16)
+        glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        ImageDraw.Draw(glow).line(pts, fill=col, width=tw * 3, joint="curve")
+        glow = glow.filter(ImageFilter.GaussianBlur(tw * 1.2))
+        canvas = Image.alpha_composite(canvas.convert("RGBA"), glow).convert("RGB")
+        dd = ImageDraw.Draw(canvas)
+        dd.line(pts, fill="black", width=tw + 10, joint="curve")
+        dd.line(pts, fill=col, width=tw, joint="curve")
+        ex, ey = pts[-1]
+        dd.ellipse([ex - tw * 1.1, ey - tw * 1.1, ex + tw * 1.1, ey + tw * 1.1], fill=col, outline="black", width=5)
+
     d = ImageDraw.Draw(canvas)
     # 가운데 초록 세로줄
     lw = cfg.get("split_w", 6)
@@ -83,6 +111,27 @@ def main():
         d.rounded_rectangle([lx, ly + cfg.get("label_size", 64) + 16, lx + tw, ly + cfg.get("label_size", 64) + 28],
                             radius=6, fill=side.get("bar", col), outline="black", width=3)
 
+    # 줄마다 색과 띠를 따로 (title_lines: [{"t": 글자, "color": 색, "banner": 띠 색}], 2026-11-15)
+    if cfg.get("title_lines"):
+        tl = cfg["title_lines"]
+        size = cfg.get("title_size", 120)
+        maxw = W - 2 * cfg.get("title_margin", 30)
+        f = ImageFont.truetype(AGGRO, size)
+        while max(d.textlength(x["t"], font=f) for x in tl) > maxw and size > 50:
+            size -= 2
+            f = ImageFont.truetype(AGGRO, size)
+        gap = int(size * cfg.get("title_gap", 1.02))
+        y = H - cfg.get("title_bottom", 34) - gap * (len(tl) - 1)
+        sw = cfg.get("title_stroke", 14)
+        pad = cfg.get("banner_pad", 18)
+        for x in tl:
+            if x.get("banner"):
+                bb = d.textbbox((W // 2, y), x["t"], font=f, anchor="ms")
+                d.rectangle([0, bb[1] - pad, W, bb[3] + pad], fill=x["banner"], outline="black", width=6)
+            stroke_text(d, (W // 2, y), x["t"], f, x.get("color", "white"), "black", sw, anchor="ms")
+            y += gap
+        canvas.save(out, quality=95)
+        return
     # 아래 큰 문구 (줄바꿈 \n이 있으면 여러 줄, 가장 긴 줄이 폭에 맞게)
     lines = cfg["title"].split("\n")
     size = cfg.get("title_size", 120)
