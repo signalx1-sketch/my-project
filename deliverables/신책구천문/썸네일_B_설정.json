@@ -1,0 +1,45 @@
+{
+ "layout": "text_left",
+ "keyword": [],
+ "bg_wash": false,
+ "bg_bright": 1.0,
+ "bg_blur": 0,
+ "bg_x": 0,
+ "big_stroke": 16,
+ "big_size": 150,
+ "col_w": 820,
+ "bottom": 30,
+ "beauty": true,
+ "doc_crop": [
+  560,
+  120,
+  1480,
+  1095
+ ],
+ "line_gap": 0.98,
+ "doc_mask": "deliverables/신책구천문/썸네일_원장님_마스크.png",
+ "big": [
+  [
+   "리트 만점자에게",
+   "white",
+   "black",
+   {
+    "banner": "#E8202A"
+   }
+  ],
+  [
+   "을지문덕이",
+   "white",
+   "black"
+  ],
+  [
+   "보낸 시",
+   "#FFE600",
+   "black"
+  ]
+ ],
+ "doc_bg": "deliverables/신책구천문/썸네일_배경.png",
+ "doc_bg_x": 640,
+ "doc_bg_blur": 0,
+ "doc_bg_wash": 0
+}
