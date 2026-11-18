@@ -13,7 +13,7 @@ C = [
  (6, 3.0, {"kind": "image", "title": "과외교사 주장", "src": f"{D}/기사1_머니투데이.png"}),
  (8, 1.5, {"kind": "punch", "lines": [["리트는"], ["다 맞으라고 내는", "시험이 아닙니다"]], "box": "아닙니다"}),
  (12, 1.0, {"kind": "icontext", "big": "3번", "text": ["저도 **수능을 3번** 봤습니다"]}),
- (16, 2.0, {"kind": "compare2", "title": "시험의 진실", "left": {"title": "공부 못하는 학생", "sub": "시험을 잘 보기 어렵다", "bar": 0.2, "color": "#8A8A8A"}, "right": {"title": "공부 잘하는 학생", "sub": "시험을 못 보는 일은 흔하다", "bar": 0.75, "color": "#52B788"}}),
+ (16, 2.0, {"kind": "compare2", "title": "시험의 진실", "left": {"title": "못하는 학생", "sub": "시험을 잘 보기 어렵다", "bar": 0.2, "color": "#8A8A8A"}, "right": {"title": "잘하는 학생", "sub": "시험을 못 보는 일은 흔하다", "bar": 0.75, "color": "#52B788"}}),
  (18, 0.0, {"kind": "punch", "lines": [["시험은"], ["운칠기삼"]], "box": "운칠기삼"}),
  (22, 0.0, {"kind": "bubble", "tone": "bad", "text": ["1학기 다니고", "한두 달 공부해서 리트 만점?"], "note": "말이 안 되는 거죠"}),
  (25, 0.5, {"kind": "icontext", "icon": "graduation-cap", "text": ["좋은 대학 나와서", "**몇 년씩** 준비하는 시험"]}),
@@ -32,7 +32,7 @@ C = [
  (20, 5.0, {"kind": "icontext", "icon": "sparkles", "text": ["원하는 고득점이 나오려면", "**운**이 따라야 합니다"]}),
  (30, 1.0, {"kind": "icontext", "icon": "graduation-cap", "text": ["학벌도 **내면의 힘**으로", "얻어낸 것이라면 도움이 됩니다"]}),
  (31, 2.0, {"kind": "icontext", "icon": "trending-up", "text": ["좋은 학벌을 얻지 못했어도", "결국 **내면의 힘**으로 성공합니다"]}),
- (35, 1.0, {"kind": "icontext", "icon": "hourglass", "strike": True, "text": ["얕은 방법으로 들어간 좋은 학교", "그걸로 **인생이 성공**하진 않습니다"]}),
+ (35, 1.0, {"kind": "icontext", "icon": "hourglass", "strike": True, "text": ["얕은 방법으로 간 좋은 학교로", "**인생 성공**은 어렵습니다"]}),
  (46, 0.5, {"kind": "compare2", "title": "살아 보니", "left": {"title": "불공평해 보여도", "sub": "당장은", "bar": 0.35, "color": "#8A8A8A"}, "right": {"title": "결국 공정하다", "sub": "길게 보면", "bar": 0.85, "color": "#52B788"}}),
 ]
 prs = Presentation(); prs.slide_width, prs.slide_height = Inches(13.333), Inches(7.5)

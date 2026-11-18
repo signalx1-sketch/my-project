@@ -357,7 +357,7 @@ def _icontext(spec, paras, cid, tl):
     var = spec.get("variant", "badge")
     if spec.get("strike") and var == "mark":
         var = "badge"
-    if spec.get("big") and var == "mark":  # 큰 숫자를 오른쪽 반투명 그림으로 두면 글자와 겹친다 (2026-11-14: '50%+')
+    if spec.get("big") and (var == "mark" or (var == "badge" and len(spec["big"]) > 2)):  # 원 안에 안 들어가는 긴 숫자('113만')도  # 큰 숫자를 오른쪽 반투명 그림으로 두면 글자와 겹친다 (2026-11-14: '50%+')
         var = "top"
     inner = (f'<div class="ibig">{_e(spec["big"])}</div>' if spec.get("big") else svg(spec.get("icon", "sparkles")))
     strike = '<div class="istrike" id="%sx"></div>' % cid if spec.get("strike") else ""
