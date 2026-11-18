@@ -1,0 +1,45 @@
+{
+ "layout": "text_left",
+ "keyword": [],
+ "bg_wash": false,
+ "bg_bright": 1.0,
+ "bg_blur": 0,
+ "bg_x": 0,
+ "big_stroke": 16,
+ "big_size": 150,
+ "col_w": 820,
+ "bottom": 30,
+ "beauty": true,
+ "doc_crop": [
+  560,
+  120,
+  1480,
+  1095
+ ],
+ "line_gap": 1.04,
+ "doc_mask": "deliverables/신책구천문/썸네일_원장님_마스크.png",
+ "big": [
+  [
+   "고3 아들을 둔",
+   "white",
+   "black",
+   {
+    "banner": "#E8202A"
+   }
+  ],
+  [
+   "수능 0.1%",
+   "#FFE600",
+   "black"
+  ],
+  [
+   "원장 생각",
+   "white",
+   "black"
+  ]
+ ],
+ "doc_bg": "deliverables/신책구천문/썸네일_배경.png",
+ "doc_bg_x": 640,
+ "doc_bg_blur": 0,
+ "doc_bg_wash": 0
+}
