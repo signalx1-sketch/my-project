@@ -47,19 +47,21 @@ def main():
     band_h = cfg.get("band_h", 250)
     top = H - band_h + cfg.get("overlap", 40) - ph  # 사람 아랫부분은 띠 뒤로 조금 들어간다
     L, R = cfg["left"], cfg["right"]
-    li, lm = cut(L, ph)
-    ri, rm = cut(R, ph)
+    # 사람마다 높이를 따로 줄 수 있다 (사진에 몸이 더 많이 나온 쪽은 키워야 머리 크기가 비슷해진다, 2026-11-18)
+    li, lm = cut(L, L.get("h", ph))
+    ri, rm = cut(R, R.get("h", ph))
     lx = L.get("x", W // 4 - li.width // 2)
     rx = R.get("x", 3 * W // 4 - ri.width // 2)
     # 사람 둘레 얇은 흰 테두리 (배경과 떨어져 보이게)
-    for img, m, x in ((li, lm, lx), (ri, rm, rx)):
+    for img, m, x, sp in ((li, lm, lx, L), (ri, rm, rx, R)):
+        y = sp.get("y", top)
         edge = m.filter(ImageFilter.MaxFilter(cfg.get("outline", 7)))
-        canvas.paste(Image.new("RGB", img.size, "white"), (x, top), edge)
-        canvas.paste(img, (x, top), m)
+        canvas.paste(Image.new("RGB", img.size, "white"), (x, y), edge)
+        canvas.paste(img, (x, y), m)
     d = ImageDraw.Draw(canvas)
     if L.get("badge"):
         f = ImageFont.truetype(AGGRO, 64)
-        cx, cy = lx + int(li.width * L.get("badge_x", 0.7)), top + L.get("badge_y", 70)
+        cx, cy = lx + int(li.width * L.get("badge_x", 0.7)), L.get("y", top) + L.get("badge_y", 70)
         d.ellipse([cx - 44, cy - 44, cx + 44, cy + 44], fill="#E8202A", outline="white", width=6)
         d.text((cx, cy + 2), L["badge"], font=f, fill="white", anchor="mm")
     # 아래 빨간 띠 전체 + 큰 글자 2줄 (줄마다 [글자, 색] 조각을 이어 쓴다)
