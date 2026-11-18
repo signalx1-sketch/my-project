@@ -1,0 +1,30 @@
+[
+ {
+  "at": 19,
+  "offset": 1.0,
+  "asset": "스톡_pexels/영상_시험지_답안_작성하는_손.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 20,
+  "offset": 0.5,
+  "asset": "스톡_pexels/영상_시험장_학생들_시험보는_교실.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 27,
+  "offset": 0.5,
+  "asset": "스톡_pexels/영상_돌아가는_동전_운.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 48,
+  "offset": 0.5,
+  "asset": "스톡_pexels/영상_책상에서_노트에_공부하는_남성.mp4",
+  "mode": "full",
+  "keep": true
+ }
+]

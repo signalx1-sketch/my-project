@@ -3213,5 +3213,57 @@
   "mood": "안도",
   "dur": 10.04,
   "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_시험장_학생들_시험보는_교실.mp4",
+  "source": "pexels",
+  "desc": "교실에서 학생들이 시험지를 푸는 장면, 앞쪽 여학생 클로즈업",
+  "tags": [
+   "시험",
+   "수능",
+   "학생"
+  ],
+  "mood": "중립",
+  "dur": 0,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_시험지_답안_작성하는_손.mp4",
+  "source": "pexels",
+  "desc": "연필로 시험 답안지에 답을 적는 손 클로즈업",
+  "tags": [
+   "시험",
+   "답안",
+   "수능"
+  ],
+  "mood": "중립",
+  "dur": 0,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_책상에서_노트에_공부하는_남성.mp4",
+  "source": "pexels",
+  "desc": "어두운 방 책상에서 노트에 적으며 공부하는 남성(얼굴 없음)",
+  "tags": [
+   "공부",
+   "노력",
+   "수험생"
+  ],
+  "mood": "중립",
+  "dur": 0,
+  "exclude": false
+ },
+ {
+  "file": "스톡_pexels/영상_돌아가는_동전_운.mp4",
+  "source": "pexels",
+  "desc": "흰 바닥 위에서 돌아가는 동전",
+  "tags": [
+   "운",
+   "확률",
+   "행운"
+  ],
+  "mood": "중립",
+  "dur": 0,
+  "exclude": false
  }
 ]

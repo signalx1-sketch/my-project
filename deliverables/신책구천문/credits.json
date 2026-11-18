@@ -1,0 +1,42 @@
+{
+ "stock": [
+  {
+   "file": "영상_시험장_학생들_시험보는_교실.mp4",
+   "author": "Andy Barbour",
+   "url": "https://www.pexels.com/video/students-having-examination-6672245/"
+  },
+  {
+   "file": "영상_시험지_답안_작성하는_손.mp4",
+   "author": "Andy Barbour",
+   "url": "https://www.pexels.com/video/person-answering-test-paper-6672301/"
+  },
+  {
+   "file": "영상_책상에서_노트에_공부하는_남성.mp4",
+   "author": "Tima Miroshnichenko",
+   "url": "https://www.pexels.com/video/a-man-using-writing-on-the-notebook-6549275/"
+  },
+  {
+   "file": "영상_돌아가는_동전_운.mp4",
+   "author": "Coverr",
+   "url": "https://www.pexels.com/video/spinning-coin-853779/"
+  }
+ ],
+ "news": [
+  {
+   "file": "기사1_머니투데이.png",
+   "url": "https://www.mt.co.kr/society/2026/11/18/2026111809573827492"
+  },
+  {
+   "file": "기사2_한국일보.png",
+   "url": "https://www.hankookilbo.com/news/article/A2026111813400004256"
+  },
+  {
+   "file": "기사3_한국경제.png",
+   "url": "https://www.hankyung.com/article/2026111852127"
+  },
+  {
+   "file": "기사4_조선일보_네이트.png",
+   "url": "https://m.news.nate.com/view/20261118n00536"
+  }
+ ]
+}

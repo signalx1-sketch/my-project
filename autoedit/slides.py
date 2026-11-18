@@ -222,7 +222,8 @@ def load(pptx: Path, work: Path, readable: bool = True) -> list[Slide]:
     folder = work / "slides"
     pngs = sorted(folder.glob("s-*.png"))
     src = folder / "src"
-    key = f"{pptx}|{'readable' if readable else 'original'}"
+    st = pptx.stat()  # 같은 경로에 내용만 바뀐 pptx도 다시 그린다 (2026-11-18: 카드를 늘렸는데 예전 25장이 쓰임)
+    key = f"{pptx}|{st.st_mtime_ns}|{st.st_size}|{'readable' if readable else 'original'}"
     if not pngs or not src.exists() or src.read_text(encoding="utf-8") != key:
         if not shutil.which("soffice"):
             raise RuntimeError("슬라이드를 그리려면 LibreOffice(soffice)가 필요합니다.")

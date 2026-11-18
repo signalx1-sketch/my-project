@@ -117,6 +117,8 @@ def openness(samples: list[tuple[float, float]]):
     ts = [t for t, _ in samples]
 
     def f(t: float):
+        if t is None:
+            return None
         i = bisect.bisect_left(ts, t)
         near = [k for k in (i - 1, i) if 0 <= k < len(ts) and abs(ts[k] - t) <= 0.4]
         if not near:
