@@ -18,8 +18,8 @@
   "src": "deliverables/신책구천문/썸네일_원장님_크롭.png",
   "mask": "deliverables/신책구천문/썸네일_원장님_누끼.png",
   "beauty": true,
-  "y": 100,
-  "h": 600
+  "y": 110,
+  "h": 520
  },
  "person_h": 520,
  "band_h": 170,
@@ -42,8 +42,8 @@
  "stroke": 12,
  "hand": {
   "text": "수능 0.1% 원장",
-  "x": 1010,
-  "y": 52,
+  "x": 1000,
+  "y": 60,
   "size": 104,
   "color": "#2BF24A",
   "stroke": 9,
