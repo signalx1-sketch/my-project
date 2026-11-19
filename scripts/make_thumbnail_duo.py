@@ -46,14 +46,26 @@ def main():
     ph = cfg.get("person_h", 540)
     band_h = cfg.get("band_h", 250)
     top = H - band_h + cfg.get("overlap", 40) - ph  # 사람 아랫부분은 띠 뒤로 조금 들어간다
-    L, R = cfg["left"], cfg["right"]
+    L, R = cfg.get("left") or {}, cfg["right"]
+    # 사진 판 (2026-11-19): 누끼 대신 사진을 한쪽 칸에 꽉 채운다. {"src", "box": [x0, x1], "focus": [fx, fy] 0~1}
+    pn = cfg.get("panel")
+    if pn:
+        x0, x1 = pn["box"]
+        ph_im = Image.open(pn["src"]).convert("RGB")
+        tw, th = x1 - x0, H - cfg.get("band_h", 250) + 10
+        s_ = max(tw / ph_im.width, th / ph_im.height) * pn.get("zoom", 1.0)
+        ph_im = ph_im.resize((int(ph_im.width * s_), int(ph_im.height * s_)), Image.LANCZOS)
+        fx, fy = pn.get("focus", [0.5, 0.4])
+        cx = min(max(0, int(ph_im.width * fx - tw / 2)), ph_im.width - tw)
+        cy = min(max(0, int(ph_im.height * fy - th / 2)), ph_im.height - th)
+        canvas.paste(ph_im.crop((cx, cy, cx + tw, cy + th)), (x0, 0))
     # 사람마다 높이를 따로 줄 수 있다 (사진에 몸이 더 많이 나온 쪽은 키워야 머리 크기가 비슷해진다, 2026-11-18)
-    li, lm = cut(L, L.get("h", ph))
+    li, lm = cut(L, L.get("h", ph)) if L else (None, None)
     ri, rm = cut(R, R.get("h", ph))
-    lx = L.get("x", W // 4 - li.width // 2)
+    lx = L.get("x", W // 4 - li.width // 2) if L else 0
     rx = R.get("x", 3 * W // 4 - ri.width // 2)
     # 사람 둘레 얇은 흰 테두리 (배경과 떨어져 보이게)
-    for img, m, x, sp in ((li, lm, lx, L), (ri, rm, rx, R)):
+    for img, m, x, sp in [t for t in ((li, lm, lx, L), (ri, rm, rx, R)) if t[0] is not None]:
         y = sp.get("y", top)
         edge = m.filter(ImageFilter.MaxFilter(cfg.get("outline", 7)))
         canvas.paste(Image.new("RGB", img.size, "white"), (x, y), edge)

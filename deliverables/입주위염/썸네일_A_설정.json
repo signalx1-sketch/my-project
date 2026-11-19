@@ -1,0 +1,54 @@
+{
+ "bg": "deliverables/입주위염/썸네일_배경.png",
+ "right": {
+  "src": "deliverables/입주위염/썸네일_원장님_크롭.png",
+  "mask": "deliverables/입주위염/썸네일_원장님_누끼.png",
+  "beauty": true,
+  "h": 580,
+  "y": 70
+ },
+ "person_h": 540,
+ "band_h": 250,
+ "band": "#E8202A",
+ "lines": [
+  [
+   [
+    "입 주위가 빨간 환자 ",
+    "white"
+   ],
+   [
+    "53%",
+    "#FFE600"
+   ],
+   [
+    "는",
+    "white"
+   ]
+  ],
+  [
+   [
+    "'이것'",
+    "#FFE600"
+   ],
+   [
+    " 문제가 있습니다",
+    "white"
+   ]
+  ]
+ ],
+ "size": 130,
+ "gap": 1.0,
+ "stroke": 12,
+ "panel": {
+  "src": "deliverables/입주위염/썸네일_여성.png",
+  "box": [
+   0,
+   640
+  ],
+  "focus": [
+   0.55,
+   0.42
+  ],
+  "zoom": 1.15
+ }
+}
