@@ -1,0 +1,54 @@
+{
+ "bg": "deliverables/신책구천문/썸네일_배경.png",
+ "left": {
+  "src": "/tmp/claude-0/-home-user-my-project/cdf7cb7b-c330-5dbc-b6f2-45320596bd58/scratchpad/p7/th/in/person.png",
+  "mask": "/tmp/claude-0/-home-user-my-project/cdf7cb7b-c330-5dbc-b6f2-45320596bd58/scratchpad/p7/th/in/p_mask.png",
+  "mosaic": false,
+  "head_x0": 0.18,
+  "head_x1": 0.78,
+  "head_h": 0.45,
+  "block": 18,
+  "blur": 0,
+  "h": 680,
+  "y": 40,
+  "badge_x": 0.68,
+  "badge_y": 80
+ },
+ "right": {
+  "src": "deliverables/신책구천문/썸네일_원장님_크롭.png",
+  "mask": "deliverables/신책구천문/썸네일_원장님_누끼.png",
+  "beauty": true,
+  "y": 118,
+  "h": 540
+ },
+ "person_h": 520,
+ "band_h": 300,
+ "overlap": 40,
+ "band": "#E8202A",
+ "lines": [
+  [
+   [
+    "고3 아들 둔",
+    "white"
+   ]
+  ],
+  [
+   [
+    "원장 생각",
+    "#FFE600"
+   ]
+  ]
+ ],
+ "size": 170,
+ "gap": 0.96,
+ "stroke": 12,
+ "hand": {
+  "text": "수능 0.1% 원장",
+  "x": 995,
+  "y": 66,
+  "size": 118,
+  "color": "#2BF24A",
+  "stroke": 9,
+  "angle": 4
+ }
+}

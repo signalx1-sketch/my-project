@@ -75,11 +75,12 @@ def main():
     def width(f, parts):
         return sum(d.textlength(t, font=f) for t, _ in parts)
     f = ImageFont.truetype(AGGRO, size)
-    while max(width(f, p) for p in lines) > maxw and size > 50:
+    # 폭과 띠 높이 둘 다에 맞춘다 (2026-11-18: 글자를 크게 하니 둘째 줄이 화면 밖으로 나갔다)
+    while (max(width(f, p) for p in lines) > maxw or size * cfg.get("gap", 1.0) * len(lines) > band_h - 24) and size > 50:
         size -= 2
         f = ImageFont.truetype(AGGRO, size)
     gap = int(size * cfg.get("gap", 1.0))
-    y = by + (band_h - gap * len(lines)) // 2 + int(size * 0.86)
+    y = by + (band_h - gap * len(lines)) // 2 + int(size * 0.84)
     sw = cfg.get("stroke", 12)
     for parts in lines:
         x = (W - width(f, parts)) / 2
@@ -87,6 +88,18 @@ def main():
             d.text((x, y), t, font=f, fill=col, stroke_width=sw, stroke_fill="black", anchor="ls")
             x += d.textlength(t, font=f)
         y += gap
+    # 손글씨 문구 (2026-11-18: 원장님 위에 녹색 필기체 '수능 0.1% 원장'). {"text", "x", "y", "size", "color", "angle"}
+    hw = cfg.get("hand")
+    if hw:
+        from make_thumbnail import PEN
+        hf = ImageFont.truetype(PEN, hw.get("size", 110))
+        layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        ld = ImageDraw.Draw(layer)
+        ld.text((hw["x"], hw["y"]), hw["text"], font=hf, fill=hw.get("color", "#2BF24A"),
+                stroke_width=hw.get("stroke", 9), stroke_fill="black", anchor="mm")
+        if hw.get("angle"):
+            layer = layer.rotate(hw["angle"], center=(hw["x"], hw["y"]), resample=Image.BICUBIC)
+        canvas = Image.alpha_composite(canvas.convert("RGBA"), layer).convert("RGB")
     canvas.save(out, quality=95)
     print("ok", out)
 
