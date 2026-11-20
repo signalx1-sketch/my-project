@@ -77,6 +77,11 @@ def main():
         s = doc["h"] / im.height
         size = (round(im.width * s), doc["h"])
         im, m = im.resize(size, Image.LANCZOS), m.resize(size, Image.LANCZOS)
+        fb = doc.get("fade_bottom", 0)
+        if fb:  # 아래 끝을 일자로 자르지 않고 어두운 그라데이션 속으로 사라지게 (2026-11-20)
+            ramp = np.ones(m.height, np.float32)
+            ramp[-fb:] = np.linspace(1, 0, fb)
+            m = Image.fromarray((np.asarray(m, np.float32) * ramp[:, None]).astype(np.uint8))
         x, y = doc["x"], doc.get("y", H - doc["h"])
         if x < 0:  # 음수면 오른쪽 끝에서 그만큼 띄운다
             x = W - im.width + x + 1

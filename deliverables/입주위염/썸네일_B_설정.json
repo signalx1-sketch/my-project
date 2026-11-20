@@ -33,24 +33,26 @@
   "mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
   "beauty": true,
   "h": 470,
-  "x": -10,
-  "y": 250
+  "x": -15,
+  "y": 95,
+  "fade_bottom": 150,
+  "outline": 0
  },
  "texts": [
   {
    "parts": [
     [
-     "입 주위 ",
+     "입 주위가 ",
      "white"
     ],
     [
-     "빨간 좁쌀",
+     "빨갛다면",
      "#FF3B30"
     ]
    ],
    "x": 640,
-   "y": 588,
-   "size": 118,
+   "y": 585,
+   "size": 110,
    "align": "center",
    "stroke": 13
   },
@@ -69,13 +71,13 @@
      "#FFE600"
     ],
     [
-     " 문제",
+     " 문제입니다",
      "white"
     ]
    ],
    "x": 640,
-   "y": 698,
-   "size": 118,
+   "y": 700,
+   "size": 110,
    "align": "center",
    "stroke": 13
   }
