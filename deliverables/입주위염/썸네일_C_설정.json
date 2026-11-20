@@ -1,0 +1,75 @@
+{
+ "photo": {
+  "src": "deliverables/입주위염/썸네일_생성_입주위1.jpg",
+  "scale": 0.68,
+  "anchor": [
+   1010,
+   645
+  ],
+  "at": [
+   560,
+   330
+  ]
+ },
+ "shade": [
+  {
+   "dir": "bottom",
+   "start": 0.55,
+   "alpha": 235
+  }
+ ],
+ "circle": {
+  "box": [
+   390,
+   245,
+   740,
+   455
+  ],
+  "color": "#FF2020",
+  "width": 8
+ },
+ "doc": {
+  "src": "deliverables/입주위염/썸네일_원장님3_크롭.png",
+  "mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
+  "beauty": true,
+  "h": 470,
+  "x": -10,
+  "y": 250
+ },
+ "texts": [
+  {
+   "parts": [
+    [
+     "입 주위만 ",
+     "white"
+    ],
+    [
+     "빨갛다면",
+     "#FF3B30"
+    ]
+   ],
+   "x": 640,
+   "y": 570,
+   "size": 112,
+   "align": "center",
+   "stroke": 13
+  },
+  {
+   "parts": [
+    [
+     "'이것'",
+     "#FFE600"
+    ],
+    [
+     "부터 끊으세요",
+     "white"
+    ]
+   ],
+   "x": 640,
+   "y": 700,
+   "size": 112,
+   "align": "center",
+   "stroke": 13
+  }
+ ]
+}
