@@ -73,9 +73,11 @@ def _clip_ass(clip: dict, words: list[dict], ass_path: Path):
     dur = clip["end"] - clip["start"]
     ev = [f"Dialogue: 2,{subtitles.ts(0)},{subtitles.ts(dur)},IvTag,,0,0,0,,{LABEL_PREFIX}",
           f"Dialogue: 2,{subtitles.ts(0)},{subtitles.ts(dur)},IvSub,,0,0,0,,{subtitles.esc(clip.get('label', ''))}"]
-    for ln in lines:
+    for i, ln in enumerate(lines):
         text = " ".join(w.text for w in ln).strip()
-        ev.append(f"Dialogue: 1,{subtitles.ts(max(0, ln[0].s))},{subtitles.ts(min(dur, ln[-1].e + 0.25))},Cap,,0,0,0,,"
+        nxt = lines[i + 1][0].s if i + 1 < len(lines) else dur
+        end = min(dur, nxt, ln[-1].e + 0.25)  # 다음 줄과 겹쳐 두 줄이 뜨지 않게
+        ev.append(f"Dialogue: 1,{subtitles.ts(max(0, ln[0].s))},{subtitles.ts(end)},Cap,,0,0,0,,"
                   f"{subtitles.esc(text.rstrip('.,'))}")
     ass_path.write_text(head + "\n".join(ev) + "\n", encoding="utf-8")
 

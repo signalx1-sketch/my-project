@@ -98,6 +98,12 @@
 - 구독, 좋아요, 하이프, 댓글 안내 같은 끝인사 문장은 얼굴로 둔다. 내용과 상관없는 스톡(운동, 목욕 등)을 넣지 않는다.
 - 얼굴 줌은 꼭 필요한 곳에만 (콜드 오픈 두 번째 문장, 계획의 `punch` 문장).
 
+- 환자 인터뷰 클립 (2026-11-21): 채널 '환자 치료 후기 인터뷰' 재생목록에서 쓸 말을 골라 `data/interview_clips.json`에 적고
+  (`python -m autoedit.interviews index 영상` → `data/interviews/*.sentences.txt`를 읽고 고른다), 계획 JSON의
+  `"interviews": [{"at": 문장 번호, "clip": id}]`로 그 문장 직전에 환자 목소리째 끼워 넣는다 (`--interviews 인터뷰 폴더`).
+  화면은 유튜브본 그대로 쓰되 아래 구워진 자막 띠는 `keep_h`(890)로 잘라내고 우리 자막과 '실제 환자 인터뷰' 이름표를 얹는다.
+  다른 병원 이름은 원본에서 삐 처리돼 있어 그대로 써도 된다. 유튜브 직접 다운로드는 이 서버에서 막혀 있어 드라이브 "인터뷰" 폴더로 받는다.
+
 ## 소리
 - 효과음 도구 earshot(`~/tools/earshot`, `EARSHOT=1 bash scripts/setup_tools.sh`로 설치): `~/tools/earshot/.venv/bin/earshot sfx render whoosh_fast/crisp -o 파일.wav`, 목록은 `sfx list`. real-sfx 스킬(`~/.claude/skills/real-sfx`, setup_tools.sh가 설치)은 녹음 효과음 라이브러리가 아직 없어 UI 소리 78개만 있다. Openverse는 검색은 되지만 Freesound가 이 서버의 다운로드를 403으로 막는다 (2026-10-29).
 - 목소리는 가볍게만 다듬는다: 입 클릭 제거, 약한 잡음 제거(nr 6), 70Hz 아래 정리, 2:1 압축, 음량은 두 번에 나눠
