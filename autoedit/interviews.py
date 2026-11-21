@@ -83,7 +83,7 @@ def _clip_ass(clip: dict, words: list[dict], ass_path: Path):
 def _render_clip(clip: dict, lib: Path, words_dir: Path, gain_db: float, out: Path, tmp: Path, bg_lib: Path | None = None):
     """mode "audio"(기본): 유튜브본은 자막·스톡이 구워져 있고 얼굴도 안 나와서 목소리만 쓴다.
     화면은 문장에 맞는 자료 영상(bg)을 흐리고 어둡게 깔고 초록 파형 + 이름표 + 우리 자막.
-    mode "video": 인터뷰 화면 그대로 (구워진 자막이 없는 원본일 때)."""
+    mode "video": 인터뷰 화면을 쓴다. 유튜브본처럼 아래에 자막이 구워져 있으면 keep_h(예 890)로 그 띠를 잘라낸다."""
     if clip.get("mode", "audio") == "audio":
         return _render_audio_clip(clip, lib, words_dir, gain_db, out, tmp, bg_lib)
     src = lib / clip["video"]
@@ -92,7 +92,11 @@ def _render_clip(clip: dict, lib: Path, words_dir: Path, gain_db: float, out: Pa
     ass = tmp / f"{clip['id']}.ass"
     _clip_ass(clip, words, ass)
     dur = clip["end"] - clip["start"]
-    vf = (f"scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,fps=30,"
+    # 유튜브본은 아래쪽 띠(높이 83~94%)에 자막이 구워져 있다: 위쪽 keep_h만 남기고 16:9로 키워 자막을 잘라낸다 (2026-11-21)
+    kh = int(clip.get("keep_h", 0))
+    crop = (f"scale=-2:1080,crop={round(kh * 16 / 9) // 2 * 2}:{kh}:(iw-{round(kh * 16 / 9) // 2 * 2})/2:0,"
+            if kh else "")
+    vf = (f"{crop}scale=1920:1080:force_original_aspect_ratio=increase:flags=lanczos,crop=1920:1080,setsar=1,fps=30,"
           f"ass={ass}:fontsdir={Path(__file__).resolve().parent.parent / 'assets' / 'fonts'},"
           f"fade=t=in:st=0:d={FADE},fade=t=out:st={dur - FADE:.3f}:d={FADE}")
     af = (f"aresample=48000,aformat=channel_layouts=stereo,volume={gain_db:.2f}dB,"
@@ -165,17 +169,17 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
             prev = t
         segs.append(("main", prev, None))
         # 본편 조각과 인터뷰 클립을 한 번에 이어 붙인다 (본편은 다시 인코딩)
-        inputs, fc, labels, k = ["-i", str(video)], [], [], 0
+        # 본편 조각마다 입력을 따로 연다 (한 입력을 여러 번 trim하면 영상이 통째로 메모리에 쌓여 죽는다)
+        inputs, fc, labels, k = [], [], [], 0
         for s in segs:
+            n = inputs.count("-i")
             if s[0] == "main":
                 a, b = s[1], s[2]
-                tr = f"trim=start={a:.3f}" + (f":end={b:.3f}" if b else "")
-                atr = f"atrim=start={a:.3f}" + (f":end={b:.3f}" if b else "")
-                fc.append(f"[0:v]{tr},setpts=PTS-STARTPTS,fps=30,format=yuv420p[v{k}]")
-                fc.append(f"[0:a]{atr},asetpts=PTS-STARTPTS,aresample=48000[a{k}]")
+                inputs += ["-ss", f"{a:.3f}"] + (["-to", f"{b:.3f}"] if b else []) + ["-i", str(video)]
+                fc.append(f"[{n}:v]setpts=PTS-STARTPTS,fps=30,format=yuv420p[v{k}]")
+                fc.append(f"[{n}:a]asetpts=PTS-STARTPTS,aresample=48000[a{k}]")
             else:
                 inputs += ["-i", str(s[1])]
-                n = len(inputs) // 2 - 1
                 fc.append(f"[{n}:v]setpts=PTS-STARTPTS,format=yuv420p[v{k}]")
                 fc.append(f"[{n}:a]asetpts=PTS-STARTPTS[a{k}]")
             labels.append(f"[v{k}][a{k}]")

@@ -13,7 +13,8 @@
    "붉은기"
   ],
   "topic": "내원 전 증상",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv002",
@@ -29,7 +30,8 @@
    "원점"
   ],
   "topic": "이전 치료 실패",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv003",
@@ -44,7 +46,8 @@
    "재발"
   ],
   "topic": "이전 관리 실패",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv004",
@@ -59,7 +62,8 @@
    "비교"
   ],
   "topic": "호전",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv005",
@@ -74,7 +78,8 @@
    "호전"
   ],
   "topic": "치료 경험",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv006",
@@ -89,7 +94,8 @@
    "주변 반응"
   ],
   "topic": "이전 치료 비교",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv007",
@@ -103,7 +109,8 @@
    "호전 속도"
   ],
   "topic": "이전 치료 비교",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv008",
@@ -118,7 +125,8 @@
    "꾸준한 호전"
   ],
   "topic": "경과",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv009",
@@ -132,7 +140,8 @@
    "돌고 돌기"
   ],
   "topic": "비용",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  },
  {
   "id": "iv010",
@@ -146,6 +155,7 @@
    "돌고 돌기"
   ],
   "topic": "환자 한마디",
-  "mode": "audio"
+  "mode": "video",
+  "keep_h": 890
  }
 ]
