@@ -102,7 +102,10 @@
   (`python -m autoedit.interviews index 영상` → `data/interviews/*.sentences.txt`를 읽고 고른다), 계획 JSON의
   `"interviews": [{"at": 문장 번호, "clip": id}]`로 그 문장 직전에 환자 목소리째 끼워 넣는다 (`--interviews 인터뷰 폴더`).
   화면은 유튜브본 그대로 쓰되 아래 구워진 자막 띠는 `keep_h`(890)로 잘라내고 우리 자막과 '실제 환자 인터뷰' 이름표를 얹는다.
-  다른 병원 이름은 원본에서 삐 처리돼 있어 그대로 써도 된다. 유튜브 직접 다운로드는 이 서버에서 막혀 있어 드라이브 "인터뷰" 폴더로 받는다.
+  다른 병원 이름은 원본에서 삐 처리돼 있어 그대로 써도 된다. 유튜브 직접 다운로드는 이 서버에서 막혀 있어 드라이브 "환자인터뷰 유튜브본" 폴더
+  (`data/interview_youtube_drive.tsv`, 32편)로 받는다. 유튜브본은 강조 글씨·질문 상자가 자막 띠보다 위(72~85%)나 가운데에도 떠서,
+  클립을 더하면 `python -m autoedit.interviews scan --assets 폴더`로 글자 위치를 재 클립마다 keep_h(760~890)를 정하고,
+  가운데·위쪽 글자가 뜨는 클립(`screen`)은 프레임을 보고 쓴다. 확인표는 `scripts/interview_review.py`.
 
 ## 소리
 - 효과음 도구 earshot(`~/tools/earshot`, `EARSHOT=1 bash scripts/setup_tools.sh`로 설치): `~/tools/earshot/.venv/bin/earshot sfx render whoosh_fast/crisp -o 파일.wav`, 목록은 `sfx list`. real-sfx 스킬(`~/.claude/skills/real-sfx`, setup_tools.sh가 설치)은 녹음 효과음 라이브러리가 아직 없어 UI 소리 78개만 있다. Openverse는 검색은 되지만 Freesound가 이 서버의 다운로드를 403으로 막는다 (2026-10-29).
