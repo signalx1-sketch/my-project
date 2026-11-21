@@ -1,0 +1,10 @@
+{
+ "note": "인터뷰 영상 원본 드라이브 ID. 새 세션에서는 drive.usercontent 링크로 받아 1080p로 줄여 인터뷰 폴더에 둔다 (ffmpeg -nostdin 필수)",
+ "files": {
+  "인터뷰_최신비님_가편집.mp4": "14Vow5RayDddwjibvGi0qYmHpRUocRCs0",
+  "인터뷰_gbg님_가편집.mp4": "1FIFzI81SlEHjP8qGuS_4bsmsidraDBqB",
+  "인터뷰_ahj님_가편.mp4": "1WNruIPuYODRVCl5WYVvXJeYqJt_bpAAT",
+  "인터뷰_3번의실패와만난답_완성본.mp4": "1d9M40oM66yc0HZReLX9kbR6OVku2Iwv5",
+  "인터뷰_20260819_gdg님.mp4": "1lFgLLkwIb471FZd-2sesCZeLIiMLaGYv"
+ }
+}
