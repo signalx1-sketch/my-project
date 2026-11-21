@@ -102,6 +102,8 @@ def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[Ou
                 if c.kind != kind:
                     continue
                 o = min(w["e"], c.src_end) - max(w["s"], c.src_start)
+                if w["e"] <= w["s"] and c.src_start <= w["s"] < c.src_end:  # 길이 0으로 인식된 낱말('라고')
+                    o = ov + 1e-6
                 if o > ov:
                     best, ov = c, o
             if best is None:

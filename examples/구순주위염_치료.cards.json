@@ -107,6 +107,7 @@
  "28": {
   "kind": "compare2",
   "title": "8주가 되자",
+  "mid": "=",
   "left": {
    "title": "엘리델",
    "sub": "차이 없음",
