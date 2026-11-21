@@ -234,7 +234,8 @@ def main():
         render.render(src, tl, ass, sfx, main_out, work, bgm=args.bgm, jobs=args.jobs, placements=placements, tabs=tabs)
         root = Path(__file__).resolve().parent.parent
         placed = interviews.insert(main_out, work, user_plan, args.interviews.resolve(), root / "data" / "interview_clips.json",
-                                   out, root / "data" / "interviews")
+                                   out, root / "data" / "interviews",
+                                   args.assets.resolve() if args.assets else None)
         for t, cid, d in placed:
             print(f"  환자 인터뷰 {cid}: {t:.1f}초에 {d:.1f}초")
     else:

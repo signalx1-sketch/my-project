@@ -80,7 +80,12 @@ def _clip_ass(clip: dict, words: list[dict], ass_path: Path):
     ass_path.write_text(head + "\n".join(ev) + "\n", encoding="utf-8")
 
 
-def _render_clip(clip: dict, lib: Path, words_dir: Path, gain_db: float, out: Path, tmp: Path):
+def _render_clip(clip: dict, lib: Path, words_dir: Path, gain_db: float, out: Path, tmp: Path, bg_lib: Path | None = None):
+    """mode "audio"(기본): 유튜브본은 자막·스톡이 구워져 있고 얼굴도 안 나와서 목소리만 쓴다.
+    화면은 문장에 맞는 자료 영상(bg)을 흐리고 어둡게 깔고 초록 파형 + 이름표 + 우리 자막.
+    mode "video": 인터뷰 화면 그대로 (구워진 자막이 없는 원본일 때)."""
+    if clip.get("mode", "audio") == "audio":
+        return _render_audio_clip(clip, lib, words_dir, gain_db, out, tmp, bg_lib)
     src = lib / clip["video"]
     wj = words_dir / f"{Path(clip['video']).stem}.words.json"
     words = json.loads(wj.read_text(encoding="utf-8")) if wj.exists() else []
@@ -92,12 +97,42 @@ def _render_clip(clip: dict, lib: Path, words_dir: Path, gain_db: float, out: Pa
           f"fade=t=in:st=0:d={FADE},fade=t=out:st={dur - FADE:.3f}:d={FADE}")
     af = (f"aresample=48000,aformat=channel_layouts=stereo,volume={gain_db:.2f}dB,"
           f"afade=t=in:st=0:d={FADE},afade=t=out:st={dur - FADE:.3f}:d={FADE}")
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{clip['start']:.3f}", "-t", f"{dur:.3f}", "-i", str(src),
+    subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", f"{clip['start']:.3f}", "-t", f"{dur:.3f}", "-i", str(src),
                     "-vf", vf, "-af", af, "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
                     "-c:a", "aac", "-b:a", "192k", "-ar", "48000", str(out)], check=True)
 
 
-def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: Path, words_dir: Path) -> list[tuple]:
+def _render_audio_clip(clip, lib, words_dir, gain_db, out, tmp, bg_lib):
+    src = lib / clip["video"]
+    wj = words_dir / f"{Path(clip['video']).stem}.words.json"
+    words = json.loads(wj.read_text(encoding="utf-8")) if wj.exists() else []
+    ass = tmp / f"{clip['id']}.ass"
+    _clip_ass(clip, words, ass)
+    dur = clip["end"] - clip["start"]
+    fonts = Path(__file__).resolve().parent.parent / "assets" / "fonts"
+    bg = (bg_lib / clip["bg"]) if bg_lib and clip.get("bg") and (bg_lib / clip["bg"]).exists() else None
+    inputs = ["-ss", f"{clip['start']:.3f}", "-t", f"{dur:.3f}", "-i", str(src)]
+    if bg:
+        inputs += ["-stream_loop", "-1", "-i", str(bg)]
+        base = (f"[1:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,setsar=1,fps=30,"
+                f"trim=duration={dur:.3f},gblur=sigma=18,eq=brightness=-0.22:saturation=0.8[bg]")
+    else:
+        base = f"color=c=0x101412:s=1920x1080:r=30:d={dur:.3f}[bg]"
+    fc = [base,
+          # 목소리 파형: 가운데 가로 띠, 초록
+          f"[0:a]aresample=48000,showwaves=s=1200x220:mode=cline:rate=30:colors=0x52B788|0x52B788:scale=sqrt,"
+          f"format=yuva420p,colorchannelmixer=aa=0.85[wv]",
+          f"[bg][wv]overlay=(W-w)/2:(H-h)/2-40:shortest=1,ass={ass}:fontsdir={fonts},"
+          f"fade=t=in:st=0:d={FADE},fade=t=out:st={dur - FADE:.3f}:d={FADE},format=yuv420p[v]",
+          f"[0:a]aresample=48000,aformat=channel_layouts=stereo,volume={gain_db:.2f}dB,"
+          f"afade=t=in:st=0:d={FADE},afade=t=out:st={dur - FADE:.3f}:d={FADE}[a]"]
+    subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc),
+                    "-map", "[v]", "-map", "[a]", "-t", f"{dur:.3f}", "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+                    "-c:a", "aac", "-b:a", "192k", "-ar", "48000", str(out)], check=True)
+
+
+def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: Path, words_dir: Path,
+           bg_lib: Path | None = None) -> list[tuple]:
     """본편 video에 plan["interviews"]의 클립을 끼워 out으로 저장. 넣은 (출력 시각, 클립 id, 길이) 목록을 돌려준다."""
     items = plan.get("interviews") or []
     if not items:
@@ -107,6 +142,7 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
     starts = _sentence_starts(work)
     target = _loudness(video)
     cuts_at = []
+    it_bg = {it["clip"]: it.get("bg") for it in items}  # 계획에서 클립마다 깔 자료 영상을 바꿀 수 있다
     for it in items:
         c = cat.get(it["clip"])
         if not c or it["at"] not in starts:
@@ -123,7 +159,7 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
         for i, (t, c) in enumerate(cuts_at):
             gain = target - _loudness(lib / c["video"], c["start"], c["end"] - c["start"])
             cp = tmp / f"iv{i}.mp4"
-            _render_clip(c, lib, words_dir, max(-12, min(12, gain)), cp, tmp)
+            _render_clip({**c, **({"bg": it_bg[c["id"]]} if it_bg.get(c["id"]) else {})}, lib, words_dir, max(-12, min(12, gain)), cp, tmp, bg_lib)
             segs.append(("main", prev, t))
             segs.append(("clip", cp))
             prev = t
@@ -145,7 +181,7 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
             labels.append(f"[v{k}][a{k}]")
             k += 1
         fc.append("".join(labels) + f"concat=n={k}:v=1:a=1[v][a]")
-        subprocess.run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
+        subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
                         "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
                         "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(out)], check=True)
     placed, shift = [], 0.0
@@ -170,13 +206,15 @@ def main():
     b.add_argument("--assets", required=True)
     b.add_argument("--catalog", default="data/interview_clips.json")
     b.add_argument("--words", default="data/interviews")
+    b.add_argument("--bg-lib", help="배경으로 깔 자료 영상 폴더 (클립의 bg)")
     x = ap.parse_args()
     if x.cmd == "index":
         for v in x.videos:
             print("ok", index(Path(v), Path(x.out)))
     else:
         plan = json.loads(Path(x.plan).read_text(encoding="utf-8"))
-        placed = insert(Path(x.video), Path(x.work), plan, Path(x.assets), Path(x.catalog), Path(x.out), Path(x.words))
+        placed = insert(Path(x.video), Path(x.work), plan, Path(x.assets), Path(x.catalog), Path(x.out), Path(x.words),
+                        Path(x.bg_lib) if x.bg_lib else None)
         for p in placed:
             print("  인터뷰", p)
         print("ok", x.out)
