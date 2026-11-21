@@ -1250,7 +1250,13 @@
   ],
   "topic": "약에 든 스테로이드",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 826,
+  "screen": {
+   "keep_h": 826,
+   "too_low": false,
+   "center_text": 0.26,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv065",
@@ -1265,7 +1271,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 876,
+  "screen": {
+   "keep_h": 876,
+   "too_low": false,
+   "center_text": 0.12,
+   "top_text": 0.46
+  }
  },
  {
   "id": "iv066",
@@ -1280,7 +1292,13 @@
   ],
   "topic": "자연수액",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 874,
+  "screen": {
+   "keep_h": 874,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv067",
@@ -1296,7 +1314,13 @@
   ],
   "topic": "절박함·비용",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.21,
+   "top_text": 0.04
+  }
  },
  {
   "id": "iv068",
@@ -1311,7 +1335,13 @@
   ],
   "topic": "비용 비교",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 762,
+  "screen": {
+   "keep_h": 762,
+   "too_low": false,
+   "center_text": 0.36,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv069",
@@ -1327,7 +1357,13 @@
   ],
   "topic": "증상",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv070",
@@ -1341,7 +1377,13 @@
   ],
   "topic": "갑작스런 시작",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv071",
@@ -1356,7 +1398,13 @@
   ],
   "topic": "스테로이드 반복",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 776,
+  "screen": {
+   "keep_h": 776,
+   "too_low": false,
+   "center_text": 0.18,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv072",
@@ -1371,7 +1419,13 @@
   ],
   "topic": "채널 발견",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 1.0,
+   "top_text": 0.79
+  }
  },
  {
   "id": "iv073",
@@ -1387,7 +1441,13 @@
   ],
   "topic": "스테로이드 믿음 상실",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 844,
+  "screen": {
+   "keep_h": 844,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv074",
@@ -1403,7 +1463,13 @@
   ],
   "topic": "가려움 완화",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 828,
+  "screen": {
+   "keep_h": 828,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv075",
@@ -1419,7 +1485,13 @@
   ],
   "topic": "주변 시선",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv076",
@@ -1435,7 +1507,13 @@
   ],
   "topic": "레이저 제모 화상",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.63,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv077",
@@ -1450,7 +1528,13 @@
   ],
   "topic": "스테로이드 반복",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.47
+  }
  },
  {
   "id": "iv078",
@@ -1465,7 +1549,13 @@
   ],
   "topic": "비용 낭비",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.54,
+   "top_text": 0.25
+  }
  },
  {
   "id": "iv079",
@@ -1480,7 +1570,13 @@
   ],
   "topic": "냉팩 효과 없음",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.38
+  }
  },
  {
   "id": "iv080",
@@ -1495,7 +1591,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.8,
+   "top_text": 0.4
+  }
  },
  {
   "id": "iv081",
@@ -1510,7 +1612,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv082",
@@ -1526,7 +1634,13 @@
   ],
   "topic": "마스크 발병",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.21,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv083",
@@ -1541,7 +1655,13 @@
   ],
   "topic": "수란트라",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.1,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv084",
@@ -1556,7 +1676,13 @@
   ],
   "topic": "연고 반복",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv085",
@@ -1572,7 +1698,13 @@
   ],
   "topic": "레이저 부작용",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv086",
@@ -1587,7 +1719,13 @@
   ],
   "topic": "추천",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv087",
@@ -1603,7 +1741,13 @@
   ],
   "topic": "증상",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 768,
+  "screen": {
+   "keep_h": 768,
+   "too_low": false,
+   "center_text": 0.46,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv088",
@@ -1620,7 +1764,13 @@
   ],
   "topic": "스테로이드 반복",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.12,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv089",
@@ -1635,7 +1785,13 @@
   ],
   "topic": "스테로이드 모르고 사용",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 778,
+  "screen": {
+   "keep_h": 778,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv090",
@@ -1650,7 +1806,13 @@
   ],
   "topic": "물세안·노보습",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv091",
@@ -1666,7 +1828,13 @@
   ],
   "topic": "병원 실패",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv092",
@@ -1682,7 +1850,13 @@
   ],
   "topic": "증상",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv093",
@@ -1696,7 +1870,13 @@
   ],
   "topic": "마지막 희망",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv094",
@@ -1711,7 +1891,13 @@
   ],
   "topic": "재발 불안",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv095",
@@ -1727,7 +1913,13 @@
   ],
   "topic": "자극 치료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.03,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv096",
@@ -1743,7 +1935,13 @@
   ],
   "topic": "생활 제한",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv097",
@@ -1757,7 +1955,13 @@
   ],
   "topic": "생활 제한 없음",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv098",
@@ -1773,7 +1977,13 @@
   ],
   "topic": "오진",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv099",
@@ -1789,7 +1999,13 @@
   ],
   "topic": "병원 유목",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv100",
@@ -1804,7 +2020,13 @@
   ],
   "topic": "설명 없는 진료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv101",
@@ -1820,7 +2042,13 @@
   ],
   "topic": "최악의 밤",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv102",
@@ -1834,7 +2062,13 @@
   ],
   "topic": "고통",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.07,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv103",
@@ -1850,7 +2084,13 @@
   ],
   "topic": "우울",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv104",
