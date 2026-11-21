@@ -33,6 +33,7 @@ def main():
     p.add_argument("--plan", type=Path, help="편집 계획 JSON (콜드 오픈/챕터/키워드)")
     p.add_argument("--bgm", type=Path, help="배경음악 파일 (없으면 생략)")
     p.add_argument("--assets", type=Path, help="자료 화면 폴더 (스톡 영상/이미지)")
+    p.add_argument("--interviews", type=Path, help="환자 인터뷰 영상 폴더 (계획의 interviews 클립을 끼워 넣는다)")
     p.add_argument("--rename-assets", action="store_true",
                    help="자료 파일 이름을 내용 설명으로 바꾼다 (원래 이름은 rename_log.json에 남음)")
     p.add_argument("--broll", type=Path, help="자료 화면 배치 계획 JSON [{at, asset, mode}]")
@@ -225,7 +226,19 @@ def main():
     print("4/4 렌더링")
     if not args.no_beauty:  # 얼굴 피부만 부드럽고 밝게 (눈·안경·머리카락 경계는 그대로)
         src = render.beautify_source(src, work)
-    render.render(src, tl, ass, sfx, out, work, bgm=args.bgm, jobs=args.jobs, placements=placements, tabs=tabs)
+    user_plan = json.loads(Path(args.plan).read_text(encoding="utf-8")) if args.plan else {}
+    if user_plan.get("interviews") and args.interviews:
+        # 환자 인터뷰 클립은 본편을 다 만든 뒤 문장 사이에 끼워 넣는다 (목소리째 들어가서 본편이 뒤로 밀린다)
+        from . import interviews
+        main_out = work / "main_no_interviews.mp4"
+        render.render(src, tl, ass, sfx, main_out, work, bgm=args.bgm, jobs=args.jobs, placements=placements, tabs=tabs)
+        root = Path(__file__).resolve().parent.parent
+        placed = interviews.insert(main_out, work, user_plan, args.interviews.resolve(), root / "data" / "interview_clips.json",
+                                   out, root / "data" / "interviews")
+        for t, cid, d in placed:
+            print(f"  환자 인터뷰 {cid}: {t:.1f}초에 {d:.1f}초")
+    else:
+        render.render(src, tl, ass, sfx, out, work, bgm=args.bgm, jobs=args.jobs, placements=placements, tabs=tabs)
     print(f"완료: {out}  ({(time.time() - t0) / 60:.1f}분 걸림)")
 
 
