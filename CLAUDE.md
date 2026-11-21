@@ -107,6 +107,8 @@
   (`data/interview_youtube_drive.tsv`, 32편)로 받는다. 유튜브본은 강조 글씨·질문 상자가 자막 띠보다 위(72~85%)나 가운데에도 떠서,
   클립을 더하면 `python -m autoedit.interviews scan --assets 폴더`로 글자 위치를 재 클립마다 keep_h(760~890)를 정하고,
   가운데·위쪽 글자가 뜨는 클립(`screen`)은 프레임을 보고 쓴다. 확인표는 `scripts/interview_review.py`.
+  몽타주(2026-11-21): `{"at": n, "clips": [id, id, {"video", "start", "end", "label"}]}`로 여러 환자 말을 한 자리에 잇는다
+  (목록에 없는 구간은 대본에서 찾아 즉석 클립으로 적는다). 이번 편부터 필요한 곳에 인터뷰를 넣되 본편의 15% 안팎으로, 한 자리 20초 이내.
 
 ## 소리
 - 효과음 도구 earshot(`~/tools/earshot`, `EARSHOT=1 bash scripts/setup_tools.sh`로 설치): `~/tools/earshot/.venv/bin/earshot sfx render whoosh_fast/crisp -o 파일.wav`, 목록은 `sfx list`. real-sfx 스킬(`~/.claude/skills/real-sfx`, setup_tools.sh가 설치)은 녹음 효과음 라이브러리가 아직 없어 UI 소리 78개만 있다. Openverse는 검색은 되지만 Freesound가 이 서버의 다운로드를 403으로 막는다 (2026-10-29).

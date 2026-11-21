@@ -6,6 +6,8 @@
 2) 끼워 넣기: 계획 JSON의 "interviews": [{"at": 문장 번호, "clip": 클립 id}]를 보고, 렌더한 본편의
    그 문장이 시작하기 직전에 환자 목소리 그대로의 클립을 끼워 넣는다 (본편은 멈추고 뒤로 밀린다).
    클립에는 같은 모양의 말 자막(Pretendard 반투명 박스)과 '실제 환자 인터뷰' 이름표를 굽고, 음량은 본편에 맞춘다.
+3) 몽타주: {"at": n, "clips": [id, id, {즉석 클립}]}로 여러 환자의 말을 한 자리에 이어 붙인다.
+   즉석 클립은 목록에 없는 구간을 대본에서 찾아 {"video", "start", "end", "label"}로 바로 적는다.
 """
 import json
 import re
@@ -159,26 +161,30 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
     starts = _sentence_starts(work)
     target = _loudness(video)
     cuts_at = []
-    it_bg = {it["clip"]: it.get("bg") for it in items}  # 계획에서 클립마다 깔 자료 영상을 바꿀 수 있다
     for it in items:
-        c = cat.get(it["clip"])
-        if not c or it["at"] not in starts:
+        group = _item_clips(it, cat)
+        if not group or it["at"] not in starts:
             print(f"  [인터뷰] 건너뜀: {it}")
             continue
         t = _out_time(starts[it["at"]], clips_tl)
         if t is None:
             continue
-        cuts_at.append((max(0.0, t - LEAD), c))
+        t = round(max(0.0, t - LEAD), 3)
+        if cuts_at and abs(cuts_at[-1][0] - t) < 0.01:   # 같은 자리에 적은 항목은 하나의 몽타주로 잇는다
+            cuts_at[-1][1].extend(group)
+        else:
+            cuts_at.append((t, group))
     cuts_at.sort(key=lambda x: x[0])
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)
         segs, prev = [], 0.0
-        for i, (t, c) in enumerate(cuts_at):
-            gain = target - _loudness(lib / c["video"], c["start"], c["end"] - c["start"])
-            cp = tmp / f"iv{i}.mp4"
-            _render_clip({**c, **({"bg": it_bg[c["id"]]} if it_bg.get(c["id"]) else {})}, lib, words_dir, max(-12, min(12, gain)), cp, tmp, bg_lib)
+        for i, (t, group) in enumerate(cuts_at):
             segs.append(("main", prev, t))
-            segs.append(("clip", cp))
+            for j, c in enumerate(group):   # 몽타주: 클립마다 이름표가 바뀌고 앞뒤 짧은 페이드로 이어진다
+                gain = target - _loudness(lib / c["video"], c["start"], c["end"] - c["start"])
+                cp = tmp / f"iv{i}_{j}.mp4"
+                _render_clip(c, lib, words_dir, max(-12, min(12, gain)), cp, tmp, bg_lib)
+                segs.append(("clip", cp))
             prev = t
         segs.append(("main", prev, None))
         # 본편 조각과 인터뷰 클립을 한 번에 이어 붙인다 (본편은 다시 인코딩)
@@ -202,10 +208,33 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
                         "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
                         "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(out)], check=True)
     placed, shift = [], 0.0
-    for t, c in cuts_at:
-        placed.append((round(t + shift, 2), c["id"], round(c["end"] - c["start"], 2)))
-        shift += c["end"] - c["start"]
+    for t, group in cuts_at:
+        dur = sum(c["end"] - c["start"] for c in group)
+        placed.append((round(t + shift, 2), "+".join(c["id"] for c in group), round(dur, 2)))
+        shift += dur
     return placed
+
+
+def _item_clips(it: dict, cat: dict) -> list[dict]:
+    """계획 항목의 클립 목록. {"clip": id} 하나, 또는 몽타주 {"clips": [id 또는 즉석 클립, ...]}.
+    즉석 클립은 대본(data/interviews/*.sentences.txt)에서 찾은 구간을 목록에 없어도 바로 쓴다:
+    {"video", "start", "end", "label"[, "keep_h", "fix", "id"]}. "bg"는 audio 모드 클립 배경 (2026-11-21)."""
+    refs = it.get("clips") or [it["clip"]]
+    out = []
+    for k, r in enumerate(refs):
+        if isinstance(r, str):
+            c = cat.get(r)
+            if not c:
+                print(f"  [인터뷰] 목록에 없는 클립: {r}")
+                continue
+            c = dict(c)
+        else:
+            c = {"mode": "video", "keep_h": KEEP_MAX if str(r.get("video", "")).startswith("yt_") else 0,
+                 "id": f"at{it['at']}_{k}", **r}
+        if it.get("bg") and len(refs) == 1:
+            c["bg"] = it["bg"]
+        out.append(c)
+    return out
 
 
 def scan_overlays(src: Path, start: float, end: float, fps: float = 2.0) -> dict:
