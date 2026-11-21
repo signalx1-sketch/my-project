@@ -58,6 +58,8 @@ def main():
         for c in groups[g]:
             sc = c.get("screen", {})
             warn = []
+            if sc.get("checked"):  # 프레임을 보고 써도 된다고 확인한 클립
+                sc = {}
             if sc.get("center_text", 0) >= 0.3:
                 warn.append("가운데 글자")
             if sc.get("top_text", 0) >= 0.2:

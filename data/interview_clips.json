@@ -540,27 +540,6 @@
   }
  },
  {
-  "id": "iv031",
-  "video": "yt_2NIz7f4crX0.mp4",
-  "start": 330.1,
-  "end": 335.8,
-  "text": "이렇게 오래 끊어본 게 15살 이후 처음",
-  "label": "25세 대학생 · 스테로이드 10년 사용",
-  "tags": [
-   "스테로이드",
-   "탈스테로이드"
-  ],
-  "topic": "스테로이드 끊기",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.82,
-   "top_text": 0.0
-  }
- },
- {
   "id": "iv032",
   "video": "yt_2NIz7f4crX0.mp4",
   "start": 343.2,
@@ -876,7 +855,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.29,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -919,7 +899,8 @@
    "keep_h": 872,
    "too_low": false,
    "center_text": 0.0,
-   "top_text": 0.24
+   "top_text": 0.24,
+   "checked": true
   }
  },
  {
@@ -940,7 +921,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.08,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -962,7 +944,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.14,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -982,7 +965,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1003,28 +987,6 @@
    "keep_h": 782,
    "too_low": false,
    "center_text": 0.05,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv053",
-  "video": "yt_3OG8AQ4MFe8.mp4",
-  "start": 346.2,
-  "end": 366.0,
-  "text": "물세안만, 로션 없이 자연수액만",
-  "label": "40대 초반 · 주사피부염 · 피부과 7곳",
-  "tags": [
-   "물세안",
-   "자연수액",
-   "보습"
-  ],
-  "topic": "치료 방식",
-  "mode": "video",
-  "keep_h": 760,
-  "screen": {
-   "keep_h": 760,
-   "too_low": true,
-   "center_text": 0.07,
    "top_text": 0.0
   }
  },
@@ -1067,7 +1029,8 @@
    "keep_h": 876,
    "too_low": false,
    "center_text": 0.0,
-   "top_text": 0.56
+   "top_text": 0.56,
+   "checked": true
   }
  },
  {
@@ -1087,7 +1050,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.0,
-   "top_text": 0.21
+   "top_text": 0.21,
+   "checked": true
   }
  },
  {
@@ -1192,7 +1156,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1276,7 +1241,8 @@
    "keep_h": 876,
    "too_low": false,
    "center_text": 0.12,
-   "top_text": 0.46
+   "top_text": 0.46,
+   "checked": true
   }
  },
  {
@@ -1319,7 +1285,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.21,
-   "top_text": 0.04
+   "top_text": 0.04,
+   "checked": true
   }
  },
  {
@@ -1340,7 +1307,8 @@
    "keep_h": 762,
    "too_low": false,
    "center_text": 0.36,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1424,7 +1392,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 1.0,
-   "top_text": 0.79
+   "top_text": 0.79,
+   "checked": true
   }
  },
  {
@@ -1512,7 +1481,8 @@
    "keep_h": 890,
    "too_low": false,
    "center_text": 0.63,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1533,28 +1503,8 @@
    "keep_h": 890,
    "too_low": false,
    "center_text": 0.0,
-   "top_text": 0.47
-  }
- },
- {
-  "id": "iv078",
-  "video": "yt_IxqIN-l1T_Y.mp4",
-  "start": 200.9,
-  "end": 213.1,
-  "text": "시간과 돈, 아반떼 중고 한 대",
-  "label": "32세 · 레이저 제모 뒤 피부염",
-  "tags": [
-   "비용",
-   "병원유목"
-  ],
-  "topic": "비용 낭비",
-  "mode": "video",
-  "keep_h": 760,
-  "screen": {
-   "keep_h": 760,
-   "too_low": true,
-   "center_text": 0.54,
-   "top_text": 0.25
+   "top_text": 0.47,
+   "checked": true
   }
  },
  {
@@ -1575,28 +1525,8 @@
    "keep_h": 890,
    "too_low": false,
    "center_text": 0.0,
-   "top_text": 0.38
-  }
- },
- {
-  "id": "iv080",
-  "video": "yt_IxqIN-l1T_Y.mp4",
-  "start": 374.6,
-  "end": 392.0,
-  "text": "첫 달은 긴가민가, 두 달 차에 말도 안 되게",
-  "label": "32세 · 레이저 제모 뒤 피부염",
-  "tags": [
-   "경과",
-   "계단식"
-  ],
-  "topic": "치료 경과",
-  "mode": "video",
-  "keep_h": 760,
-  "screen": {
-   "keep_h": 760,
-   "too_low": true,
-   "center_text": 0.8,
-   "top_text": 0.4
+   "top_text": 0.38,
+   "checked": true
   }
  },
  {
@@ -1617,7 +1547,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1746,7 +1677,8 @@
    "keep_h": 768,
    "too_low": false,
    "center_text": 0.46,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1769,7 +1701,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.12,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -1811,7 +1744,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -2559,7 +2493,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 1.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -2580,7 +2515,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 1.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -2602,7 +2538,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 1.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -2623,7 +2560,8 @@
    "keep_h": 798,
    "too_low": false,
    "center_text": 1.0,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -2645,7 +2583,8 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.11,
-   "top_text": 0.0
+   "top_text": 0.0,
+   "checked": true
   }
  },
  {
@@ -2670,28 +2609,6 @@
   }
  },
  {
-  "id": "iv131",
-  "video": "yt_ck0LZwH-FW8.mp4",
-  "start": 60.7,
-  "end": 79.7,
-  "text": "세안을 열심히 했더니 빨개지기 시작",
-  "label": "28세 · 홍조·주사피부염 10년",
-  "tags": [
-   "세안",
-   "폼클렌징",
-   "발병"
-  ],
-  "topic": "세안 과다",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.34,
-   "top_text": 0.74
-  }
- },
- {
   "id": "iv132",
   "video": "yt_ck0LZwH-FW8.mp4",
   "start": 84.7,
@@ -2710,7 +2627,8 @@
    "keep_h": 890,
    "too_low": false,
    "center_text": 0.0,
-   "top_text": 0.35
+   "top_text": 0.35,
+   "checked": true
   }
  },
  {
@@ -2752,7 +2670,8 @@
    "keep_h": 890,
    "too_low": false,
    "center_text": 0.0,
-   "top_text": 0.21
+   "top_text": 0.21,
+   "checked": true
   }
  },
  {
@@ -2983,7 +2902,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv146",
@@ -2999,7 +2924,13 @@
   ],
   "topic": "스테로이드 모르고 사용",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv147",
@@ -3015,7 +2946,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv148",
@@ -3031,7 +2968,13 @@
   ],
   "topic": "자연수액만",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv149",
@@ -3047,7 +2990,13 @@
   ],
   "topic": "자극 없는 치료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv150",
@@ -3063,7 +3012,13 @@
   ],
   "topic": "격려",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv151",
@@ -3078,7 +3033,13 @@
   ],
   "topic": "햇빛 발병",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 786,
+  "screen": {
+   "keep_h": 786,
+   "too_low": false,
+   "center_text": 0.12,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv152",
@@ -3093,7 +3054,13 @@
   ],
   "topic": "똑같은 약",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 852,
+  "screen": {
+   "keep_h": 852,
+   "too_low": false,
+   "center_text": 0.15,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv153",
@@ -3109,7 +3076,13 @@
   ],
   "topic": "수란트라·항생제",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 766,
+  "screen": {
+   "keep_h": 766,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv154",
@@ -3124,7 +3097,13 @@
   ],
   "topic": "밤 가려움",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv155",
@@ -3140,7 +3119,13 @@
   ],
   "topic": "딱지 회복",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 780,
+  "screen": {
+   "keep_h": 780,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv156",
@@ -3155,7 +3140,13 @@
   ],
   "topic": "가려움 치료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 772,
+  "screen": {
+   "keep_h": 772,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv157",
@@ -3170,7 +3161,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 810,
+  "screen": {
+   "keep_h": 810,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv158",
@@ -3186,7 +3183,13 @@
   ],
   "topic": "희망",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv159",
@@ -3201,7 +3204,13 @@
   ],
   "topic": "자연수액 첫 경험",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 842,
+  "screen": {
+   "keep_h": 842,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv160",
@@ -3216,7 +3225,13 @@
   ],
   "topic": "수면 회복",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv161",
@@ -3231,7 +3246,13 @@
   ],
   "topic": "아프지 않은 치료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.04,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv162",
@@ -3246,7 +3267,13 @@
   ],
   "topic": "레이저 권유",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv163",
@@ -3261,7 +3288,13 @@
   ],
   "topic": "인터뷰의 힘",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv164",
@@ -3276,7 +3309,13 @@
   ],
   "topic": "양약 위장장애",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv165",
@@ -3292,7 +3331,13 @@
   ],
   "topic": "증상",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 826,
+  "screen": {
+   "keep_h": 826,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv166",
@@ -3307,7 +3352,14 @@
   ],
   "topic": "고질병",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.0,
+   "top_text": 0.0,
+   "checked": true
+  }
  },
  {
   "id": "iv167",
@@ -3323,7 +3375,13 @@
   ],
   "topic": "이전 치료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv168",
@@ -3339,7 +3397,13 @@
   ],
   "topic": "필링 후 발병",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv169",
@@ -3354,7 +3418,13 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 836,
+  "screen": {
+   "keep_h": 836,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv170",
@@ -3369,7 +3439,13 @@
   ],
   "topic": "필링 후 예민",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv171",
@@ -3384,7 +3460,13 @@
   ],
   "topic": "조언",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 870,
+  "screen": {
+   "keep_h": 870,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv172",
@@ -3400,7 +3482,13 @@
   ],
   "topic": "증상",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.29,
+   "top_text": 0.0
+  }
  },
  {
   "id": "iv173",
@@ -3415,7 +3503,14 @@
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.57,
+   "top_text": 0.0,
+   "checked": true
+  }
  },
  {
   "id": "iv174",
@@ -3430,7 +3525,14 @@
   ],
   "topic": "면역억제제",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.5,
+   "top_text": 0.0,
+   "checked": true
+  }
  },
  {
   "id": "iv175",
@@ -3446,7 +3548,14 @@
   ],
   "topic": "약 부작용",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 810,
+  "screen": {
+   "keep_h": 810,
+   "too_low": false,
+   "center_text": 0.6,
+   "top_text": 0.0,
+   "checked": true
+  }
  },
  {
   "id": "iv176",
@@ -3461,6 +3570,13 @@
   ],
   "topic": "첫 치료",
   "mode": "video",
-  "keep_h": 890
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.57,
+   "top_text": 0.14,
+   "checked": true
+  }
  }
 ]
