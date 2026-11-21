@@ -72,8 +72,14 @@ def esc(text: str) -> str:
     return text.replace("\\", "").replace("{", "(").replace("}", ")")
 
 
+# 병원 제품 이름: 음성 인식이 늘 '자연수액'으로 적는다. 본편·인터뷰 자막 모두에 항상 적용 (2026-11-21 사용자 지적)
+BRAND_FIX = {"자연수액": "자윤수액", "자연 수액": "자윤수액"}
+
+
 def fix_text(text: str, fixes: dict[str, str]) -> str:
     for wrong, right in fixes.items():
+        text = text.replace(wrong, right)
+    for wrong, right in BRAND_FIX.items():
         text = text.replace(wrong, right)
     return text
 
