@@ -20,6 +20,17 @@ from .subtitles import OutWord
 FADE = 0.12          # 클립 앞뒤 화면·소리 페이드
 LEAD = 0.15          # 문장 시작보다 이만큼 앞에서 자른다 (말 첫소리를 먹지 않게)
 LABEL_PREFIX = "실제 환자 인터뷰"
+# 인터뷰 음성 인식에 자주 나오는 오인식 (단어 단위로 바꾼다). 클립별 "fix"가 뒤에 덮어쓴다 (2026-11-21)
+INTERVIEW_FIX = {
+    "자연수육": "자연수액", "자연수색": "자연수액", "자연수행": "자연수액", "자연책": "자연수액", "자연색": "자연수액",
+    "자연수에": "자연수액", "자연수의": "자연수액",
+    "스킨눅스": "스킨룩스", "스킨록스": "스킨룩스", "스킨룹스": "스킨룩스", "스킨롭스": "스킨룩스", "스킨옥스": "스킨룩스",
+    "스킨럭스": "스킨룩스", "스킨업스": "스킨룩스", "스킨로스": "스킨룩스", "스킨십스": "스킨룩스",
+    "스티로이드": "스테로이드", "스테레이드": "스테로이드", "스테롤드": "스테로이드", "세로이드": "스테로이드",
+    "히로이드": "스테로이드", "제로이드": "스테로이드",
+    "사이포렌": "사이폴엔", "폐혈증": "패혈증", "독시사이클링": "독시사이클린", "술안트라": "수란트라",
+    "VBM": "브이빔", "VBIM": "브이빔", "V빔": "브이빔", "LED": "엘리델", "레이더": "레이저", "연골": "연고",
+}
 
 
 # ---------- 1) 색인 ----------
@@ -62,7 +73,7 @@ def _loudness(path: Path, start: float = 0, dur: float | None = None) -> float:
 def _clip_ass(clip: dict, words: list[dict], ass_path: Path):
     """클립 구간의 말 자막 + 왼쪽 아래 이름표. 시간은 클립 시작 기준."""
     st = subtitles.CAPTION_STYLES[subtitles.DEFAULT_CAPTION_STYLE]
-    ws = [OutWord(subtitles.fix_text(w["w"], clip.get("fix", {})), w["s"] - clip["start"], w["e"] - clip["start"], "body")
+    ws = [OutWord(subtitles.fix_text(w["w"], {**INTERVIEW_FIX, **clip.get("fix", {})}), w["s"] - clip["start"], w["e"] - clip["start"], "body")
           for w in words if w["s"] >= clip["start"] - 0.05 and w["e"] <= clip["end"] + 0.05]
     lines = subtitles.group_lines(ws, st["max_chars"], st["max_words"])
     head = subtitles.HEADER.format(cap=st["font"], capline=st["line"], big="Pretendard")
@@ -197,6 +208,48 @@ def insert(video: Path, work: Path, plan: dict, lib: Path, catalog: Path, out: P
     return placed
 
 
+def scan_overlays(src: Path, start: float, end: float, fps: float = 2.0) -> dict:
+    """유튜브본 클립에 구워진 글자 위치를 잰다 (2026-11-21).
+
+    유튜브본은 아래 자막 말고도 강조 글씨·질문 상자가 높이 72~85%에 뜨거나, 가운데에 질문 상자가 뜬다.
+    0.5초마다 프레임을 뽑아 글자 상자를 찾고(RapidOCR 검출만), 아래쪽 글자를 다 잘라낼 keep_h와
+    가운데·위쪽 글자가 뜬 프레임 비율을 돌려준다. keep_h가 KEEP_MIN보다 작아야 하면 too_low."""
+    import numpy as np
+    from rapidocr import RapidOCR   # pip install rapidocr (검출 모델만 쓴다)
+    eng = RapidOCR()
+    W, H = 960, 540
+    raw = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-ss", f"{start:.3f}", "-t", f"{end - start:.3f}", "-i", str(src),
+                          "-vf", f"fps={fps},scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2",
+                          "-f", "rawvideo", "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
+    frames = np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3)
+    top_cut, center, upper = 1.0, 0, 0
+    for f in frames:
+        boxes = eng(np.ascontiguousarray(f), use_det=True, use_cls=False, use_rec=False).boxes
+        boxes = [] if boxes is None else boxes
+        c_hit = u_hit = False
+        for b in boxes:
+            ys = [p[1] / H for p in b]
+            y0, y1 = min(ys), max(ys)
+            if y1 - y0 < 0.02:
+                continue
+            cy = (y0 + y1) / 2
+            if cy > 0.6:
+                top_cut = min(top_cut, y0)
+            elif cy < 0.09:
+                u_hit = True
+            else:
+                c_hit = True
+        center += c_hit
+        upper += u_hit
+    n = max(1, len(frames))
+    kh = min(KEEP_MAX, int(top_cut * 1080) - 14) // 2 * 2
+    return {"keep_h": max(kh, KEEP_MIN), "too_low": kh < KEEP_MIN,
+            "center_text": round(center / n, 2), "top_text": round(upper / n, 2)}
+
+
+KEEP_MAX, KEEP_MIN = 890, 760   # 890 = 자막 띠 위, 760보다 더 자르면 화면이 너무 커져 흐려진다
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser()
@@ -213,10 +266,25 @@ def main():
     b.add_argument("--catalog", default="data/interview_clips.json")
     b.add_argument("--words", default="data/interviews")
     b.add_argument("--bg-lib", help="배경으로 깔 자료 영상 폴더 (클립의 bg)")
+    c = sub.add_parser("scan", help="클립 목록의 유튜브본 클립마다 구워진 글자를 재서 keep_h·screen 표시를 적는다")
+    c.add_argument("--assets", required=True, help="인터뷰 영상 폴더")
+    c.add_argument("--catalog", default="data/interview_clips.json")
+    c.add_argument("--all", action="store_true", help="이미 잰 클립도 다시 잰다")
     x = ap.parse_args()
     if x.cmd == "index":
         for v in x.videos:
             print("ok", index(Path(v), Path(x.out)))
+    elif x.cmd == "scan":
+        cat = Path(x.catalog)
+        clips = json.loads(cat.read_text(encoding="utf-8"))
+        for cl in clips:
+            if cl.get("mode") != "video" or not cl["video"].startswith("yt_") or ("screen" in cl and not x.all):
+                continue
+            r = scan_overlays(Path(x.assets) / cl["video"], cl["start"], cl["end"])
+            cl["keep_h"] = r["keep_h"]
+            cl["screen"] = r
+            print(cl["id"], r, flush=True)
+            cat.write_text(json.dumps(clips, ensure_ascii=False, indent=1), encoding="utf-8")
     else:
         plan = json.loads(Path(x.plan).read_text(encoding="utf-8"))
         placed = insert(Path(x.video), Path(x.work), plan, Path(x.assets), Path(x.catalog), Path(x.out), Path(x.words),
