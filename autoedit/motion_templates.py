@@ -226,7 +226,7 @@ def _bubble(spec, paras, cid, tl):
     stamp = svg("check" if good else "x", "st")
     body = (f'<div class="bwrap"><div class="bub" id="{cid}bb">{words}<div class="btail"></div></div>'
             f'<div class="stamp" id="{cid}st" style="border-color:{col};color:{col}">{stamp}</div></div>'
-            + _lines([spec["note"]], "bnote", cid, "c").replace('class="ln', f'style="color:{col}" class="ln'))
+            + (_lines([spec["note"]], "bnote", cid, "c").replace('class="ln', f'style="color:{col}" class="ln') if spec.get("note") else ""))
     nw = sum(len(t.split()) for t in text)
     tl.add(f"#{cid}bb", {"scale": 0.7, "opacity": 0.3, "transformOrigin": "10% 100%"},
            {"scale": 1, "opacity": 1, "ease": "back.out(1.6)"}, 0.05, 0.5)
