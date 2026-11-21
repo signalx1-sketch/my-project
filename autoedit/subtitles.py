@@ -96,7 +96,8 @@ def map_words(words: list[dict], tl: Timeline, fixes: dict[str, str]) -> list[Ou
         if is_filler(w["w"]) or w.get("drop"):
             continue
         for kind in ("hook", "body"):  # 콜드 오픈에 쓰인 문장은 본편에도 한 번 더 나온다
-            best, ov = None, 0.05
+            # 0.05초보다 짧게 인식된 낱말('안', '세')도 빠지지 않게 (2026-11-21: '조절이 안 되니까'가 '조절이 되니까'로 나옴)
+            best, ov = None, min(0.05, (w["e"] - w["s"]) * 0.5)
             for c in clips:
                 if c.kind != kind:
                     continue

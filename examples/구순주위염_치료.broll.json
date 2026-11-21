@@ -28,6 +28,13 @@
   "keep": true
  },
  {
+  "at": 21,
+  "offset": 0.5,
+  "asset": "영상_깨끗한피부_연고_서랍에_넣고_웃는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 23,
   "offset": 0.0,
   "asset": "영상_연고_튜브_볼에_바르기_클로즈업_홍조.mp4",
@@ -73,6 +80,27 @@
   "at": 51,
   "offset": 0.0,
   "asset": "영상_식탁_항생제_캡슐_먹고_연고_집는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 55,
+  "offset": 0.3,
+  "asset": "자료-ai클립/영상_입주위_연고_바르며_안도하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 58,
+  "offset": 0.0,
+  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 68,
+  "offset": 0.5,
+  "asset": "영상_욕실_거울_홍조_얼굴_만지는_여성.mp4",
   "mode": "full",
   "keep": true
  },
