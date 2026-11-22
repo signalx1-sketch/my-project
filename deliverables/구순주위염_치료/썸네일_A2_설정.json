@@ -14,7 +14,7 @@
  "shade": [
   {
    "dir": "bottom",
-   "start": 0.48,
+   "start": 0.52,
    "alpha": 240
   }
  ],
@@ -34,7 +34,7 @@
   "beauty": true,
   "h": 400,
   "x": 813,
-  "y": 100,
+  "y": 120,
   "fade_bottom": 130,
   "outline": 0
  },
@@ -51,10 +51,10 @@
     ]
    ],
    "x": 640,
-   "y": 540,
-   "size": 142,
+   "y": 560,
+   "size": 125,
    "align": "center",
-   "stroke": 15
+   "stroke": 14
   },
   {
    "parts": [
@@ -68,10 +68,10 @@
     ]
    ],
    "x": 640,
-   "y": 684,
-   "size": 142,
+   "y": 690,
+   "size": 125,
    "align": "center",
-   "stroke": 15
+   "stroke": 14
   }
  ]
 }
