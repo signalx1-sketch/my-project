@@ -1,0 +1,77 @@
+{
+ "photo": {
+  "src": "deliverables/입주위염/썸네일_생성_입주위2.jpg",
+  "scale": 0.7,
+  "anchor": [
+   1000,
+   500
+  ],
+  "at": [
+   470,
+   300
+  ]
+ },
+ "shade": [
+  {
+   "dir": "bottom",
+   "start": 0.55,
+   "alpha": 235
+  }
+ ],
+ "circle": {
+  "box": [
+   345,
+   285,
+   575,
+   430
+  ],
+  "color": "#FF2020",
+  "width": 8
+ },
+ "doc": {
+  "src": "deliverables/입주위염/썸네일_원장님3_크롭.png",
+  "mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
+  "beauty": true,
+  "h": 400,
+  "x": 813,
+  "y": 150,
+  "fade_bottom": 130,
+  "outline": 0
+ },
+ "texts": [
+  {
+   "parts": [
+    [
+     "연고 바르기 ",
+     "white"
+    ],
+    [
+     "전에",
+     "#FF3B30"
+    ]
+   ],
+   "x": 640,
+   "y": 585,
+   "size": 110,
+   "align": "center",
+   "stroke": 13
+  },
+  {
+   "parts": [
+    [
+     "'이것'",
+     "#FFE600"
+    ],
+    [
+     "부터 줄이세요",
+     "white"
+    ]
+   ],
+   "x": 640,
+   "y": 700,
+   "size": 110,
+   "align": "center",
+   "stroke": 13
+  }
+ ]
+}
