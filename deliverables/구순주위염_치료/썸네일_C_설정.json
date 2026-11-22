@@ -11,14 +11,14 @@
  "bottom": 26,
  "beauty": true,
  "doc_crop": [
-  540,
-  180,
-  1220,
-  945
+  140,
+  0,
+  833,
+  780
  ],
- "doc_mask": "deliverables/구순주위염_치료/썸네일_원장님_누끼.png",
+ "doc_mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
  "doc_bg": "deliverables/구순주위염_치료/썸네일_배경_거울.jpg",
- "doc_bg_x": 300,
+ "doc_bg_x": 560,
  "doc_bg_blur": 3,
  "doc_bg_wash": 0.1,
  "line_gap": 0.98,
