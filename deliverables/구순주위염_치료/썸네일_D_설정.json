@@ -1,0 +1,55 @@
+{
+ "layout": "text_left",
+ "keyword": [],
+ "bg_wash": false,
+ "bg_bright": 0.75,
+ "bg_blur": 4,
+ "bg_x": 300,
+ "big_stroke": 16,
+ "big_size": 162,
+ "col_w": 1120,
+ "bottom": 26,
+ "beauty": true,
+ "doc_crop": [
+  540,
+  180,
+  1220,
+  945
+ ],
+ "doc_mask": "deliverables/구순주위염_치료/썸네일_원장님_누끼.png",
+ "doc_bg": "deliverables/구순주위염_치료/썸네일_배경_거울.jpg",
+ "doc_bg_x": 300,
+ "doc_bg_blur": 3,
+ "doc_bg_wash": 0.1,
+ "line_gap": 0.98,
+ "big": [
+  [
+   "입 주위가",
+   "white",
+   "black",
+   {
+    "banner": "#E8202A",
+    "banner_lines": 2,
+    "banner_fx": "brush"
+   }
+  ],
+  [
+   "빨갛다면",
+   "white",
+   "black"
+  ],
+  [
+   "딱 4가지만",
+   "#FFE600",
+   "black",
+   {
+    "num_scale": 1.35
+   }
+  ],
+  [
+   "지키세요",
+   "white",
+   "black"
+  ]
+ ]
+}
