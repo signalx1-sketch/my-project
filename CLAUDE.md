@@ -113,6 +113,7 @@
   (목록에 없는 구간은 대본에서 찾아 즉석 클립으로 적는다). 이번 편부터 필요한 곳에 인터뷰를 넣되 본편의 15% 안팎으로, 한 자리 20초 이내.
   인터뷰는 영상 앞·중간에 원장님 말 사이사이 끼우면 어색하다 (2026-11-21 사용자): 뒷부분(마무리 쪽) 우리 병원 치료·효과를 말하는 곳에만,
   나은 환자의 말(효과, 자극 없는 치료)로 넣는다.
+  2026-11-22: 치료편에서 뒷부분에만 넣어도 '아쉽다'며 다 뺐다. 인터뷰는 사용자가 넣자고 할 때만 넣는다.
 
 ## 소리
 - 효과음 도구 earshot(`~/tools/earshot`, `EARSHOT=1 bash scripts/setup_tools.sh`로 설치): `~/tools/earshot/.venv/bin/earshot sfx render whoosh_fast/crisp -o 파일.wav`, 목록은 `sfx list`. real-sfx 스킬(`~/.claude/skills/real-sfx`, setup_tools.sh가 설치)은 녹음 효과음 라이브러리가 아직 없어 UI 소리 78개만 있다. Openverse는 검색은 되지만 Freesound가 이 서버의 다운로드를 403으로 막는다 (2026-10-29).
