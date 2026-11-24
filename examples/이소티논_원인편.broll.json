@@ -1,0 +1,107 @@
+[
+ {
+  "at": 1,
+  "offset": 0.5,
+  "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 6,
+  "offset": 0.0,
+  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 22,
+  "offset": 0.0,
+  "asset": "영상_돋보기로_보는_여드름_구진_피부_클로즈업.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 27,
+  "offset": 1.0,
+  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 35,
+  "offset": 0.0,
+  "asset": "영상_홍조_볼_여성_얼굴_클로즈업.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 50,
+  "offset": 0.0,
+  "asset": "영상_햇빛_자외선_일광화상_얼굴_가리는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 56,
+  "offset": 0.0,
+  "asset": "영상_피부과_레이저_시술_받는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 63,
+  "offset": 0.0,
+  "asset": "영상_피지선_모낭_3D_일러스트.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 67,
+  "offset": 0.0,
+  "asset": "영상_피부_장벽_수분_보습_vs_건조_도식.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 78,
+  "offset": 0.0,
+  "asset": "영상_피부_위_세균_미생물_3D_클로즈업.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 87,
+  "offset": 0.0,
+  "asset": "영상_짧은_진료_의사_모니터로_돌아앉음_말_못하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 94,
+  "offset": 0.0,
+  "asset": "영상_알약_먹고_붉고_부은_얼굴_각질_걱정하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 101,
+  "offset": 4.0,
+  "asset": "영상_지친_홍조_여성_소파.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 103,
+  "offset": 0.0,
+  "asset": "영상_피부과_대기실_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 106,
+  "offset": 0.0,
+  "asset": "영상_창가거울_볼_만지며_안도_미소_여성.mp4",
+  "mode": "full",
+  "keep": true
+ }
+]
