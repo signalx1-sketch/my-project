@@ -1,12 +1,5 @@
 [
  {
-  "at": 1,
-  "offset": 0.5,
-  "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
   "at": 2,
   "offset": 10.0,
   "asset": "영상_거울_속_홍조_구진_볼_여성.mp4",
@@ -17,13 +10,6 @@
   "at": 5,
   "offset": 0.0,
   "asset": "영상_욕실_거울_홍조_얼굴_걱정_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
-  "at": 6,
-  "offset": 0.0,
-  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
   "mode": "full",
   "keep": true
  },
@@ -115,13 +101,6 @@
   "at": 87,
   "offset": 0.0,
   "asset": "영상_짧은_진료_의사_모니터로_돌아앉음_말_못하는_여성.mp4",
-  "mode": "full",
-  "keep": true
- },
- {
-  "at": 94,
-  "offset": 0.0,
-  "asset": "영상_알약_먹고_붉고_부은_얼굴_각질_걱정하는_여성.mp4",
   "mode": "full",
   "keep": true
  },
