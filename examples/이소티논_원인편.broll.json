@@ -7,9 +7,37 @@
   "keep": true
  },
  {
+  "at": 2,
+  "offset": 10.0,
+  "asset": "영상_거울_속_홍조_구진_볼_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 5,
+  "offset": 0.0,
+  "asset": "영상_욕실_거울_홍조_얼굴_걱정_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 6,
   "offset": 0.0,
   "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 8,
+  "offset": 0.0,
+  "asset": "영상_손거울_보며_홍조_걱정하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 12,
+  "offset": 0.0,
+  "asset": "영상_돋보기로_보는_피부_결_클로즈업.mp4",
   "mode": "full",
   "keep": true
  },
@@ -56,9 +84,23 @@
   "keep": true
  },
  {
-  "at": 67,
-  "offset": 0.0,
+  "at": 66,
+  "offset": 3.0,
   "asset": "영상_피부_장벽_수분_보습_vs_건조_도식.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 74,
+  "offset": 0.0,
+  "asset": "영상_코_피부_각질_만지는_여성_클로즈업.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 81,
+  "offset": 0.0,
+  "asset": "영상_거울_보며_홍조_볼_만지는_여성.mp4",
   "mode": "full",
   "keep": true
  },
@@ -98,9 +140,23 @@
   "keep": true
  },
  {
+  "at": 105,
+  "offset": 8.0,
+  "asset": "영상_침대_누운_심한_홍조_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 106,
   "offset": 0.0,
   "asset": "영상_창가거울_볼_만지며_안도_미소_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 111,
+  "offset": 0.0,
+  "asset": "영상_노트_기록에_동그라미_미소_여성.mp4",
   "mode": "full",
   "keep": true
  }
