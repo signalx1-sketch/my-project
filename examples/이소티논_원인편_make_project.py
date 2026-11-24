@@ -33,7 +33,7 @@ CARDS = {
     55: (43, 0.0, {"kind": "part", "num": 3, "total": 5, "title": "약 설명서", "sub": "뭐라고 적혀 있을까"}),  # PART 3/5
     57: (44, 1.0, {"kind": "icontext", "icon": "pill-bottle", "text": ["한미약품 이소티논연질캡슐 설명서", "로슈 **로아큐탄** 제품정보"]}),
     60: (46, 0.0, {"kind": "icontext", "icon": "triangle-alert", "text": ["줄이거나 끊으면 대개 좋아지지만", "**일부는 치료 후에도 남습니다**"]}),
-    62: (47, 0.0, {"kind": "icontext", "icon": "droplets", "text": ["가장 흔한 건 점막 건조", "피부 · 코 · 입술 · 눈이 **마릅니다**"]}),
+    62: (47, 0.0, {"kind": "icontext", "icon": "droplets", "text": ["가장 흔한 건 점막 건조", "피부·코·입술·눈이", "**마릅니다**"]}),
     63: (48, 0.0, {"kind": "icontext", "big": "90%", "text": ["**입술염** 90%", "가려움·피부염·벗겨짐 10%"]}),
     67: (51, 0.0, {"kind": "icons", "items": [["얼굴 피부염", "scan-face"], ["홍조", "flame"], ["상처 치유 지연", "bandage"]],
                    "caption": "빈도 불명으로 적힌 부작용"}),
