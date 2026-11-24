@@ -23,6 +23,8 @@ def load_dotenv(path: Path):
 # 배경음악 대신 효과음을 조금 더 (2026-10-30): 그림 카드가 뜰 때 작은 뽁. 20초 간격으로 솎아진다
 SFX_CARDS = {"bubble", "timer", "compare2", "graph", "warning", "icons", "iconlist", "timeline", "segments",
              "diverge", "tags", "icontext", "paper"}
+# 중요한 화면 전환: 카드가 뜰 때 작은 휙 소리 (2026-11-24 사용자: 화면 전환 때 중요한 부분은 효과음 조금 추가)
+KEY_SFX_CARDS = {"part", "paper", "punch", "comment", "image", "warning"}
 
 
 def main():
@@ -212,7 +214,9 @@ def main():
                           # 강조 카드(✕/✓ 말풍선, 체크리스트, 타이머, 합치기, 비교)에 작은 뽁 소리. 30초 간격으로 솎아진다
                           + [(p.start + 0.45, "pop") for p in placements if p.card in SFX_CARDS]
                           # 정리 카드(체크리스트, 합치기)는 결과가 뜰 때 작은 딩
-                          + [(p.start + 1.0, "ding") for p in placements if p.card in ("checklist", "merge")], tl.duration)
+                          + [(p.start + 1.0, "ding") for p in placements if p.card in ("checklist", "merge")], tl.duration,
+                          # 중요한 전환에는 휙(파트 표지는 위에서 넣음): 논문·펀치·댓글·경고 카드, 2026-11-24
+                          key=[(p.start + 0.15, "whoosh") for p in placements if p.card in KEY_SFX_CARDS])
     tabs = None
     if (plan.get("progress") or {}).get("labels"):
         wins = progress.windows(tl, plan, tl.duration)

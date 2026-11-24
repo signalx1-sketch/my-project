@@ -1,8 +1,8 @@
 [
  {
   "at": 2,
-  "offset": 10.0,
-  "asset": "영상_거울_속_홍조_구진_볼_여성.mp4",
+  "offset": 9.0,
+  "asset": "영상_연질캡슐_꺼내먹는_건조한볼_여성_앞.mp4",
   "mode": "full",
   "keep": true
  },
@@ -28,6 +28,13 @@
   "keep": true
  },
  {
+  "at": 16,
+  "offset": 1.0,
+  "asset": "영상_흰_바탕_알약_클로즈업.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 22,
   "offset": 0.0,
   "asset": "영상_돋보기로_보는_여드름_구진_피부_클로즈업.mp4",
@@ -36,8 +43,15 @@
  },
  {
   "at": 27,
-  "offset": 1.0,
-  "asset": "영상_밤_스마트폰_병원_예약_검색_지친_여성.mp4",
+  "offset": 0.5,
+  "asset": "영상_택배상자_약봉투_세개_여성_뒤.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 34,
+  "offset": 8.0,
+  "asset": "영상_갈라진입술_립밤_여성.mp4",
   "mode": "full",
   "keep": true
  },
@@ -45,6 +59,13 @@
   "at": 35,
   "offset": 0.0,
   "asset": "영상_홍조_볼_여성_얼굴_클로즈업.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 47,
+  "offset": 5.4,
+  "asset": "영상_노트북앞_인공눈물_넣는_여성.mp4",
   "mode": "full",
   "keep": true
  },
@@ -77,6 +98,13 @@
   "keep": true
  },
  {
+  "at": 68,
+  "offset": 0.0,
+  "asset": "영상_손거울_볼_각질_들뜨는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 74,
   "offset": 0.0,
   "asset": "영상_코_피부_각질_만지는_여성_클로즈업.mp4",
@@ -84,8 +112,8 @@
   "keep": true
  },
  {
-  "at": 81,
-  "offset": 0.0,
+  "at": 80,
+  "offset": 7.0,
   "asset": "영상_거울_보며_홍조_볼_만지는_여성.mp4",
   "mode": "full",
   "keep": true
@@ -105,9 +133,23 @@
   "keep": true
  },
  {
+  "at": 91,
+  "offset": 0.2,
+  "asset": "영상_레이저시술_중_약_쟁반_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
   "at": 101,
   "offset": 4.0,
   "asset": "영상_지친_홍조_여성_소파.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 102,
+  "offset": 0.0,
+  "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
   "mode": "full",
   "keep": true
  },

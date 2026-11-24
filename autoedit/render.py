@@ -47,9 +47,18 @@ INTRO_SFX = True      # 맨 앞 3~5초 임팩트 효과음 (assets/sfx/intro_*.w
 SFX_PRIORITY = {"ding": 0, "whoosh": 1, "pop": 2}
 
 
-def thin_sfx(events: list[tuple[float, str]], duration: float) -> list[tuple[float, str]]:
-    """효과음이 너무 잦으면 거슬린다. 중요한 것(딩 > 휙 > 팝)부터 남기고 간격이 좁은 것은 뺀다."""
+# 중요한 화면 전환(파트 표지, 논문, 펀치, 댓글, 경고 카드)은 20초 솎기와 따로 8초 간격까지 소리를 낸다 (2026-11-24 사용자 요청)
+SFX_KEY_EVERY = 8.0
+
+
+def thin_sfx(events: list[tuple[float, str]], duration: float,
+             key: list[tuple[float, str]] | None = None) -> list[tuple[float, str]]:
+    """효과음이 너무 잦으면 거슬린다. 중요한 것(딩 > 휙 > 팝)부터 남기고 간격이 좁은 것은 뺀다.
+    key: 중요한 전환의 효과음. 먼저 SFX_KEY_EVERY 간격으로 넣고, 나머지는 그 둘레를 피해 솎는다."""
     kept: list[tuple[float, str]] = []
+    for t, kind in sorted(key or []):
+        if all(abs(t - k) >= SFX_KEY_EVERY for k, _ in kept):
+            kept.append((t, kind))
     for t, kind in sorted(events, key=lambda e: (SFX_PRIORITY.get(e[1], 9), e[0])):
         edge = t < SFX_EDGE or t > duration - SFX_EDGE
         gap = SFX_EDGE_EVERY if edge else SFX_EVERY
