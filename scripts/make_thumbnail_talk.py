@@ -50,12 +50,13 @@ def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
         w = draw.textlength(txt, font=font)
         if color.startswith("box"):  # "box" = 노란 상자에 검은 글자, "box:#바탕:#글자" = 색 지정 (예: 빨간 상자에 흰 글자)
             _, bg, fg = (color.split(":") + ["#FFE600", "#111111"])[:3] if ":" in color else ("box", "#FFE600", "#111111")
-            bb = draw.textbbox((x, y), txt, font=font)
-            pad = (round(font.size * 0.12), round(font.size * 0.13))
-            draw.rectangle((bb[0] - pad[0] + 8, bb[1] - pad[1] + 8, bb[2] + pad[0] + 8, bb[3] + pad[1] + 8), fill="#111111")  # 그림자
-            draw.rectangle((bb[0] - pad[0], bb[1] - pad[1], bb[2] + pad[0], bb[3] + pad[1]), fill=bg)
-            draw.text((x, y), txt, font=font, fill=fg, stroke_width=3 if fg.lower() in ("white", "#ffffff") else 0, stroke_fill="#111111")
-            x += w + box_pad[0] + 4
+            bb = draw.textbbox((x, y), txt, font=font, stroke_width=STROKE["w"])  # 테두리까지 포함한 글자 상자
+            px, py = round(font.size * 0.10), round(font.size * 0.07)
+            draw.rectangle((bb[0], bb[1] - py, bb[2] + 2 * px, bb[3] + py), fill=bg)
+            # 상자 안 글자도 다른 글자와 같은 굵기로 (같은 검은 테두리, 2026-11-25 사용자: 굵기 동일하게)
+            draw.text((x + px, y), txt, font=font, fill=fg, stroke_width=STROKE["w"], stroke_fill=STROKE["c"])
+            w += 2 * px
+            x += w + round(font.size * 0.06)
         else:
             draw.text((x, y), txt, font=font, fill=color, stroke_width=STROKE["w"], stroke_fill=STROKE["c"])
             x += w
@@ -107,7 +108,7 @@ def main():
         f = ImageFont.truetype(BOLD, size)
         x = cfg["x"]
         if line.get("align", cfg.get("align")) == "center":
-            tw = sum(draw.textlength(t, font=f) for t, _ in line["parts"])
+            tw = sum(draw.textlength(t, font=f) + (round(size * 0.26) if c.startswith("box") else 0) for t, c in line["parts"])
             x = round(line.get("cx", cfg.get("cx", W / 2)) - tw / 2)
         top = f.getbbox("가")[1]  # 글자 위 빈 공간을 빼고 촘촘히 쌓는다
         text_line(draw, x, y - top, line["parts"], f)
