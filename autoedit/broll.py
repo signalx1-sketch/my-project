@@ -583,8 +583,10 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
             bd.used.discard(a.id)
         elif item.get("keep"):
             bd.placed[-1].keep = True
-    placed = [p for p in bd.placed if p.mode == "side"] + enforce_min_show(
-        [p for p in bd.placed if p.mode != "side"], bd.start, bd.end)
+    # 하이라이트(콜드 오픈) 위 자료는 본편 밖이라 맨 앞 얼굴·최소 길이 규칙에서 뺀다 (안 빼면 '맨 앞은 얼굴' 규칙에 지워진다)
+    pre = [p for p in bd.placed if p.mode != "side" and p.start + p.dur <= bd.start + 0.01]
+    placed = [p for p in bd.placed if p.mode == "side"] + pre + enforce_min_show(
+        [p for p in bd.placed if p.mode != "side" and p not in pre], bd.start, bd.end)
     return sorted(placed, key=lambda p: p.start)
 
 
