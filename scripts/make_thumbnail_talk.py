@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from make_thumbnail import beautify  # noqa: E402
 
 W, H = 1280, 720
-BOLD = str(ROOT / "assets" / "fonts" / "Pretendard-ExtraBold.otf")
+BOLD = str(ROOT / "assets" / "fonts" / "SBAggroM.woff")  # 채널 메인 폰트 어그로체 M (2026-11-25 사용자)
 SEMI = str(ROOT / "assets" / "fonts" / "Pretendard-Bold.otf")
 HAND = str(ROOT / "assets" / "fonts" / "thumb" / "NanumPenScript-Regular.ttf")
 
@@ -52,7 +52,7 @@ def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
             draw.text((x, y), txt, font=font, fill="#111111")
             x += w + box_pad[0] + 4
         else:
-            draw.text((x, y), txt, font=font, fill=color, stroke_width=3, stroke_fill="#111111")
+            draw.text((x, y), txt, font=font, fill=color, stroke_width=8, stroke_fill="#111111")  # 채널 썸네일처럼 굵은 검은 테두리
             x += w
 
 
