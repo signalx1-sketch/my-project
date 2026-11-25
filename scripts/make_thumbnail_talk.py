@@ -42,6 +42,9 @@ def background(spec):
     return canvas
 
 
+STROKE = {"w": 8, "c": "#111111"}  # 설정 "stroke": 테두리 굵기, "stroke_color": 테두리 색 (밝은 배경엔 흰 테두리에 검은 글자)
+
+
 def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
     for txt, color in parts:
         w = draw.textlength(txt, font=font)
@@ -52,12 +55,13 @@ def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
             draw.text((x, y), txt, font=font, fill="#111111")
             x += w + box_pad[0] + 4
         else:
-            draw.text((x, y), txt, font=font, fill=color, stroke_width=8, stroke_fill="#111111")  # 채널 썸네일처럼 굵은 검은 테두리
+            draw.text((x, y), txt, font=font, fill=color, stroke_width=STROKE["w"], stroke_fill=STROKE["c"])
             x += w
 
 
 def main():
     cfg = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    STROKE.update(w=cfg.get("stroke", 8), c=cfg.get("stroke_color", "#111111"))
     img = background(cfg["bg"])
 
     d = cfg["doc"]
