@@ -51,7 +51,7 @@ def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
         if color.startswith("box"):  # "box" = 노란 상자에 검은 글자, "box:#바탕:#글자" = 색 지정 (예: 빨간 상자에 흰 글자)
             _, bg, fg = (color.split(":") + ["#FFE600", "#111111"])[:3] if ":" in color else ("box", "#FFE600", "#111111")
             bb = draw.textbbox((x, y), txt, font=font)
-            pad = (round(font.size * 0.12), round(font.size * 0.08))
+            pad = (round(font.size * 0.12), round(font.size * 0.13))
             draw.rectangle((bb[0] - pad[0] + 8, bb[1] - pad[1] + 8, bb[2] + pad[0] + 8, bb[3] + pad[1] + 8), fill="#111111")  # 그림자
             draw.rectangle((bb[0] - pad[0], bb[1] - pad[1], bb[2] + pad[0], bb[3] + pad[1]), fill=bg)
             draw.text((x, y), txt, font=font, fill=fg, stroke_width=3 if fg.lower() in ("white", "#ffffff") else 0, stroke_fill="#111111")
@@ -65,11 +65,6 @@ def main():
     cfg = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     STROKE.update(w=cfg.get("stroke", 8), c=cfg.get("stroke_color", "#111111"))
     img = background(cfg["bg"])
-    if cfg.get("shade_bottom"):  # 아래 글자 자리만 어둡게 (사진 가득형처럼)
-        st, al = cfg["shade_bottom"]
-        g = Image.linear_gradient("L").resize((W, H - int(H * st))).point(lambda v: int(v * al / 255))
-        mask = Image.new("L", (W, H), 0); mask.paste(g, (0, int(H * st)))
-        img = Image.composite(Image.new("RGB", (W, H), "black"), img, mask)
 
     d = cfg["doc"]
     doc = Image.open(d["src"]).convert("RGB")
@@ -86,6 +81,11 @@ def main():
     img = Image.composite(Image.new("RGB", img.size, "black"), img, sh.filter(ImageFilter.GaussianBlur(18)).point(lambda v: v * 0.55))
     img.paste(doc, (d["x"], d["y"]), mask)
 
+    if cfg.get("shade_bottom"):  # 아래 글자 자리만 어둡게 (원장님 가운 위 흰 글자도 읽히게 원장님을 붙인 뒤에)
+        st, al = cfg["shade_bottom"]
+        g = Image.linear_gradient("L").resize((W, H - int(H * st))).point(lambda v: int(v * al / 255))
+        mask = Image.new("L", (W, H), 0); mask.paste(g, (0, int(H * st)))
+        img = Image.composite(Image.new("RGB", (W, H), "black"), img, mask)
     draw = ImageDraw.Draw(img)
     if cfg.get("tag"):
         f = ImageFont.truetype(SEMI, 26)
