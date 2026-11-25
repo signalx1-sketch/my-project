@@ -63,6 +63,11 @@ def main():
     cfg = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     STROKE.update(w=cfg.get("stroke", 8), c=cfg.get("stroke_color", "#111111"))
     img = background(cfg["bg"])
+    if cfg.get("shade_bottom"):  # 아래 글자 자리만 어둡게 (사진 가득형처럼)
+        st, al = cfg["shade_bottom"]
+        g = Image.linear_gradient("L").resize((W, H - int(H * st))).point(lambda v: int(v * al / 255))
+        mask = Image.new("L", (W, H), 0); mask.paste(g, (0, int(H * st)))
+        img = Image.composite(Image.new("RGB", (W, H), "black"), img, mask)
 
     d = cfg["doc"]
     doc = Image.open(d["src"]).convert("RGB")
@@ -86,11 +91,25 @@ def main():
         x0, y0 = cfg["x"], cfg["y"] - 62
         draw.rounded_rectangle((x0, y0, x0 + tw + 36, y0 + 44), radius=22, fill=(20, 24, 22))
         draw.text((x0 + 18, y0 + 7), cfg["tag"], font=f, fill="white")
-    f = ImageFont.truetype(BOLD, cfg.get("size", 110))
     y = cfg["y"]
-    for parts in cfg["lines"]:
-        text_line(draw, cfg["x"], y, parts, f)
-        y += round(cfg.get("size", 110) * cfg.get("gap", 1.22))
+    for line in cfg["lines"]:
+        # 줄마다 설정 가능: {"parts", "fit": 이 폭에 꽉 차게 글자 크기 맞춤, "size", "align": "left"|"center", "cx": 가운데 x}
+        if isinstance(line, list):
+            line = {"parts": line}
+        size = line.get("size", cfg.get("size", 110))
+        if line.get("fit") or cfg.get("fit"):
+            fw = line.get("fit") or cfg["fit"]
+            probe = ImageFont.truetype(BOLD, 100)
+            tw = sum(draw.textlength(t, font=probe) for t, _ in line["parts"])
+            size = int(100 * fw / tw)
+        f = ImageFont.truetype(BOLD, size)
+        x = cfg["x"]
+        if line.get("align", cfg.get("align")) == "center":
+            tw = sum(draw.textlength(t, font=f) for t, _ in line["parts"])
+            x = round(line.get("cx", cfg.get("cx", W / 2)) - tw / 2)
+        top = f.getbbox("가")[1]  # 글자 위 빈 공간을 빼고 촘촘히 쌓는다
+        text_line(draw, x, y - top, line["parts"], f)
+        y += round(size * cfg.get("gap", 1.22) - (0 if not cfg.get("tight") else 0))
     if cfg.get("sub"):
         fs = ImageFont.truetype(SEMI, 34)
         y += 10
