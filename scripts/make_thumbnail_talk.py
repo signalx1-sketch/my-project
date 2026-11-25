@@ -48,11 +48,13 @@ STROKE = {"w": 8, "c": "#111111"}  # 설정 "stroke": 테두리 굵기, "stroke_
 def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
     for txt, color in parts:
         w = draw.textlength(txt, font=font)
-        if color == "box":
-            asc, desc = font.getmetrics()
+        if color.startswith("box"):  # "box" = 노란 상자에 검은 글자, "box:#바탕:#글자" = 색 지정 (예: 빨간 상자에 흰 글자)
+            _, bg, fg = (color.split(":") + ["#FFE600", "#111111"])[:3] if ":" in color else ("box", "#FFE600", "#111111")
             bb = draw.textbbox((x, y), txt, font=font)
-            draw.rectangle((bb[0] - box_pad[0], bb[1] - box_pad[1], bb[2] + box_pad[0], bb[3] + box_pad[1]), fill="#FFE600")
-            draw.text((x, y), txt, font=font, fill="#111111")
+            pad = (round(font.size * 0.12), round(font.size * 0.08))
+            draw.rectangle((bb[0] - pad[0] + 8, bb[1] - pad[1] + 8, bb[2] + pad[0] + 8, bb[3] + pad[1] + 8), fill="#111111")  # 그림자
+            draw.rectangle((bb[0] - pad[0], bb[1] - pad[1], bb[2] + pad[0], bb[3] + pad[1]), fill=bg)
+            draw.text((x, y), txt, font=font, fill=fg, stroke_width=3 if fg.lower() in ("white", "#ffffff") else 0, stroke_fill="#111111")
             x += w + box_pad[0] + 4
         else:
             draw.text((x, y), txt, font=font, fill=color, stroke_width=STROKE["w"], stroke_fill=STROKE["c"])
