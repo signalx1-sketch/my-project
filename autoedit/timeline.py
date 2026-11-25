@@ -84,11 +84,16 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict,
     sentence_starts = [s.start for s in sentences]
     word_starts = [w["s"] for w in words]
 
-    # 1. 콜드 오픈
+    speed_at: dict[int, float] = {}
+    for sp in plan.get("speed", []):
+        for i in range(sp["from"], sp["to"] + 1):
+            speed_at[i] = float(sp["rate"])
+
+    # 1. 콜드 오픈 (본편과 같은 배속으로: 하이라이트만 느리게 들리면 어색하다)
     for k, h in enumerate(plan["hooks"]):
         s, e = _sentence_span(sentences, h["from"], h["to"])
         for a, b in keep_ranges(words, s, e, silences):
-            tl.clips.append(Clip("hook", a, b, zoom=HOOK_ZOOMS[k % 2]))
+            tl.clips.append(Clip("hook", a, b, zoom=HOOK_ZOOMS[k % 2], speed=speed_at.get(h["from"], 1.0)))
 
     # 2. 인트로 범퍼 (콜드 오픈이 있을 때만)
     if tl.clips:
@@ -100,11 +105,6 @@ def build(words: list[dict], sentences: list[Sentence], plan: dict,
     for sk in plan["skip"]:
         skipped.update(range(sk["from"], sk["to"] + 1))
     chapter_at = {c["from"]: n for n, c in enumerate(plan["chapters"])}
-
-    speed_at: dict[int, float] = {}
-    for sp in plan.get("speed", []):
-        for i in range(sp["from"], sp["to"] + 1):
-            speed_at[i] = float(sp["rate"])
 
     body: list[list] = []  # [시작, 끝, 챕터번호, 배속]
     for s in sentences:
