@@ -1,0 +1,120 @@
+"""원장님이 시청자에게 말하는 형 썸네일 (2026-11-25, 레퍼런스: 메이드영 '윤곽수술을 고민하는 모두에게 말씀드립니다').
+
+왼쪽에 굵은 흰 글자 3줄(핵심어는 노란 상자에 검은 글자), 오른쪽에 원장님 누끼를 크게, 원장님 머리 위에 초록 필기체 한마디.
+배경은 장면 사진을 어둡고 살짝 흐리게 깔고, 테두리는 초록 둥근 틀.
+
+사용법: python scripts/make_thumbnail_talk.py 설정.json 결과.jpg
+설정: {"bg": {"src", "scale", "anchor", "at", "blur", "dark"}, "frame": {"color", "width", "radius"},
+       "tag": 작은 머리말, "lines": [[[글자, "box"|"white"|색], ...], ...], "size", "x", "y", "gap",
+       "sub": [작은 글자 줄...], "doc": {"src", "mask", "h", "x", "y", "beauty"},
+       "hand": {"lines": [...], "x", "y", "size", "color", "angle"}}
+"""
+import json
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+from make_thumbnail import beautify  # noqa: E402
+
+W, H = 1280, 720
+BOLD = str(ROOT / "assets" / "fonts" / "Pretendard-ExtraBold.otf")
+SEMI = str(ROOT / "assets" / "fonts" / "Pretendard-Bold.otf")
+HAND = str(ROOT / "assets" / "fonts" / "thumb" / "NanumPenScript-Regular.ttf")
+
+
+def background(spec):
+    im = Image.open(spec["src"]).convert("RGB")
+    s = spec.get("scale", max(W / im.width, H / im.height))
+    im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
+    ax, ay = spec.get("anchor", [im.width / s / 2, im.height / s / 2])
+    tx, ty = spec.get("at", [W / 2, H / 2])
+    canvas = Image.new("RGB", (W, H))
+    canvas.paste(im, (round(tx - ax * s), round(ty - ay * s)))
+    canvas = canvas.filter(ImageFilter.GaussianBlur(spec.get("blur", 3)))
+    canvas = ImageEnhance.Brightness(canvas).enhance(spec.get("dark", 0.45))
+    # 글자 쪽(왼쪽)은 조금 더 어둡게
+    grad = Image.linear_gradient("L").rotate(90).resize((W, H))
+    shade = Image.new("RGB", (W, H), "black")
+    canvas = Image.composite(canvas, shade, grad.point(lambda v: int(255 - (255 - v) * spec.get("left_dark", 0.45))))
+    return canvas
+
+
+def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
+    for txt, color in parts:
+        w = draw.textlength(txt, font=font)
+        if color == "box":
+            asc, desc = font.getmetrics()
+            bb = draw.textbbox((x, y), txt, font=font)
+            draw.rectangle((bb[0] - box_pad[0], bb[1] - box_pad[1], bb[2] + box_pad[0], bb[3] + box_pad[1]), fill="#FFE600")
+            draw.text((x, y), txt, font=font, fill="#111111")
+            x += w + box_pad[0] + 4
+        else:
+            draw.text((x, y), txt, font=font, fill=color, stroke_width=3, stroke_fill="#111111")
+            x += w
+
+
+def main():
+    cfg = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    img = background(cfg["bg"])
+
+    d = cfg["doc"]
+    doc = Image.open(d["src"]).convert("RGB")
+    if d.get("beauty"):
+        doc = beautify(doc)
+    # 누끼 바깥의 옅은 회색은 상자 테두리처럼 비치니 잘라 낸다
+    mask = Image.open(d["mask"]).convert("L").point(lambda v: 255 if v > 128 else 0).filter(ImageFilter.GaussianBlur(1.2))
+    s = d["h"] / doc.height
+    doc = doc.resize((round(doc.width * s), d["h"]), Image.LANCZOS)
+    mask = mask.resize(doc.size, Image.LANCZOS)
+    # 원장님 뒤 은은한 그림자로 배경과 떼어 놓는다
+    sh = Image.new("L", img.size, 0)
+    sh.paste(mask, (d["x"] + 10, d["y"] + 10))
+    img = Image.composite(Image.new("RGB", img.size, "black"), img, sh.filter(ImageFilter.GaussianBlur(18)).point(lambda v: v * 0.55))
+    img.paste(doc, (d["x"], d["y"]), mask)
+
+    draw = ImageDraw.Draw(img)
+    if cfg.get("tag"):
+        f = ImageFont.truetype(SEMI, 26)
+        tw = draw.textlength(cfg["tag"], font=f)
+        x0, y0 = cfg["x"], cfg["y"] - 62
+        draw.rounded_rectangle((x0, y0, x0 + tw + 36, y0 + 44), radius=22, fill=(20, 24, 22))
+        draw.text((x0 + 18, y0 + 7), cfg["tag"], font=f, fill="white")
+    f = ImageFont.truetype(BOLD, cfg.get("size", 110))
+    y = cfg["y"]
+    for parts in cfg["lines"]:
+        text_line(draw, cfg["x"], y, parts, f)
+        y += round(cfg.get("size", 110) * cfg.get("gap", 1.22))
+    if cfg.get("sub"):
+        fs = ImageFont.truetype(SEMI, 34)
+        y += 10
+        for line in cfg["sub"]:
+            draw.text((cfg["x"], y), line, font=fs, fill="#E8E8E8", stroke_width=2, stroke_fill="#111111")
+            y += 46
+
+    hcfg = cfg.get("hand")
+    if hcfg:
+        fh = ImageFont.truetype(HAND, hcfg.get("size", 64))
+        layer = Image.new("RGBA", (1100, 400), (0, 0, 0, 0))
+        ld = ImageDraw.Draw(layer)
+        ly = 10
+        for line in hcfg["lines"]:
+            for dx in (0, 1, 2):  # 펜 글씨가 가늘어 조금 두껍게
+                ld.text((20 + dx, ly), line, font=fh, fill=hcfg.get("color", "#3BE37A"), stroke_width=5, stroke_fill="#0B2A16")
+            ly += round(hcfg.get("size", 64) * 0.95)
+        layer = layer.crop(layer.getbbox()).rotate(hcfg.get("angle", 6), expand=True, resample=Image.BICUBIC)
+        img.paste(layer, (hcfg["x"], hcfg["y"]), layer)
+
+    fr = cfg.get("frame")
+    if fr:
+        border = Image.new("L", img.size, 0)
+        ImageDraw.Draw(border).rounded_rectangle((0, 0, W - 1, H - 1), radius=fr.get("radius", 36), outline=255, width=fr.get("width", 16))
+        img = Image.composite(Image.new("RGB", img.size, fr.get("color", "#2F9E6E")), img, border)
+    img.save(sys.argv[2], quality=93)
+    print("ok", sys.argv[2])
+
+
+if __name__ == "__main__":
+    main()
