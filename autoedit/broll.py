@@ -300,7 +300,7 @@ def video_twin(a: Asset, videos: list[Asset]) -> Asset | None:
 
 def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset], tl: Timeline,
           slides: list[dict] = (), face_target: float = FACE_TARGET,
-          squint: list[tuple[float, float]] = ()) -> list[Placement]:
+          squint: list[tuple[float, float]] = (), slide_max: dict | None = None) -> list[Placement]:
     """자료 화면을 출력 시간에 배치한다.
 
     1. 슬라이드: 그 내용을 말하는 순간부터 다음 슬라이드 전까지 (최대 SLIDE_MAX초)
@@ -328,6 +328,30 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
     if bd.start >= bd.end:
         return []
 
+    # 0. 콜드 오픈 위 자료 (계획 broll 항목에 "hook": 몇 번째 하이라이트, "offset": 그 안에서 몇 초 뒤(출력), "len": 길이)
+    #    하이라이트는 본편 밖이라 얼굴 비율 계산에는 들지 않는다 (2026-11-25: 하이라이트 얼굴 11초가 심심하다)
+    hooks = [c for c in tl.clips if c.kind == "hook"]
+    for item in plan_broll:
+        a = by_id.get(item.get("asset", ""))
+        if "hook" not in item or not a or not hooks:
+            continue
+        grp, cur = [], None
+        for c in hooks:  # 하이라이트 하나가 여러 클립으로 나뉘어 있을 수 있다: 줌이 같은 연속 클립을 한 묶음으로
+            if cur is None or c.zoom != cur:
+                grp.append([c]); cur = c.zoom
+            else:
+                grp[-1].append(c)
+        if item["hook"] >= len(grp):
+            continue
+        g = grp[item["hook"]]
+        t0 = g[0].out_start + float(item.get("offset", 0))
+        end = g[-1].out_start + g[-1].dur
+        dur = min(float(item.get("len", FULL_SEC)), end - t0, a.duration - 0.2 if a.kind == "video" else FULL_MAX)
+        if dur >= FULL_MIN:
+            bd.add(a, "full", t0, dur)
+            bd.placed[-1].keep = True
+    plan_broll = [x for x in plan_broll if "hook" not in x]
+
     def out_t(item) -> float | None:
         if not 0 <= item["at"] < len(sentences):
             return None
@@ -344,6 +368,10 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         hold = PAPER_MIN if cd == "paper" else MIN_SHOW
         nxt = next((x[0] for x in st[k + 1:] if not (x[3] and x[0] - t < hold)), bd.end)
         dur = min(PAPER_MAX if cd == "paper" else SLIDE_MAX, nxt - t, bd.end - t)
+        # 계획 "slide_max": {"슬라이드 번호": 초}: 뒤에 올 자료가 말에 맞게 뜨도록 이 카드만 짧게 (2026-11-25)
+        lim = (slide_max or {}).get(a.id.split("/")[-1])
+        if lim:
+            dur = min(dur, float(lim))
         if dur >= SLIDE_MIN and not stop:
             bd.add(a, "slide", t, dur)
             bd.placed[-1].card = cd
@@ -406,7 +434,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         t = out_t(item)
         if t is None or bd.recent_family(a):
             continue
-        fit = fit_full(a, t, FULL_SEC)
+        fit = fit_full(a, t, float(item.get("len", FULL_SEC)))  # "len": 이 자료만 길이 지정 (2026-11-25)
         if fit:
             bd.add(a, "full", *fit)
             if item.get("keep"):  # 계획에서 꼭 넣으라고 한 자료는 얼굴을 보여 주려고 뺄 때도 남긴다
@@ -546,7 +574,7 @@ def place(plan_broll: list[dict], sentences: list[Sentence], assets: list[Asset]
         t = out_t(item)
         if t is None:
             continue
-        fit = fit_full(a, t, FULL_SEC)
+        fit = fit_full(a, t, float(item.get("len", FULL_SEC)))  # "len": 이 자료만 길이 지정 (2026-11-25)
         if not fit:
             continue
         bd.add(a, "full", *fit)

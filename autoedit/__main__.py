@@ -185,7 +185,8 @@ def main():
             squint = eyes.squint_ranges(samples) if samples else []
             if squint:
                 print(f"  실눈 구간 {len(squint)}곳 {sum(b - a for a, b in squint):.0f}초 → 얼굴로 두지 않음")
-        placements = broll.place(items, sentences, assets, tl, slide_items, args.face, squint)
+        placements = broll.place(items, sentences, assets, tl, slide_items, args.face, squint,
+                                 slide_max=plan.get("slide_max"))
         for pl in placements:
             if pl.mode == "slide":
                 pl.card = card_kind.get(int(pl.asset.id.split("/")[-1]), "")

@@ -1,184 +1,228 @@
 [
  {
-  "at": 2,
   "offset": 9.0,
   "asset": "자료-ai클립/영상_연질캡슐_꺼내먹는_건조한볼_여성_앞.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 2
  },
  {
-  "at": 5,
   "offset": 0.0,
   "asset": "영상_욕실_거울_홍조_얼굴_걱정_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 5
  },
  {
-  "at": 8,
   "offset": 0.0,
   "asset": "영상_손거울_보며_홍조_걱정하는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 8
  },
  {
-  "at": 12,
   "offset": 0.0,
   "asset": "영상_돋보기로_보는_피부_결_클로즈업.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 12
  },
  {
-  "at": 16,
   "offset": 1.0,
   "asset": "스톡_pexels/영상_흰_바탕_알약_클로즈업.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 16
  },
  {
-  "at": 22,
+  "offset": 0.0,
+  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 29
+ },
+ {
   "offset": 0.0,
   "asset": "영상_돋보기로_보는_여드름_구진_피부_클로즈업.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 22
  },
  {
-  "at": 27,
   "offset": 0.5,
   "asset": "자료-ai클립/영상_택배상자_약봉투_세개_여성_뒤.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 27
  },
  {
-  "at": 34,
   "offset": 8.0,
   "asset": "자료-ai클립/영상_갈라진입술_립밤_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "len": 5.0,
+  "at": 34
  },
  {
-  "at": 35,
   "offset": 0.0,
   "asset": "영상_홍조_볼_여성_얼굴_클로즈업.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 35
  },
  {
-  "at": 47,
   "offset": 5.4,
   "asset": "자료-ai클립/영상_노트북앞_인공눈물_넣는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 47
  },
  {
-  "at": 50,
   "offset": 0.0,
   "asset": "영상_햇빛_자외선_일광화상_얼굴_가리는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 50
  },
  {
-  "at": 56,
   "offset": 0.0,
   "asset": "영상_피부과_레이저_시술_받는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 56
  },
  {
-  "at": 63,
+  "offset": 2.4,
+  "asset": "스톡_pexels/영상_피부_모공_극접사_볼.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 61
+ },
+ {
   "offset": 0.0,
   "asset": "영상_피지선_모낭_3D_일러스트.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 63
  },
  {
-  "at": 66,
+  "offset": 3.6,
+  "asset": "영상_알약_먹고_붉고_부은_얼굴_각질_걱정하는_여성.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 64
+ },
+ {
+  "offset": 0.2,
+  "asset": "영상_현미경_피부_단면_물방울_장벽.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 65
+ },
+ {
   "offset": 3.0,
   "asset": "영상_피부_장벽_수분_보습_vs_건조_도식.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 66
  },
  {
-  "at": 68,
   "offset": 0.0,
   "asset": "자료-ai클립/영상_손거울_볼_각질_들뜨는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 68
  },
  {
-  "at": 74,
   "offset": 0.0,
   "asset": "영상_코_피부_각질_만지는_여성_클로즈업.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 74
  },
  {
-  "at": 80,
   "offset": 7.0,
   "asset": "영상_거울_보며_홍조_볼_만지는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 80
  },
  {
-  "at": 78,
   "offset": 0.0,
   "asset": "영상_피부_위_세균_미생물_3D_클로즈업.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 78
  },
  {
-  "at": 87,
   "offset": 0.0,
   "asset": "영상_짧은_진료_의사_모니터로_돌아앉음_말_못하는_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 87
  },
  {
-  "at": 91,
-  "offset": 0.2,
+  "offset": 2.2,
   "asset": "자료-ai클립/영상_레이저시술_중_약_쟁반_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "hook": 0,
+  "len": 4.0
  },
  {
-  "at": 101,
+  "offset": 0.2,
+  "asset": "영상_시술후_얼굴_붉어져_손거울보며_굳는_여성.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 91
+ },
+ {
   "offset": 4.0,
   "asset": "영상_지친_홍조_여성_소파.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 101
  },
  {
-  "at": 102,
   "offset": 0.0,
   "asset": "영상_밤에_스마트폰_검색하는_홍조_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 102
  },
  {
-  "at": 103,
   "offset": 0.0,
   "asset": "영상_피부과_대기실_홍조_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 103
  },
  {
-  "at": 105,
+  "offset": 5.0,
+  "asset": "영상_대학병원_앞_처방전_연고_든_여성.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 103
+ },
+ {
   "offset": 8.0,
   "asset": "영상_침대_누운_심한_홍조_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 105
  },
  {
-  "at": 106,
   "offset": 0.0,
   "asset": "영상_창가거울_볼_만지며_안도_미소_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 106
  },
  {
-  "at": 111,
   "offset": 0.0,
   "asset": "영상_노트_기록에_동그라미_미소_여성.mp4",
   "mode": "full",
-  "keep": true
+  "keep": true,
+  "at": 111
  }
 ]
