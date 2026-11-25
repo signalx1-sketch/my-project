@@ -1,0 +1,73 @@
+{
+ "photo": {
+  "src": "deliverables/이소티논_원인편/썸네일_생성_손거울.png",
+  "scale": 1.3,
+  "anchor": [
+   560,
+   300
+  ],
+  "at": [
+   470,
+   330
+  ]
+ },
+ "shade": [
+  {
+   "dir": "bottom",
+   "start": 0.52,
+   "alpha": 240
+  }
+ ],
+ "circle": {
+  "box": [
+   225,
+   175,
+   445,
+   325
+  ],
+  "color": "#FF2020",
+  "width": 8
+ },
+ "doc": {
+  "src": "deliverables/입주위염/썸네일_원장님3_크롭.png",
+  "mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
+  "beauty": true,
+  "h": 400,
+  "x": 850,
+  "y": 120,
+  "fade_bottom": 130,
+  "outline": 0
+ },
+ "texts": [
+  {
+   "parts": [
+    [
+     "이소티논 먹고",
+     "white"
+    ]
+   ],
+   "x": 640,
+   "y": 560,
+   "size": 125,
+   "align": "center",
+   "stroke": 14
+  },
+  {
+   "parts": [
+    [
+     "얼굴이 ",
+     "white"
+    ],
+    [
+     "빨개졌다면",
+     "#FF3B30"
+    ]
+   ],
+   "x": 640,
+   "y": 690,
+   "size": 125,
+   "align": "center",
+   "stroke": 14
+  }
+ ]
+}

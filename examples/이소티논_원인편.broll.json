@@ -36,7 +36,7 @@
  },
  {
   "offset": 0.0,
-  "asset": "영상_피부과_약국_앞_처방전_보는_여성.mp4",
+  "asset": "자료-ai클립/영상_약국_석달치_약봉투_받는_여성.mp4",
   "mode": "full",
   "keep": true,
   "at": 29
@@ -92,11 +92,18 @@
   "at": 56
  },
  {
-  "offset": 2.4,
-  "asset": "스톡_pexels/영상_피부_모공_극접사_볼.mp4",
+  "offset": 3.6,
+  "asset": "자료-ai클립/영상_침실_따뜻한수건_눈꺼풀_찜질_여성_앞.mp4",
   "mode": "full",
   "keep": true,
   "at": 61
+ },
+ {
+  "offset": 0.0,
+  "asset": "스톡_pexels/영상_피부_모공_극접사_볼.mp4",
+  "mode": "full",
+  "keep": true,
+  "at": 62
  },
  {
   "offset": 0.0,
@@ -171,7 +178,7 @@
  },
  {
   "offset": 0.2,
-  "asset": "영상_시술후_얼굴_붉어져_손거울보며_굳는_여성.mp4",
+  "asset": "자료-ai클립/영상_상담실_레이저_권유_약봉투_여성.mp4",
   "mode": "full",
   "keep": true,
   "at": 91
