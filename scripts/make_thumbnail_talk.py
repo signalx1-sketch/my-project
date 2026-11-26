@@ -87,6 +87,13 @@ def main():
         g = Image.linear_gradient("L").resize((W, H - int(H * st))).point(lambda v: int(v * al / 255))
         mask = Image.new("L", (W, H), 0); mask.paste(g, (0, int(H * st)))
         img = Image.composite(Image.new("RGB", (W, H), "black"), img, mask)
+    if cfg.get("band_top"):  # 위쪽 까만 띠 (레퍼런스 '제발 아무것도 하지마세요'처럼 띠 위에 큰 글자)
+        ImageDraw.Draw(img).rectangle((0, 0, W, cfg["band_top"]), fill="#0B0B0B")
+    if cfg.get("shade_top"):  # 위쪽 글자 자리만 어둡게 (레퍼런스 '제발 아무것도 하지마세요'처럼 위에 큰 글자)
+        en, al = cfg["shade_top"]
+        g = Image.linear_gradient("L").rotate(180).resize((W, int(H * en))).point(lambda v: int(v * al / 255))
+        mask = Image.new("L", (W, H), 0); mask.paste(g, (0, 0))
+        img = Image.composite(Image.new("RGB", (W, H), "black"), img, mask)
     draw = ImageDraw.Draw(img)
     if cfg.get("tag"):
         f = ImageFont.truetype(SEMI, 26)
