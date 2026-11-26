@@ -1,0 +1,75 @@
+{
+ "bg": {
+  "src": "deliverables/이소티논_원인편/썸네일_생성_캡슐.png",
+  "scale": 1.35,
+  "anchor": [
+   560,
+   300
+  ],
+  "at": [
+   520,
+   300
+  ],
+  "blur": 0,
+  "dark": 0.94,
+  "left_dark": 0
+ },
+ "shade_bottom": [
+  0.5,
+  240
+ ],
+ "frame": {
+  "color": "#2F9E6E",
+  "width": 14,
+  "radius": 36
+ },
+ "x": 40,
+ "y": 372,
+ "align": "center",
+ "cx": 640,
+ "gap": 1.13,
+ "stroke": 12,
+ "stroke_color": "#111111",
+ "lines": [
+  [
+   [
+    "이소티논",
+    "white"
+   ],
+   [
+    " + ",
+    "#FFE600"
+   ],
+   [
+    "레이저",
+    "white"
+   ]
+  ],
+  [
+   [
+    "참사",
+    "box:#E8262B:white"
+   ]
+  ]
+ ],
+ "doc": {
+  "src": "deliverables/입주위염/썸네일_원장님3_크롭.png",
+  "mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
+  "beauty": true,
+  "h": 420,
+  "x": 830,
+  "y": 110
+ },
+ "hand": {
+  "lines": [
+   "피부과에서 포기한",
+   "환자만 보는 원장"
+  ],
+  "x": 900,
+  "y": 22,
+  "size": 54,
+  "color": "#3BE37A",
+  "angle": 4
+ },
+ "size": 142
+}
