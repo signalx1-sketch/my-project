@@ -1,0 +1,23 @@
+[
+ {
+  "at": 12,
+  "offset": 0.0,
+  "asset": "영상_식탁_휴대폰_메모앱_입력하는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 16,
+  "offset": 2.0,
+  "asset": "자료-ai클립/영상_화장대_여러제품_겹겹이_바르는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ },
+ {
+  "at": 53,
+  "offset": 1.1,
+  "asset": "영상_밤책상_병원영수증_한약봉지_한숨쉬는_여성.mp4",
+  "mode": "full",
+  "keep": true
+ }
+]
