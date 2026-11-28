@@ -10,7 +10,8 @@
     "큰 병"
    ]
   ],
-  "box": "큰 병"
+  "box": "큰 병",
+  "bg": "deliverables/이소티논_치료편/card_bg/card3.jpg"
  },
  "4": {
   "kind": "image",
@@ -33,7 +34,8 @@
     "레이저까지"
    ]
   ],
-  "foot": "오히려 더 붉어지고"
+  "foot": "오히려 더 붉어지고",
+  "bg": "deliverables/이소티논_치료편/card_bg/card5.jpg"
  },
  "7": {
   "kind": "icontext",
@@ -42,7 +44,8 @@
    "한의원에서는 '열대사장애'",
    "열 내리는 한약 몇 달",
    "**효과는 없고**"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card7.jpg"
  },
  "9": {
   "kind": "icontext",
@@ -50,7 +53,8 @@
   "text": [
    "그러는 사이",
    "**화장품만** 이것저것 바꾸고"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card9.jpg"
  },
  "12": {
   "kind": "punch",
@@ -63,7 +67,8 @@
     "아닙니다"
    ]
   ],
-  "box": "아닙니다"
+  "box": "아닙니다",
+  "bg": "deliverables/이소티논_치료편/card_bg/card12.jpg"
  },
  "13": {
   "kind": "icontext",
@@ -71,7 +76,8 @@
   "text": [
    "제대로 치료하면",
    "**재발도 잘 안 되는** 증상"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card13.jpg"
  },
  "14": {
   "kind": "iconlist",
@@ -93,7 +99,8 @@
     "혈관"
    ]
   ],
-  "foot": "붉어졌을 때 해야 할 순서 4가지"
+  "foot": "붉어졌을 때 해야 할 순서 4가지",
+  "bg": "deliverables/이소티논_치료편/card_bg/card14.jpg"
  },
  "16": {
   "kind": "icontext",
@@ -101,7 +108,8 @@
   "text": [
    "제 뇌피셜이 아닌",
    "**논문 근거**로"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card16.jpg"
  },
  "17": {
   "kind": "icontext",
@@ -123,7 +131,8 @@
     "없을 거예요"
    ]
   ],
-  "box": "없을 거예요"
+  "box": "없을 거예요",
+  "bg": "deliverables/이소티논_치료편/card_bg/card19.jpg"
  },
  "21": {
   "kind": "part",
@@ -147,7 +156,8 @@
   "text": [
    "지루성피부염 진단 전에",
    "**약 때문은 아닌지**부터"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card27.jpg"
  },
  "28": {
   "kind": "icontext",
@@ -155,7 +165,8 @@
   "text": [
    "효과보다 부작용이 크면",
    "**용량을 줄이거나 중단**이 표준"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card28.jpg"
  },
  "29": {
   "kind": "icontext",
@@ -163,7 +174,8 @@
   "text": [
    "이건",
    "**처방하신 병원**에 문의하세요"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card29.jpg"
  },
  "31": {
   "kind": "warning",
@@ -186,7 +198,8 @@
   "text": [
    "제품은 한 번에",
    "**하나씩만** 바꾸세요"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card34.jpg"
  },
  "37": {
   "kind": "icontext",
@@ -195,7 +208,8 @@
    "저희 치료는",
    "**장벽 손상을 개선하는**",
    "천연 성분으로"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card37.jpg"
  },
  "39": {
   "kind": "icontext",
@@ -203,7 +217,8 @@
   "text": [
    "피지가 줄어",
    "피부가 마르고 **장벽이 약해진** 쪽부터"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card39.jpg"
  },
  "42": {
   "ko": [
@@ -239,7 +254,8 @@
   "text": [
    "항염증 천연물 중",
    "경험적으로 **효과가 높았던** 약물"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card52.jpg"
  },
  "53": {
   "kind": "punch",
@@ -252,7 +268,8 @@
     "될까요?"
    ]
   ],
-  "box": "될까요?"
+  "box": "될까요?",
+  "bg": "deliverables/이소티논_치료편/card_bg/card53.jpg"
  },
  "58": {
   "ko": [
@@ -288,7 +305,8 @@
   "text": [
    "이소티논을 먹으면",
    "**황색포도알균**이 늘 수 있습니다"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card65.jpg"
  },
  "68": {
   "ko": [
@@ -325,7 +343,8 @@
   "text": [
    "붉은기가 계속 가는 건",
    "**혈관이 늘어난 채로** 있어서"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card74.jpg"
  },
  "75": {
   "kind": "icons",
@@ -343,7 +362,8 @@
     "flask-conical"
    ]
   ],
-  "caption": "열을 올리는 자극은 줄이세요"
+  "caption": "열을 올리는 자극은 줄이세요",
+  "bg": "deliverables/이소티논_치료편/card_bg/card75.jpg"
  },
  "76": {
   "kind": "icontext",
@@ -351,7 +371,8 @@
   "text": [
    "홍조를 만드는",
    "**늘어난 혈관을 직접**"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card76.jpg"
  },
  "77": {
   "kind": "icontext",
@@ -359,7 +380,8 @@
   "text": [
    "그래서 피부과는",
    "**혈관 레이저**를 합니다"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card77.jpg"
  },
  "78": {
   "kind": "icontext",
@@ -401,7 +423,8 @@
     "낫습니다"
    ]
   ],
-  "box": "낫습니다"
+  "box": "낫습니다",
+  "bg": "deliverables/이소티논_치료편/card_bg/card89.jpg"
  },
  "95": {
   "kind": "checklist",
@@ -431,7 +454,8 @@
    "목표",
    "이소티논 없이도",
    "**자극 없이 멀쩡한 얼굴**"
-  ]
+  ],
+  "bg": "deliverables/이소티논_치료편/card_bg/card98.jpg"
  },
  "101": {
   "kind": "icontext",

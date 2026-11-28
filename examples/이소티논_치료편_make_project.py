@@ -103,6 +103,12 @@ def main(pptx):
     from pptx import Presentation
     n = len(Presentation(pptx).slides)
     cards = {str(k): v[2] for k, v in CARDS.items() if v[2]}
+    # 카드 뒤에 그 문장에 맞는 장면 사진을 흐리고 어둡게 깐다 (2026-11-28 사용자: 고급감, 논문·체크리스트·파트·경고 카드는 까만 바탕)
+    import os
+    for k, spec in cards.items():
+        bg = f"deliverables/이소티논_치료편/card_bg/card{k}.jpg"
+        if os.path.exists(bg):
+            spec["bg"] = bg
     slide_at = {str(k): ([v[0], v[1]] if v[1] else v[0]) for k, v in CARDS.items()}
     plan = {
         "title": "이소티논 부작용 치료", "hooks": [], "keywords": [], "skip": [], "cut": [],
