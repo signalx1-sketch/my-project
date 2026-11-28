@@ -3,7 +3,9 @@
 data/interview_clips.json의 클립마다 가운데 프레임을 잘라낼 높이(keep_h)로 잘라 붙이고,
 환자·주제·말·길이·구워진 글자 검사 결과를 주제별로 묶어 한 장짜리 HTML로 만든다.
 
-사용법: python scripts/interview_review.py 인터뷰_영상_폴더 결과.html
+사용법: python scripts/interview_review.py 인터뷰_영상_폴더 결과.html [--by topic|video]
+  --by video (기본, 2026-11-28 사용자): 같은 영상에서 나온 클립끼리 묶고, 영상 제목·환자를 머리말로 단다.
+  --by topic: 주제별 묶음 (예전 방식)
 """
 import base64
 import html
@@ -43,18 +45,40 @@ def thumb(lib: Path, c: dict) -> str:
     return base64.b64encode(jpg).decode()
 
 
+def video_titles() -> dict:
+    """유튜브 ID → (제목, 채널). data/interview_youtube_drive.tsv (ID, 드라이브 ID, 짧은 제목[, 채널])."""
+    out = {}
+    for line in (ROOT / "data" / "interview_youtube_drive.tsv").read_text(encoding="utf-8").splitlines():
+        f = line.split("\t")
+        if len(f) >= 3:
+            out[f[0]] = (f[2], f[3] if len(f) > 3 else "더마허브")
+    return out
+
+
 def main():
     lib, out = Path(sys.argv[1]), Path(sys.argv[2])
+    by = sys.argv[sys.argv.index("--by") + 1] if "--by" in sys.argv else "video"
     clips = json.loads((ROOT / "data" / "interview_clips.json").read_text(encoding="utf-8"))
+    titles = video_titles()
     groups = defaultdict(list)
     for c in clips:
-        groups[group_of(c)].append(c)
+        groups[group_of(c) if by == "topic" else c["video"]].append(c)
     rows = []
-    order = [g for g, _ in GROUPS] + ["기타"]
+    if by == "topic":
+        order = [g for g, _ in GROUPS] + ["기타"]
+        heads = {g: g for g in order}
+    else:
+        order = list(groups)  # 목록에 처음 나온 순서
+        heads = {}
+        for v in order:
+            yid = v[3:-4] if v.startswith("yt_") else ""
+            t, ch = titles.get(yid, (v, ""))
+            link = f" <a href='https://youtu.be/{yid}'>{yid}</a>" if yid else ""
+            heads[v] = f"{html.escape(t)}{link}<br><small>{html.escape(ch)} · {html.escape(groups[v][0]['label'])}</small>"
     for g in order:
         if not groups[g]:
             continue
-        rows.append(f"<h2>{g} <small>{len(groups[g])}개</small></h2><div class=grid>")
+        rows.append(f"<h2>{heads[g]} <small>{len(groups[g])}개</small></h2><div class=grid>")
         for c in groups[g]:
             sc = c.get("screen", {})
             warn = []
@@ -85,7 +109,7 @@ h1{{font-size:22px}}h2{{font-size:18px;margin-top:28px;border-bottom:1px solid #
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}}
 .card{{background:#1c1c1c;border-radius:8px;padding:8px;font-size:13px}}.card.warn{{outline:2px solid #c80}}
 .card img{{width:100%;border-radius:4px;display:block}}.id{{color:#8c8;margin-top:6px}}.txt{{font-size:15px;margin:4px 0;font-weight:600}}
-.lab{{color:#bbb}}.tag{{color:#888;font-size:12px}}.w{{color:#fb4;font-size:12px;margin-top:4px}}p{{color:#aaa;line-height:1.6}}</style>
+a{{color:#8bf}}.lab{{color:#bbb}}.tag{{color:#888;font-size:12px}}.w{{color:#fb4;font-size:12px;margin-top:4px}}p{{color:#aaa;line-height:1.6}}</style>
 <h1>환자 인터뷰 클립 {len(clips)}개 <small>(유튜브본 {n_yt}개)</small></h1>
 <p>사진은 실제로 들어갈 화면입니다. 아래 구워진 자막 띠는 잘라낸 상태이고, 그 위에 우리 자막과 '실제 환자 인터뷰' 이름표가 얹힙니다.
 주황 테두리는 화면 가운데·위쪽에 글자가 떠 있어서 쓰기 전에 한 번 더 볼 클립입니다.</p>
