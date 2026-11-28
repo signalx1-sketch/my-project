@@ -59,6 +59,9 @@ def main():
     lib, out = Path(sys.argv[1]), Path(sys.argv[2])
     by = sys.argv[sys.argv.index("--by") + 1] if "--by" in sys.argv else "video"
     clips = json.loads((ROOT / "data" / "interview_clips.json").read_text(encoding="utf-8"))
+    if "--only" in sys.argv:  # 이 영상들만 (쉼표로 여럿): --only yt_5Gm4FiJUlL8,yt_7vi79V6lyvM
+        keep = sys.argv[sys.argv.index("--only") + 1].split(",")
+        clips = [c for c in clips if any(k in c["video"] for k in keep)]
     titles = video_titles()
     groups = defaultdict(list)
     for c in clips:

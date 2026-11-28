@@ -118,6 +118,10 @@
   인터뷰는 영상 앞·중간에 원장님 말 사이사이 끼우면 어색하다 (2026-11-21 사용자): 뒷부분(마무리 쪽) 우리 병원 치료·효과를 말하는 곳에만,
   나은 환자의 말(효과, 자극 없는 치료)로 넣는다.
   2026-11-22: 치료편에서 뒷부분에만 넣어도 '아쉽다'며 다 뺐다. 인터뷰는 사용자가 넣자고 할 때만 넣는다.
+  두 번째 채널 '코메닥'(UCH9-8rhtsfm7xQ9L27-tfDQ) 인터뷰 14편도 같은 드라이브 폴더에 있다 (2026-11-28, `data/interview_youtube_drive.tsv` 4번째 칸 '코메닥').
+  얼굴 없이 몸만 찍은 익명 화면이고 왼쪽 위 '코메닥 생생 인터뷰' 로고와 아래 자막·강조 글씨가 있어 keep_h 770으로 둘 다 잘라낸다.
+  이소티논 부작용 사례는 yt_5Gm4FiJUlL8 (21세, iv199~208). 클립 목록은 같은 영상끼리 묶어 시각 순으로 둔다(`group`),
+  확인표는 `scripts/interview_review.py 폴더 결과.html` (기본 영상별 묶음, `--only 영상ID들`).
 
 ## 소리
 - 효과음 도구 earshot(`~/tools/earshot`, `EARSHOT=1 bash scripts/setup_tools.sh`로 설치): `~/tools/earshot/.venv/bin/earshot sfx render whoosh_fast/crisp -o 파일.wav`, 목록은 `sfx list`. real-sfx 스킬(`~/.claude/skills/real-sfx`, setup_tools.sh가 설치)은 녹음 효과음 라이브러리가 아직 없어 UI 소리 78개만 있다. Openverse는 검색은 되지만 Freesound가 이 서버의 다운로드를 403으로 막는다 (2026-10-29).

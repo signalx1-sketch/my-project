@@ -238,22 +238,6 @@
   "keep_h": 0
  },
  {
-  "id": "iv015",
-  "video": "인터뷰_gbg님_가편집.mp4",
-  "start": 604.7,
-  "end": 608.5,
-  "text": "붉은기 때문에 여러 병원 왔다 갔다 하면서 마음고생",
-  "label": "25세 대학생 · 붉은기·모낭염 · 스테로이드 사용 후",
-  "tags": [
-   "마음고생",
-   "돌고 돌기",
-   "붉은기"
-  ],
-  "topic": "감정",
-  "mode": "video",
-  "keep_h": 0
- },
- {
   "id": "iv016",
   "video": "인터뷰_gbg님_가편집.mp4",
   "start": 582.3,
@@ -270,6 +254,22 @@
   "fix": {
    "안 나왔으니까": "안 나았으니까"
   }
+ },
+ {
+  "id": "iv015",
+  "video": "인터뷰_gbg님_가편집.mp4",
+  "start": 604.7,
+  "end": 608.5,
+  "text": "붉은기 때문에 여러 병원 왔다 갔다 하면서 마음고생",
+  "label": "25세 대학생 · 붉은기·모낭염 · 스테로이드 사용 후",
+  "tags": [
+   "마음고생",
+   "돌고 돌기",
+   "붉은기"
+  ],
+  "topic": "감정",
+  "mode": "video",
+  "keep_h": 0
  },
  {
   "id": "iv017",
@@ -476,27 +476,6 @@
   }
  },
  {
-  "id": "iv028",
-  "video": "yt_2NIz7f4crX0.mp4",
-  "start": 278.5,
-  "end": 284.87,
-  "text": "10년 썼고 5년은 매일, 발라도 차도 없어",
-  "label": "25세 대학생 · 스테로이드 10년 사용",
-  "tags": [
-   "스테로이드",
-   "장기사용"
-  ],
-  "topic": "스테로이드 장기 사용",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.27,
-   "top_text": 0.0
-  }
- },
- {
   "id": "iv029",
   "video": "yt_2NIz7f4crX0.mp4",
   "start": 190.8,
@@ -540,11 +519,97 @@
   }
  },
  {
+  "id": "iv178",
+  "video": "yt_2NIz7f4crX0.mp4",
+  "start": 223.78,
+  "end": 233.7,
+  "text": "피부가 얇아지고 혈관이 더 확장돼",
+  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "tags": [
+   "레이저",
+   "브이빔",
+   "혈관확장"
+  ],
+  "topic": "레이저 부작용",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv028",
+  "video": "yt_2NIz7f4crX0.mp4",
+  "start": 278.5,
+  "end": 284.87,
+  "text": "10년 썼고 5년은 매일, 발라도 차도 없어",
+  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "tags": [
+   "스테로이드",
+   "장기사용"
+  ],
+  "topic": "스테로이드 장기 사용",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.27,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv177",
+  "video": "yt_2NIz7f4crX0.mp4",
+  "start": 291.0,
+  "end": 298.8,
+  "text": "발라도 차도가 없어 끊어야겠다 생각했어요",
+  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "tags": [
+   "스테로이드",
+   "장기사용"
+  ],
+  "topic": "스테로이드 장기 사용",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv032",
   "video": "yt_2NIz7f4crX0.mp4",
   "start": 343.2,
   "end": 352.47,
   "text": "간지럽고 따가웠는데 지금은 거의 없어요",
+  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "tags": [
+   "효과",
+   "가려움",
+   "홍조"
+  ],
+  "topic": "치료 경과",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv179",
+  "video": "yt_2NIz7f4crX0.mp4",
+  "start": 353.43,
+  "end": 362.4,
+  "text": "밖에 나가도 일반 사람 피부 같아요",
   "label": "25세 대학생 · 스테로이드 10년 사용",
   "tags": [
    "효과",
@@ -952,6 +1017,29 @@
   }
  },
  {
+  "id": "iv180",
+  "video": "yt_3OG8AQ4MFe8.mp4",
+  "start": 236.81,
+  "end": 245.5,
+  "text": "얼굴에 약침 맞는 게 너무 아파서",
+  "label": "40대 초반 · 주사피부염 · 피부과 7곳",
+  "tags": [
+   "한의원",
+   "약침",
+   "악화"
+  ],
+  "topic": "약침 실패",
+  "mode": "video",
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.29,
+   "top_text": 0.0,
+   "checked": true
+  }
+ },
+ {
   "id": "iv051",
   "video": "yt_3OG8AQ4MFe8.mp4",
   "start": 275.0,
@@ -1241,6 +1329,27 @@
   }
  },
  {
+  "id": "iv181",
+  "video": "yt_ADV7TGSOTCk.mp4",
+  "start": 225.37,
+  "end": 232.66,
+  "text": "점 빼는 자극에 약까지, 확 빨개져",
+  "label": "39세 주부 · 홍조·주사피부염 3년",
+  "tags": [
+   "스테로이드",
+   "재발"
+  ],
+  "topic": "약에 든 스테로이드",
+  "mode": "video",
+  "keep_h": 874,
+  "screen": {
+   "keep_h": 874,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv065",
   "video": "yt_ADV7TGSOTCk.mp4",
   "start": 286.4,
@@ -1392,6 +1501,28 @@
   }
  },
  {
+  "id": "iv182",
+  "video": "yt_I9YPO5GmCQw.mp4",
+  "start": 148.95,
+  "end": 157.0,
+  "text": "안 쓰면 더 심해져 스테로이드를 끊었어요",
+  "label": "30대 중반 · 안면홍조",
+  "tags": [
+   "스테로이드",
+   "재발"
+  ],
+  "topic": "스테로이드 반복",
+  "mode": "video",
+  "keep_h": 782,
+  "screen": {
+   "keep_h": 782,
+   "too_low": false,
+   "center_text": 0.56,
+   "top_text": 0.0,
+   "checked": true
+  }
+ },
+ {
   "id": "iv072",
   "video": "yt_I9YPO5GmCQw.mp4",
   "start": 192.3,
@@ -1430,6 +1561,28 @@
   "keep_h": 844,
   "screen": {
    "keep_h": 844,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv183",
+  "video": "yt_I9YPO5GmCQw.mp4",
+  "start": 284.91,
+  "end": 291.3,
+  "text": "자윤수액은 자극이 없어 부담 없이",
+  "label": "30대 중반 · 안면홍조",
+  "tags": [
+   "스테로이드",
+   "자윤수액",
+   "자극"
+  ],
+  "topic": "스테로이드 믿음 상실",
+  "mode": "video",
+  "keep_h": 842,
+  "screen": {
+   "keep_h": 842,
    "too_low": false,
    "center_text": 0.0,
    "top_text": 0.0
@@ -1601,6 +1754,28 @@
   }
  },
  {
+  "id": "iv184",
+  "video": "yt_KMn_XbEjnRc.mp4",
+  "start": 184.15,
+  "end": 190.1,
+  "text": "모낭염이 번지며 피부염이 심해져",
+  "label": "28세 · 모낭염·주사피부염",
+  "tags": [
+   "마스크",
+   "모낭염",
+   "발병"
+  ],
+  "topic": "마스크 발병",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv083",
   "video": "yt_KMn_XbEjnRc.mp4",
   "start": 217.47,
@@ -1728,6 +1903,30 @@
    "keep_h": 760,
    "too_low": true,
    "center_text": 0.12,
+   "top_text": 0.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv185",
+  "video": "yt_NL0uSp4VOsM.mp4",
+  "start": 98.57,
+  "end": 107.2,
+  "text": "괜찮아져도 화장하면 처음부터 반복",
+  "label": "26세 · 스테로이드 연고 1년 반",
+  "tags": [
+   "스테로이드",
+   "항생제",
+   "재발",
+   "화장품"
+  ],
+  "topic": "스테로이드 반복",
+  "mode": "video",
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 0.0,
    "top_text": 0.0,
    "checked": true
   }
@@ -1889,11 +2088,55 @@
   }
  },
  {
+  "id": "iv186",
+  "video": "yt_NQ2ivd990kc.mp4",
+  "start": 627.15,
+  "end": 637.2,
+  "text": "얼굴에 자극 하나 없이 낫는 게 신기해요",
+  "label": "아이 엄마 · 아토피성 습진 3년",
+  "tags": [
+   "한의원",
+   "침",
+   "자극"
+  ],
+  "topic": "자극 치료",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv096",
   "video": "yt_NQ2ivd990kc.mp4",
   "start": 693.01,
   "end": 699.56,
   "text": "이전 병원은 다 막았어요, 스트레스도",
+  "label": "아이 엄마 · 아토피성 습진 3년",
+  "tags": [
+   "생활관리",
+   "음식",
+   "스트레스"
+  ],
+  "topic": "생활 제한",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv187",
+  "video": "yt_NQ2ivd990kc.mp4",
+  "start": 718.36,
+  "end": 724.7,
+  "text": "하지 말라는 게 너무 많아 힘들었어요",
   "label": "아이 엄마 · 아토피성 습진 3년",
   "tags": [
    "생활관리",
@@ -2021,6 +2264,31 @@
   }
  },
  {
+  "id": "iv188",
+  "video": "yt_NkDPBQdMCKY.mp4",
+  "start": 309.47,
+  "end": 319.3,
+  "text": "찬 수건 올려놓고 밤을 샜어요",
+  "label": "50대 · 얼굴 피부염",
+  "tags": [
+   "열감",
+   "고통",
+   "밤샘"
+  ],
+  "topic": "최악의 밤",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  },
+  "fix": {
+   "샀거든요": "샜거든요"
+  }
+ },
+ {
   "id": "iv102",
   "video": "yt_NkDPBQdMCKY.mp4",
   "start": 354.9,
@@ -2089,6 +2357,31 @@
   "start": 130.81,
   "end": 144.64,
   "text": "약을 먹어도 안 듣고 리바운드가",
+  "label": "23세 대학생 · 아토피 · 먹는 스테로이드",
+  "tags": [
+   "스테로이드",
+   "먹는약",
+   "의존"
+  ],
+  "topic": "먹는 스테로이드 의존",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  },
+  "fix": {
+   "스테로이드젤": "스테로이드제"
+  }
+ },
+ {
+  "id": "iv189",
+  "video": "yt_R-c1EosYeRY.mp4",
+  "start": 144.49,
+  "end": 155.5,
+  "text": "5개월 먹으니 끊을 수가 없어, 큰일 났다",
   "label": "23세 대학생 · 아토피 · 먹는 스테로이드",
   "tags": [
    "스테로이드",
@@ -2349,6 +2642,28 @@
   }
  },
  {
+  "id": "iv190",
+  "video": "yt_UJ_cLU-55sE.mp4",
+  "start": 106.69,
+  "end": 116.3,
+  "text": "피부가 얇아지면서 지루성 피부염이",
+  "label": "20대 · 지루성 피부염 6년",
+  "tags": [
+   "레이저",
+   "피부얇아짐",
+   "지루성"
+  ],
+  "topic": "레이저 후 발병",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv117",
   "video": "yt_UJ_cLU-55sE.mp4",
   "start": 148.4,
@@ -2409,6 +2724,27 @@
    "keep_h": 890,
    "too_low": false,
    "center_text": 0.1,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv191",
+  "video": "yt_UJ_cLU-55sE.mp4",
+  "start": 255.56,
+  "end": 261.1,
+  "text": "6개월 되니 안 듣더라고요",
+  "label": "20대 · 지루성 피부염 6년",
+  "tags": [
+   "스테로이드",
+   "의존"
+  ],
+  "topic": "스테로이드 중독",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.09,
    "top_text": 0.0
   }
  },
@@ -2526,6 +2862,33 @@
   "start": 296.91,
   "end": 304.6,
   "text": "완치 어렵다, 평생 반복된다고",
+  "label": "회사원 · 혈관 레이저·스테로이드 뒤 주사피부염",
+  "tags": [
+   "병원",
+   "포기",
+   "약"
+  ],
+  "topic": "완치 어렵다",
+  "mode": "video",
+  "keep_h": 760,
+  "screen": {
+   "keep_h": 760,
+   "too_low": true,
+   "center_text": 1.0,
+   "top_text": 0.0,
+   "checked": true
+  },
+  "fix": {
+   "만치가": "완치가",
+   "깔아앉히고": "가라앉히고"
+  }
+ },
+ {
+  "id": "iv192",
+  "video": "yt_YZhbbGkw18s.mp4",
+  "start": 308.38,
+  "end": 317.4,
+  "text": "이렇게 살 수는 없을 것 같았어요",
   "label": "회사원 · 혈관 레이저·스테로이드 뒤 주사피부염",
   "tags": [
    "병원",
@@ -2796,6 +3159,27 @@
   }
  },
  {
+  "id": "iv193",
+  "video": "yt_cn95hO-Jm4k.mp4",
+  "start": 136.03,
+  "end": 141.6,
+  "text": "바를 때만 낫고 안 바르면 리바운드",
+  "label": "40세 남성 · 여드름·홍조",
+  "tags": [
+   "레이저",
+   "시술"
+  ],
+  "topic": "시술 두려움",
+  "mode": "video",
+  "keep_h": 878,
+  "screen": {
+   "keep_h": 878,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv138",
   "video": "yt_cn95hO-Jm4k.mp4",
   "start": 201.3,
@@ -2868,6 +3252,28 @@
   "start": 30.0,
   "end": 38.22,
   "text": "손을 묶고 자야 했어요",
+  "label": "20대 대학생 · 아토피",
+  "tags": [
+   "아토피",
+   "가려움",
+   "수면"
+  ],
+  "topic": "아토피 긁음",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv194",
+  "video": "yt_d3ZE2KJduCY.mp4",
+  "start": 39.95,
+  "end": 47.0,
+  "text": "이제는 안 묶어도 괜찮아요",
   "label": "20대 대학생 · 아토피",
   "tags": [
    "아토피",
@@ -2996,6 +3402,28 @@
   }
  },
  {
+  "id": "iv195",
+  "video": "yt_ejjIsZWNx9o.mp4",
+  "start": 155.2,
+  "end": 164.33,
+  "text": "끊으니 붉게 달아오르고 가렵고",
+  "label": "31세 변호사 · 주사피부염",
+  "tags": [
+   "스테로이드",
+   "연고",
+   "리바운드"
+  ],
+  "topic": "스테로이드 모르고 사용",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv147",
   "video": "yt_ejjIsZWNx9o.mp4",
   "start": 231.16,
@@ -3023,6 +3451,28 @@
   "start": 270.2,
   "end": 278.38,
   "text": "이것만 써도 될까 했는데 건조하지 않아",
+  "label": "31세 변호사 · 주사피부염",
+  "tags": [
+   "자윤수액",
+   "건조",
+   "보습"
+  ],
+  "topic": "자윤수액만",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv196",
+  "video": "yt_ejjIsZWNx9o.mp4",
+  "start": 288.47,
+  "end": 298.1,
+  "text": "자윤수액만 써도 피부가 잘 유지돼요",
   "label": "31세 변호사 · 주사피부염",
   "tags": [
    "자윤수액",
@@ -3148,6 +3598,28 @@
   }
  },
  {
+  "id": "iv197",
+  "video": "yt_nsuruOaAvsk.mp4",
+  "start": 202.77,
+  "end": 208.5,
+  "text": "항생제·항히스타민 못 먹으면 너무 가려워",
+  "label": "30대 · 홍조·가려움 2년",
+  "tags": [
+   "연고",
+   "항생제",
+   "가려움"
+  ],
+  "topic": "수란트라·항생제",
+  "mode": "video",
+  "keep_h": 878,
+  "screen": {
+   "keep_h": 878,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
   "id": "iv154",
   "video": "yt_nsuruOaAvsk.mp4",
   "start": 313.3,
@@ -3248,6 +3720,27 @@
    "병원"
   ],
   "topic": "희망",
+  "mode": "video",
+  "keep_h": 890,
+  "screen": {
+   "keep_h": 890,
+   "too_low": false,
+   "center_text": 0.0,
+   "top_text": 0.0
+  }
+ },
+ {
+  "id": "iv198",
+  "video": "yt_qjZqHBD-64Y.mp4",
+  "start": 300.4,
+  "end": 307.94,
+  "text": "토요일 내내 몇 초 간격으로 뿌렸어요",
+  "label": "50대 · 얼굴 피부염",
+  "tags": [
+   "자윤수액",
+   "가려움"
+  ],
+  "topic": "자윤수액 첫 경험",
   "mode": "video",
   "keep_h": 890,
   "screen": {
@@ -3650,496 +4143,1287 @@
   }
  },
  {
-  "id": "iv177",
-  "video": "yt_2NIz7f4crX0.mp4",
-  "start": 291.0,
-  "end": 298.8,
-  "text": "발라도 차도가 없어 끊어야겠다 생각했어요",
-  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "id": "iv199",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 60.25,
+  "end": 69.48,
+  "text": "이소트레티노인 2주 먹으니 괜찮아졌다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
   "tags": [
-   "스테로이드",
-   "장기사용"
+   "이소티논",
+   "여드름",
+   "약"
   ],
-  "topic": "스테로이드 장기 사용",
+  "topic": "이소티논 복용",
   "mode": "video",
-  "keep_h": 890,
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "fix": {
+   "피지조려제": "피지조절제"
+  },
   "screen": {
-   "keep_h": 890,
+   "keep_h": 770,
    "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
   }
  },
  {
-  "id": "iv178",
-  "video": "yt_2NIz7f4crX0.mp4",
-  "start": 223.78,
-  "end": 233.7,
-  "text": "피부가 얇아지고 혈관이 더 확장돼",
-  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "id": "iv200",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 84.25,
+  "end": 94.92,
+  "text": "먹으면 괜찮고 끊으면 다시, 평생 먹어야 하나",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
   "tags": [
-   "레이저",
-   "브이빔",
-   "혈관확장"
+   "이소티논",
+   "의존",
+   "재발"
   ],
-  "topic": "레이저 부작용",
+  "topic": "이소티논 의존",
   "mode": "video",
-  "keep_h": 890,
+  "keep_h": 770,
+  "group": "이소티논 21세",
   "screen": {
-   "keep_h": 890,
+   "keep_h": 770,
    "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
   }
  },
  {
-  "id": "iv179",
-  "video": "yt_2NIz7f4crX0.mp4",
-  "start": 353.43,
-  "end": 362.4,
-  "text": "밖에 나가도 일반 사람 피부 같아요",
-  "label": "25세 대학생 · 스테로이드 10년 사용",
+  "id": "iv201",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 117.0,
+  "end": 128.62,
+  "text": "그 뒤로 홍조가 안 빠지고 볼이 엄청 빨개졌다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "이소티논",
+   "홍조",
+   "증상",
+   "레이저"
+  ],
+  "topic": "이소티논·시술 뒤 홍조",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv202",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 264.18,
+  "end": 270.71,
+  "text": "치료 초반 딱지가 많이 생겨 정말 힘들었다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "경과",
+   "증상"
+  ],
+  "topic": "치료 초반",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv203",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 280.65,
+  "end": 286.73,
+  "text": "지금은 딱지가 거의 없고 많이 괜찮아졌다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
   "tags": [
    "효과",
-   "가려움",
-   "홍조"
+   "경과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv207",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 351.34,
+  "end": 356.05,
+  "text": "원장님 잘 만나서 치료 잘 됐다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "효과",
+   "추천"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv204",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 370.1,
+  "end": 377.45,
+  "text": "피부과 압출은 아파서 각오하고 가야 했다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "시술",
+   "통증",
+   "병원"
+  ],
+  "topic": "이전 치료 고통",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv205",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 379.08,
+  "end": 389.12,
+  "text": "여기선 누워 있다 오면 된다, 자극 없는 치료",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "효과",
+   "자극없음"
+  ],
+  "topic": "자극 없는 치료",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv206",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 390.25,
+  "end": 398.24,
+  "text": "다른 데보다 훨씬 효과가 좋다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv208",
+  "video": "yt_5Gm4FiJUlL8.mp4",
+  "start": 437.64,
+  "end": 447.82,
+  "text": "악화된 선행 요인을 생각해 보고 여기 오시면 된다",
+  "label": "21세 · 이소티논·브이빔·AMTS 뒤 홍조 · 치료 5개월",
+  "tags": [
+   "추천",
+   "조언"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "group": "이소티논 21세",
+  "screen": {
+   "keep_h": 770,
+   "too_low": false,
+   "center_text": 1.0,
+   "top_text": 1.0,
+   "checked": true
+  }
+ },
+ {
+  "id": "iv209",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 55.61,
+  "end": 70.33,
+  "text": "광대부터 눈·귀까지 타는 듯한 뜨거움",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "증상",
+   "열감"
+  ],
+  "topic": "내원 전 증상",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부",
+  "fix": {
+   "성밑": "턱밑"
+  }
+ },
+ {
+  "id": "iv210",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 165.38,
+  "end": 174.91,
+  "text": "멀리 대구 피부과 약까지 먹었는데 더 악화",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "병원유목",
+   "악화"
+  ],
+  "topic": "이전 치료 실패",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv211",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 504.36,
+  "end": 510.87,
+  "text": "브이빔 3회, 자극만 주고 효과는 없었다",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "레이저",
+   "브이빔"
+  ],
+  "topic": "레이저 효과 없음",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv212",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 545.56,
+  "end": 548.39,
+  "text": "확실히 치료가 빠르고 효과가 있다",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv213",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 601.56,
+  "end": 609.67,
+  "text": "다들 안 된다 했는데 된다고 확신을 주셨다",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "희망",
+   "확신"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv214",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 637.17,
+  "end": 651.99,
+  "text": "아들이 '엄마 얼굴 좋아졌으니 여행 가자'",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "효과",
+   "가족"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv215",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 698.32,
+  "end": 703.39,
+  "text": "희망고문하는 병원 말고 빨리 여기로 오세요",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "추천"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv216",
+  "video": "yt_7vi79V6lyvM.mp4",
+  "start": 712.65,
+  "end": 718.03,
+  "text": "LTE급으로 효과가 좋으니 빨리 오셨으면",
+  "label": "52세 주부 · 주사피부염 7년 · 대학병원도 못 고침",
+  "tags": [
+   "추천",
+   "효과"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "52세 주부"
+ },
+ {
+  "id": "iv217",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 114.1,
+  "end": 126.91,
+  "text": "여드름 치료에 레이저 받고 고등학생 때 홍조가 심해졌다",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "레이저",
+   "홍조",
+   "여드름"
+  ],
+  "topic": "내원 전 증상",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv218",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 219.4,
+  "end": 230.18,
+  "text": "필링 뒤 터진 데가 번져 수포, 농가진 진단",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "필링",
+   "증상"
+  ],
+  "topic": "시술 뒤 악화",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv219",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 238.62,
+  "end": 247.76,
+  "text": "스테로이드 처방이 나와 겁이 났다",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "스테로이드"
+  ],
+  "topic": "스테로이드 걱정",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv220",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 459.95,
+  "end": 464.95,
+  "text": "스테로이드·레이저로 인한 피부 손상 얘기는 처음 들었다",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "스테로이드",
+   "레이저",
+   "오진"
+  ],
+  "topic": "원인 설명",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv221",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 508.26,
+  "end": 512.77,
+  "text": "눈 주변 색깔이 확연히 달라졌다",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv222",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 525.17,
+  "end": 532.35,
+  "text": "색깔이 너무 좋아져 이제 마음이 낫다",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "효과",
+   "가족"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv223",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 598.13,
+  "end": 607.64,
+  "text": "전에는 차도가 없었는데 지금은 치료한 만큼 효과",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "효과",
+   "비용"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv224",
+  "video": "yt_Kq-l2IUbAWQ.mp4",
+  "start": 856.14,
+  "end": 862.43,
+  "text": "의심 들어도 믿고 다녀 보시면 만족하실 것",
+  "label": "21세 대학생과 어머니 · 여드름 레이저·필링 뒤 홍조",
+  "tags": [
+   "추천"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "21세 대학생과 어머니"
+ },
+ {
+  "id": "iv225",
+  "video": "yt_CztzUrWaZvk.mp4",
+  "start": 101.8,
+  "end": 107.6,
+  "text": "스테로이드 연고를 바르자 얼굴이 뒤집어졌다",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "스테로이드",
+   "연고",
+   "악화"
+  ],
+  "topic": "스테로이드 뒤 악화",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv226",
+  "video": "yt_CztzUrWaZvk.mp4",
+  "start": 249.45,
+  "end": 261.15,
+  "text": "염증이 안 가라앉아 우울하고 거울 보기 싫었다",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "증상",
+   "우울"
+  ],
+  "topic": "내원 전 고통",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv227",
+  "video": "yt_CztzUrWaZvk.mp4",
+  "start": 300.47,
+  "end": 308.01,
+  "text": "이 병원은 거짓이 없는 것 같다",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "신뢰"
+  ],
+  "topic": "내원 계기",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv228",
+  "video": "yt_CztzUrWaZvk.mp4",
+  "start": 334.21,
+  "end": 339.93,
+  "text": "3주 지나고 피부가 갑자기 확 좋아졌다",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv229",
+  "video": "yt_CztzUrWaZvk.mp4",
+  "start": 342.22,
+  "end": 348.75,
+  "text": "사람들이 왜 이렇게 좋아졌냐고 할 정도",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv230",
+  "video": "yt_kJCyoG8rrfw.mp4",
+  "start": 150.51,
+  "end": 154.05,
+  "text": "하루 지나면 더 좋아지는 느낌",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv231",
+  "video": "yt_NZo95c_HGe4.mp4",
+  "start": 176.97,
+  "end": 185.07,
+  "text": "초반엔 앞으로 어떻게 하나 엄청 우울했다",
+  "label": "29세 · 스테로이드 연고 뒤 주사피부염",
+  "tags": [
+   "우울",
+   "증상"
+  ],
+  "topic": "내원 전 고통",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "29세"
+ },
+ {
+  "id": "iv232",
+  "video": "yt_AqMOnOay9NY.mp4",
+  "start": 47.96,
+  "end": 55.15,
+  "text": "동네 피부과에서 스테로이드 약과 연고",
+  "label": "20세 · 스테로이드 부작용 · 대학병원 진단",
+  "tags": [
+   "스테로이드",
+   "연고"
+  ],
+  "topic": "스테로이드 사용",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "20세"
+ },
+ {
+  "id": "iv233",
+  "video": "yt_AqMOnOay9NY.mp4",
+  "start": 88.11,
+  "end": 97.57,
+  "text": "연고 한 달 반, 주사 한 달 반, 약 3개월",
+  "label": "20세 · 스테로이드 부작용 · 대학병원 진단",
+  "tags": [
+   "스테로이드",
+   "연고"
+  ],
+  "topic": "스테로이드 사용",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "20세"
+ },
+ {
+  "id": "iv234",
+  "video": "yt_AqMOnOay9NY.mp4",
+  "start": 402.24,
+  "end": 407.17,
+  "text": "집에서 뿌리는 것과 내원 치료는 진짜 다르다",
+  "label": "20세 · 스테로이드 부작용 · 대학병원 진단",
+  "tags": [
+   "효과",
+   "자윤수액"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "20세"
+ },
+ {
+  "id": "iv235",
+  "video": "yt_AqMOnOay9NY.mp4",
+  "start": 407.16,
+  "end": 413.51,
+  "text": "자윤수액 쓰시는 분들은 꼭 내원 치료 받아 보시길",
+  "label": "20세 · 스테로이드 부작용 · 대학병원 진단",
+  "tags": [
+   "추천",
+   "자윤수액"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "20세"
+ },
+ {
+  "id": "iv236",
+  "video": "yt_GfPQ5nndTpA.mp4",
+  "start": 32.63,
+  "end": 38.19,
+  "text": "오래 받아서 그런지 금방 효과를 본다",
+  "label": "천안에서 강남까지 · 스테로이드 부작용 · 12년 전 치료 뒤 재내원",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "천안에서 강남까지"
+ },
+ {
+  "id": "iv237",
+  "video": "yt_GfPQ5nndTpA.mp4",
+  "start": 348.07,
+  "end": 351.77,
+  "text": "오래 치료받지 않아도 효과가 빨리 나온다",
+  "label": "천안에서 강남까지 · 스테로이드 부작용 · 12년 전 치료 뒤 재내원",
+  "tags": [
+   "효과"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "천안에서 강남까지"
+ },
+ {
+  "id": "iv238",
+  "video": "yt_GfPQ5nndTpA.mp4",
+  "start": 372.79,
+  "end": 380.07,
+  "text": "다른 데는 얼굴을 많이 만지는 자극적인 치료",
+  "label": "천안에서 강남까지 · 스테로이드 부작용 · 12년 전 치료 뒤 재내원",
+  "tags": [
+   "시술",
+   "자극"
+  ],
+  "topic": "이전 치료 고통",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "천안에서 강남까지"
+ },
+ {
+  "id": "iv239",
+  "video": "yt_fJkWio34aHU.mp4",
+  "start": 57.17,
+  "end": 62.21,
+  "text": "강한 레이저 뒤 접촉성 피부염이 났다",
+  "label": "레이저 뒤 통증 피부염 · 지루성 오진",
+  "tags": [
+   "레이저",
+   "악화"
+  ],
+  "topic": "레이저 뒤 악화",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "레이저 뒤 통증 피부염"
+ },
+ {
+  "id": "iv240",
+  "video": "yt_fJkWio34aHU.mp4",
+  "start": 299.24,
+  "end": 312.82,
+  "text": "아픈 건 하나도 안 가라앉고 더 악화됐다",
+  "label": "레이저 뒤 통증 피부염 · 지루성 오진",
+  "tags": [
+   "증상",
+   "통증",
+   "악화"
+  ],
+  "topic": "이전 치료 실패",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "레이저 뒤 통증 피부염"
+ },
+ {
+  "id": "iv241",
+  "video": "yt_fJkWio34aHU.mp4",
+  "start": 326.1,
+  "end": 331.4,
+  "text": "저처럼 아프신 분들 방황 말고 빨리 오셨으면",
+  "label": "레이저 뒤 통증 피부염 · 지루성 오진",
+  "tags": [
+   "추천"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "레이저 뒤 통증 피부염"
+ },
+ {
+  "id": "iv242",
+  "video": "yt_TO6PAUaTH9w.mp4",
+  "start": 119.48,
+  "end": 126.57,
+  "text": "집 근처 피부과에서 스테로이드 연고 처방",
+  "label": "스테로이드 연고 뒤 홍조 · 치료 1년 반",
+  "tags": [
+   "스테로이드",
+   "연고"
+  ],
+  "topic": "스테로이드 사용",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "스테로이드 연고 뒤 홍조"
+ },
+ {
+  "id": "iv243",
+  "video": "yt_TO6PAUaTH9w.mp4",
+  "start": 149.26,
+  "end": 162.39,
+  "text": "연고 끊고 심해져 레이저·항생제·수란트라까지",
+  "label": "스테로이드 연고 뒤 홍조 · 치료 1년 반",
+  "tags": [
+   "스테로이드",
+   "레이저",
+   "항생제",
+   "병원유목"
+  ],
+  "topic": "이전 치료 실패",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "스테로이드 연고 뒤 홍조",
+  "fix": {
+   "소란트라": "수란트라"
+  }
+ },
+ {
+  "id": "iv244",
+  "video": "yt_TO6PAUaTH9w.mp4",
+  "start": 244.59,
+  "end": 252.92,
+  "text": "자극 없이 관리되는 게 마음이 편하다",
+  "label": "스테로이드 연고 뒤 홍조 · 치료 1년 반",
+  "tags": [
+   "효과",
+   "자극없음"
+  ],
+  "topic": "자극 없는 치료",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "스테로이드 연고 뒤 홍조"
+ },
+ {
+  "id": "iv245",
+  "video": "yt_TO6PAUaTH9w.mp4",
+  "start": 252.98,
+  "end": 262.28,
+  "text": "예민한 피부에 레이저가 정말 좋나 늘 불안했다",
+  "label": "스테로이드 연고 뒤 홍조 · 치료 1년 반",
+  "tags": [
+   "레이저",
+   "자극"
+  ],
+  "topic": "레이저 불안",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "스테로이드 연고 뒤 홍조",
+  "fix": {
+   "이민해진": "예민해진"
+  }
+ },
+ {
+  "id": "iv246",
+  "video": "yt_TO6PAUaTH9w.mp4",
+  "start": 508.25,
+  "end": 511.85,
+  "text": "고민은 시간만 늦출 뿐, 빨리 오세요",
+  "label": "스테로이드 연고 뒤 홍조 · 치료 1년 반",
+  "tags": [
+   "추천"
+  ],
+  "topic": "다른 환자에게",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "스테로이드 연고 뒤 홍조"
+ },
+ {
+  "id": "iv247",
+  "video": "yt_bVhPq18nTPI.mp4",
+  "start": 131.22,
+  "end": 138.49,
+  "text": "점점 심해지면서 빨개지고 가려웠다",
+  "label": "병원 4곳 · 열감 심한 피부염",
+  "tags": [
+   "증상",
+   "가려움"
+  ],
+  "topic": "내원 전 증상",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "병원 4곳"
+ },
+ {
+  "id": "iv248",
+  "video": "yt_bVhPq18nTPI.mp4",
+  "start": 326.11,
+  "end": 340.23,
+  "text": "열이 너무 심해 찬 수건을 올렸다가 상처가 났다",
+  "label": "병원 4곳 · 열감 심한 피부염",
+  "tags": [
+   "증상",
+   "열감"
+  ],
+  "topic": "내원 전 고통",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "병원 4곳"
+ },
+ {
+  "id": "iv249",
+  "video": "yt_bVhPq18nTPI.mp4",
+  "start": 455.03,
+  "end": 469.83,
+  "text": "우울하게 누워 있다가 유튜브 원장님 말에 공감",
+  "label": "병원 4곳 · 열감 심한 피부염",
+  "tags": [
+   "우울",
+   "내원계기"
+  ],
+  "topic": "내원 계기",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "병원 4곳"
+ },
+ {
+  "id": "iv250",
+  "video": "yt_-qdeyQfbf90.mp4",
+  "start": 45.39,
+  "end": 59.66,
+  "text": "손을 묶고 자야 할 만큼 심했던 아토피",
+  "label": "아토피 · 손 묶고 자던 환자 · 치료 11개월",
+  "tags": [
+   "증상",
+   "아토피"
+  ],
+  "topic": "내원 전 증상",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "아토피"
+ },
+ {
+  "id": "iv251",
+  "video": "yt_-qdeyQfbf90.mp4",
+  "start": 274.42,
+  "end": 287.14,
+  "text": "여드름도 많이 줄고 피부가 부드러워졌다",
+  "label": "아토피 · 손 묶고 자던 환자 · 치료 11개월",
+  "tags": [
+   "효과",
+   "여드름"
+  ],
+  "topic": "치료 효과",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "아토피"
+ },
+ {
+  "id": "iv252",
+  "video": "yt_-qdeyQfbf90.mp4",
+  "start": 306.12,
+  "end": 311.28,
+  "text": "4~5개월쯤부터 확 좋아진 게 느껴졌다",
+  "label": "아토피 · 손 묶고 자던 환자 · 치료 11개월",
+  "tags": [
+   "효과",
+   "경과"
   ],
   "topic": "치료 경과",
   "mode": "video",
-  "keep_h": 890,
+  "keep_h": 770,
   "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv180",
-  "video": "yt_3OG8AQ4MFe8.mp4",
-  "start": 236.81,
-  "end": 245.5,
-  "text": "얼굴에 약침 맞는 게 너무 아파서",
-  "label": "40대 초반 · 주사피부염 · 피부과 7곳",
-  "tags": [
-   "한의원",
-   "약침",
-   "악화"
-  ],
-  "topic": "약침 실패",
-  "mode": "video",
-  "keep_h": 760,
-  "screen": {
-   "keep_h": 760,
-   "too_low": true,
-   "center_text": 0.29,
-   "top_text": 0.0,
+   "keep_h": 770,
    "checked": true
-  }
- },
- {
-  "id": "iv181",
-  "video": "yt_ADV7TGSOTCk.mp4",
-  "start": 225.37,
-  "end": 232.66,
-  "text": "점 빼는 자극에 약까지, 확 빨개져",
-  "label": "39세 주부 · 홍조·주사피부염 3년",
-  "tags": [
-   "스테로이드",
-   "재발"
-  ],
-  "topic": "약에 든 스테로이드",
-  "mode": "video",
-  "keep_h": 874,
-  "screen": {
-   "keep_h": 874,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv182",
-  "video": "yt_I9YPO5GmCQw.mp4",
-  "start": 148.95,
-  "end": 157.0,
-  "text": "안 쓰면 더 심해져 스테로이드를 끊었어요",
-  "label": "30대 중반 · 안면홍조",
-  "tags": [
-   "스테로이드",
-   "재발"
-  ],
-  "topic": "스테로이드 반복",
-  "mode": "video",
-  "keep_h": 782,
-  "screen": {
-   "keep_h": 782,
-   "too_low": false,
-   "center_text": 0.56,
-   "top_text": 0.0,
-   "checked": true
-  }
- },
- {
-  "id": "iv183",
-  "video": "yt_I9YPO5GmCQw.mp4",
-  "start": 284.91,
-  "end": 291.3,
-  "text": "자윤수액은 자극이 없어 부담 없이",
-  "label": "30대 중반 · 안면홍조",
-  "tags": [
-   "스테로이드",
-   "자윤수액",
-   "자극"
-  ],
-  "topic": "스테로이드 믿음 상실",
-  "mode": "video",
-  "keep_h": 842,
-  "screen": {
-   "keep_h": 842,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv184",
-  "video": "yt_KMn_XbEjnRc.mp4",
-  "start": 184.15,
-  "end": 190.1,
-  "text": "모낭염이 번지며 피부염이 심해져",
-  "label": "28세 · 모낭염·주사피부염",
-  "tags": [
-   "마스크",
-   "모낭염",
-   "발병"
-  ],
-  "topic": "마스크 발병",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv185",
-  "video": "yt_NL0uSp4VOsM.mp4",
-  "start": 98.57,
-  "end": 107.2,
-  "text": "괜찮아져도 화장하면 처음부터 반복",
-  "label": "26세 · 스테로이드 연고 1년 반",
-  "tags": [
-   "스테로이드",
-   "항생제",
-   "재발",
-   "화장품"
-  ],
-  "topic": "스테로이드 반복",
-  "mode": "video",
-  "keep_h": 760,
-  "screen": {
-   "keep_h": 760,
-   "too_low": true,
-   "center_text": 0.0,
-   "top_text": 0.0,
-   "checked": true
-  }
- },
- {
-  "id": "iv186",
-  "video": "yt_NQ2ivd990kc.mp4",
-  "start": 627.15,
-  "end": 637.2,
-  "text": "얼굴에 자극 하나 없이 낫는 게 신기해요",
-  "label": "아이 엄마 · 아토피성 습진 3년",
-  "tags": [
-   "한의원",
-   "침",
-   "자극"
-  ],
-  "topic": "자극 치료",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv187",
-  "video": "yt_NQ2ivd990kc.mp4",
-  "start": 718.36,
-  "end": 724.7,
-  "text": "하지 말라는 게 너무 많아 힘들었어요",
-  "label": "아이 엄마 · 아토피성 습진 3년",
-  "tags": [
-   "생활관리",
-   "음식",
-   "스트레스"
-  ],
-  "topic": "생활 제한",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv188",
-  "video": "yt_NkDPBQdMCKY.mp4",
-  "start": 309.47,
-  "end": 319.3,
-  "text": "찬 수건 올려놓고 밤을 샜어요",
-  "label": "50대 · 얼굴 피부염",
-  "tags": [
-   "열감",
-   "고통",
-   "밤샘"
-  ],
-  "topic": "최악의 밤",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
   },
+  "group": "아토피",
   "fix": {
-   "샀거든요": "샜거든요"
+   "진상이": "증상이"
   }
  },
  {
-  "id": "iv189",
-  "video": "yt_R-c1EosYeRY.mp4",
-  "start": 144.49,
-  "end": 155.5,
-  "text": "5개월 먹으니 끊을 수가 없어, 큰일 났다",
-  "label": "23세 대학생 · 아토피 · 먹는 스테로이드",
+  "id": "iv253",
+  "video": "yt_-qdeyQfbf90.mp4",
+  "start": 549.56,
+  "end": 556.27,
+  "text": "성인 아토피는 치료를 포기하는 분들이 있다",
+  "label": "아토피 · 손 묶고 자던 환자 · 치료 11개월",
   "tags": [
-   "스테로이드",
-   "먹는약",
-   "의존"
-  ],
-  "topic": "먹는 스테로이드 의존",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  },
-  "fix": {
-   "스테로이드젤": "스테로이드제"
-  }
- },
- {
-  "id": "iv190",
-  "video": "yt_UJ_cLU-55sE.mp4",
-  "start": 106.69,
-  "end": 116.3,
-  "text": "피부가 얇아지면서 지루성 피부염이",
-  "label": "20대 · 지루성 피부염 6년",
-  "tags": [
-   "레이저",
-   "피부얇아짐",
-   "지루성"
-  ],
-  "topic": "레이저 후 발병",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv191",
-  "video": "yt_UJ_cLU-55sE.mp4",
-  "start": 255.56,
-  "end": 261.1,
-  "text": "6개월 되니 안 듣더라고요",
-  "label": "20대 · 지루성 피부염 6년",
-  "tags": [
-   "스테로이드",
-   "의존"
-  ],
-  "topic": "스테로이드 중독",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.09,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv192",
-  "video": "yt_YZhbbGkw18s.mp4",
-  "start": 308.38,
-  "end": 317.4,
-  "text": "이렇게 살 수는 없을 것 같았어요",
-  "label": "회사원 · 혈관 레이저·스테로이드 뒤 주사피부염",
-  "tags": [
-   "병원",
    "포기",
-   "약"
+   "아토피"
   ],
-  "topic": "완치 어렵다",
+  "topic": "다른 환자에게",
   "mode": "video",
-  "keep_h": 760,
+  "keep_h": 770,
   "screen": {
-   "keep_h": 760,
-   "too_low": true,
-   "center_text": 1.0,
-   "top_text": 0.0,
+   "keep_h": 770,
    "checked": true
   },
-  "fix": {
-   "만치가": "완치가",
-   "깔아앉히고": "가라앉히고"
-  }
+  "group": "아토피"
  },
  {
-  "id": "iv193",
-  "video": "yt_cn95hO-Jm4k.mp4",
-  "start": 136.03,
-  "end": 141.6,
-  "text": "바를 때만 낫고 안 바르면 리바운드",
-  "label": "40세 남성 · 여드름·홍조",
-  "tags": [
-   "레이저",
-   "시술"
-  ],
-  "topic": "시술 두려움",
-  "mode": "video",
-  "keep_h": 878,
-  "screen": {
-   "keep_h": 878,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv194",
-  "video": "yt_d3ZE2KJduCY.mp4",
-  "start": 39.95,
-  "end": 47.0,
-  "text": "이제는 안 묶어도 괜찮아요",
-  "label": "20대 대학생 · 아토피",
-  "tags": [
-   "아토피",
-   "가려움",
-   "수면"
-  ],
-  "topic": "아토피 긁음",
-  "mode": "video",
-  "keep_h": 890,
-  "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
- },
- {
-  "id": "iv195",
-  "video": "yt_ejjIsZWNx9o.mp4",
-  "start": 155.2,
-  "end": 164.33,
-  "text": "끊으니 붉게 달아오르고 가렵고",
-  "label": "31세 변호사 · 주사피부염",
+  "id": "iv254",
+  "video": "yt_zED2qT5H-5E.mp4",
+  "start": 109.51,
+  "end": 122.43,
+  "text": "스테로이드 주사·연고·항히스타민제를 반복",
+  "label": "성인 아토피 · 스테로이드 반복 · 치료 2년",
   "tags": [
    "스테로이드",
-   "연고",
-   "리바운드"
+   "연고"
   ],
-  "topic": "스테로이드 모르고 사용",
+  "topic": "스테로이드 사용",
   "mode": "video",
-  "keep_h": 890,
+  "keep_h": 770,
   "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "성인 아토피",
+  "fix": {
+   "항이스타민제": "항히스타민제"
   }
  },
  {
-  "id": "iv196",
-  "video": "yt_ejjIsZWNx9o.mp4",
-  "start": 288.47,
-  "end": 298.1,
-  "text": "자윤수액만 써도 피부가 잘 유지돼요",
-  "label": "31세 변호사 · 주사피부염",
+  "id": "iv255",
+  "video": "yt_zED2qT5H-5E.mp4",
+  "start": 125.66,
+  "end": 140.65,
+  "text": "스테로이드는 2~3일만 좋고 약발 떨어지면 반복",
+  "label": "성인 아토피 · 스테로이드 반복 · 치료 2년",
   "tags": [
-   "자윤수액",
-   "건조",
-   "보습"
+   "스테로이드",
+   "재발"
   ],
-  "topic": "자윤수액만",
+  "topic": "스테로이드 한계",
   "mode": "video",
-  "keep_h": 890,
+  "keep_h": 770,
   "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "성인 아토피"
  },
  {
-  "id": "iv197",
-  "video": "yt_nsuruOaAvsk.mp4",
-  "start": 202.77,
-  "end": 208.5,
-  "text": "항생제·항히스타민 못 먹으면 너무 가려워",
-  "label": "30대 · 홍조·가려움 2년",
+  "id": "iv256",
+  "video": "yt_zED2qT5H-5E.mp4",
+  "start": 155.52,
+  "end": 170.21,
+  "text": "자극 없는 치료로 효과가 정말 빨랐다",
+  "label": "성인 아토피 · 스테로이드 반복 · 치료 2년",
   "tags": [
-   "연고",
-   "항생제",
-   "가려움"
+   "효과",
+   "자극없음",
+   "자윤수액"
   ],
-  "topic": "수란트라·항생제",
+  "topic": "자극 없는 치료",
   "mode": "video",
-  "keep_h": 878,
+  "keep_h": 770,
   "screen": {
-   "keep_h": 878,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "성인 아토피"
  },
  {
-  "id": "iv198",
-  "video": "yt_qjZqHBD-64Y.mp4",
-  "start": 300.4,
-  "end": 307.94,
-  "text": "토요일 내내 몇 초 간격으로 뿌렸어요",
-  "label": "50대 · 얼굴 피부염",
+  "id": "iv257",
+  "video": "yt_zED2qT5H-5E.mp4",
+  "start": 308.71,
+  "end": 317.03,
+  "text": "어느 순간 진물도 안 나고 붉은기도 없어졌다",
+  "label": "성인 아토피 · 스테로이드 반복 · 치료 2년",
   "tags": [
-   "자윤수액",
-   "가려움"
+   "효과"
   ],
-  "topic": "자윤수액 첫 경험",
+  "topic": "치료 효과",
   "mode": "video",
-  "keep_h": 890,
+  "keep_h": 770,
   "screen": {
-   "keep_h": 890,
-   "too_low": false,
-   "center_text": 0.0,
-   "top_text": 0.0
-  }
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "성인 아토피"
+ },
+ {
+  "id": "iv258",
+  "video": "yt_IYIdG8Dd2Pg.mp4",
+  "start": 244.95,
+  "end": 252.23,
+  "text": "진료 보고 희망을 얻어 자윤수액을 왕창 타 갔다",
+  "label": "불로 지지는 듯한 피부염 · 대학병원도 포기",
+  "tags": [
+   "희망",
+   "자윤수액"
+  ],
+  "topic": "내원 첫날",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "불로 지지는 듯한 피부염"
+ },
+ {
+  "id": "iv259",
+  "video": "yt_IYIdG8Dd2Pg.mp4",
+  "start": 528.39,
+  "end": 543.43,
+  "text": "효과도 있고, 치료가 전혀 아프지 않다",
+  "label": "불로 지지는 듯한 피부염 · 대학병원도 포기",
+  "tags": [
+   "효과",
+   "자극없음"
+  ],
+  "topic": "자극 없는 치료",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "불로 지지는 듯한 피부염"
+ },
+ {
+  "id": "iv260",
+  "video": "yt_IYIdG8Dd2Pg.mp4",
+  "start": 591.06,
+  "end": 597.41,
+  "text": "여기에 레이저를 했더라면 생각하고 싶지도 않다",
+  "label": "불로 지지는 듯한 피부염 · 대학병원도 포기",
+  "tags": [
+   "레이저"
+  ],
+  "topic": "레이저 걱정",
+  "mode": "video",
+  "keep_h": 770,
+  "screen": {
+   "keep_h": 770,
+   "checked": true
+  },
+  "group": "불로 지지는 듯한 피부염"
  }
 ]
