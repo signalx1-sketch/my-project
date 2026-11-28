@@ -1,0 +1,80 @@
+{
+ "bg": {
+  "src": "deliverables/연고_장기사용/썸네일_생성_연고바르기.png",
+  "scale": 1.1,
+  "anchor": [
+   640,
+   330
+  ],
+  "at": [
+   520,
+   330
+  ],
+  "blur": 0,
+  "dark": 1.2,
+  "left_dark": 0
+ },
+ "shade_bottom": [
+  0.5,
+  240
+ ],
+ "frame": {
+  "color": "#2F9E6E",
+  "width": 14,
+  "radius": 36
+ },
+ "x": 40,
+ "y": 452,
+ "gap": 1.2,
+ "stroke": 12,
+ "stroke_color": "#111111",
+ "align": "center",
+ "cx": 640,
+ "lines": [
+  {
+   "parts": [
+    [
+     "피부과 연고 장기 사용",
+     "#FFE600"
+    ]
+   ],
+   "size": 92
+  },
+  {
+   "parts": [
+    [
+     "내 ",
+     "white"
+    ],
+    [
+     "피부장벽",
+     "box:#E8262B:white"
+    ],
+    [
+     "은 무사할까?",
+     "white"
+    ]
+   ],
+   "size": 106
+  }
+ ],
+ "doc": {
+  "src": "deliverables/입주위염/썸네일_원장님3_크롭.png",
+  "mask": "deliverables/입주위염/썸네일_원장님3_누끼.png",
+  "beauty": true,
+  "h": 440,
+  "x": 850,
+  "y": 110
+ },
+ "hand": {
+  "lines": [
+   "피부과에서 포기한",
+   "환자만 보는 원장"
+  ],
+  "x": 905,
+  "y": 20,
+  "size": 54,
+  "color": "#3BE37A",
+  "angle": 4
+ }
+}

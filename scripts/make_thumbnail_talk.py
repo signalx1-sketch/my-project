@@ -56,7 +56,7 @@ def text_line(draw, x, y, parts, font, box_pad=(14, 6)):
             # 상자 안 글자도 다른 글자와 같은 굵기로 (같은 검은 테두리, 2026-11-25 사용자: 굵기 동일하게)
             draw.text((x + px, y), txt, font=font, fill=fg, stroke_width=STROKE["w"], stroke_fill=STROKE["c"])
             w += 2 * px
-            x += w + round(font.size * 0.06)
+            x += w  # 뒤 글자와의 띄어쓰기는 글자 쪽 공백으로 (조사 "은" 같은 건 붙여 쓴다)
         else:
             draw.text((x, y), txt, font=font, fill=color, stroke_width=STROKE["w"], stroke_fill=STROKE["c"])
             x += w
